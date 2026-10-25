@@ -1366,6 +1366,53 @@ fun AboutSheet(
                                                 maxLines = 2
                                             )
                                         }
+                                        // Rotation de la route Tor
+                                        val rotation by TorPreferenceManager.rotationFlow.collectAsState()
+                                        val derniereRoute by torProvider.lastRouteChange.collectAsState()
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            OutlinedButton(
+                                                onClick = { torProvider.requestNewRoute() },
+                                                enabled = torStatus.running && torStatus.bootstrapPercent >= 100
+                                            ) {
+                                                Text("Nouvelle route Tor", fontFamily = BitchatFontFamily, fontSize = 13.sp)
+                                            }
+                                            if (derniereRoute > 0) {
+                                                Text(
+                                                    text = "changée à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(java.util.Date(derniereRoute)),
+                                                    fontFamily = BitchatFontFamily,
+                                                    fontSize = 11.sp,
+                                                    color = palette.textTertiary
+                                                )
+                                            }
+                                        }
+                                        Text(
+                                            text = "Rotation automatique",
+                                            fontFamily = BitchatFontFamily,
+                                            fontSize = 12.sp,
+                                            color = colorScheme.onSurface
+                                        )
+                                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            TorPreferenceManager.ROTATION_CHOICES.forEach { m ->
+                                                FilterChip(
+                                                    selected = rotation == m,
+                                                    onClick = { TorPreferenceManager.setRotation(context, m) },
+                                                    label = {
+                                                        Text(
+                                                            when {
+                                                                m == 0 -> "jamais"
+                                                                m < 60 -> "$m min"
+                                                                else -> "${m / 60} h"
+                                                            },
+                                                            fontFamily = BitchatFontFamily,
+                                                            fontSize = 11.sp
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
