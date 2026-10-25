@@ -854,11 +854,19 @@ private fun ChatDialogs(
 
     // About sheet
     var showDebugSheet by remember { mutableStateOf(false) }
+    var showFloodSheet by remember { mutableStateOf(false) }
     AboutSheet(
         isPresented = showAppInfo,
         onDismiss = onAppInfoDismiss,
-        onShowDebug = { showDebugSheet = true }
+        onShowDebug = { showDebugSheet = true },
+        onShowFloodSettings = { showFloodSheet = true }
     )
+    if (showFloodSheet) {
+        FloodSettingsSheet(
+            onDismiss = { showFloodSheet = false },
+            geohashViewModel = viewModel.geohashViewModel
+        )
+    }
     if (showDebugSheet) {
         com.bitchat.android.ui.debug.DebugSettingsSheet(
             isPresented = showDebugSheet,

@@ -15,6 +15,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -304,6 +305,7 @@ fun AboutSheet(
     isPresented: Boolean,
     onDismiss: () -> Unit,
     onShowDebug: (() -> Unit)? = null,
+    onShowFloodSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -517,6 +519,8 @@ fun AboutSheet(
                         val shieldBots by com.bitchat.android.nostr.BitchatShield.blockBots.collectAsState()
                         val shieldLinks by com.bitchat.android.nostr.BitchatShield.blockLinks.collectAsState()
                         val shieldBlockedCount by com.bitchat.android.nostr.BitchatShield.blockedCount.collectAsState()
+                        val floodEnabled by com.bitchat.android.nostr.BitchatShield.floodEnabled.collectAsState()
+                        val floodFlagged by com.bitchat.android.nostr.BitchatShield.flaggedCount.collectAsState()
                         var backgroundEnabled by remember { mutableStateOf(com.bitchat.android.service.MeshServicePreferences.isBackgroundEnabled(true)) }
                         var liveVoiceEnabled by remember {
                             mutableStateOf(com.bitchat.android.features.voice.LiveVoicePreferences.isEnabled(context))
@@ -644,6 +648,29 @@ fun AboutSheet(
                                         checked = shieldLinks,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockLinks(it) }
                                     )
+
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(start = 54.dp),
+                                        thickness = 1.dp,
+                                        color = colorScheme.outlineVariant
+                                    )
+
+                                    // Two-stage anti-flood (detection ported from bitchat-bot)
+                                    SettingsToggleRow(
+                                        icon = Icons.Filled.Shield,
+                                        title = "Anti-flood ($floodFlagged signalés)",
+                                        subtitle = "Masque les flooders : clés bavardes d'abord, puis verdict sur le contenu",
+                                        checked = floodEnabled,
+                                        onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setFloodEnabled(it) }
+                                    )
+                                    if (onShowFloodSettings != null) {
+                                        TextButton(
+                                            onClick = onShowFloodSettings,
+                                            modifier = Modifier.padding(start = 46.dp)
+                                        ) {
+                                            Text("Réglages anti-flood, masqués, listes ›", fontSize = 13.sp)
+                                        }
+                                    }
 
                                     HorizontalDivider(
                                         modifier = Modifier.padding(start = 54.dp),

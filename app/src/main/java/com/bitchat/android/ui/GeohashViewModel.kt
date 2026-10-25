@@ -278,6 +278,23 @@ class GeohashViewModel(
 
     fun getNostrKeyMapping(): Map<String, String> = repo.getNostrKeyMapping()
 
+    /** Blocked geohash pubkeys (hex), for list export. */
+    fun blockedPubkeys(): Set<String> = dataManager.geohashBlockedUsers
+
+    /** Display name of a known pubkey, or null. */
+    fun knownNickname(pubkey: String): String? = repo.getCachedNickname(pubkey)
+
+    /** Blocks many pubkeys at once (list import); returns how many were new. */
+    fun blockPubkeys(pubkeys: Collection<String>): Int {
+        val fresh = pubkeys.map { it.lowercase() }.filter { !dataManager.isGeohashUserBlocked(it) }
+        fresh.forEach { dataManager.addGeohashBlockedUser(it) }
+        if (fresh.isNotEmpty()) {
+            repo.refreshGeohashPeople()
+            repo.updateReactiveParticipantCounts()
+        }
+        return fresh.size
+    }
+
     fun blockUserInGeohash(targetNickname: String) {
         val pubkey = repo.findPubkeyByNickname(targetNickname)
         if (pubkey != null) {
