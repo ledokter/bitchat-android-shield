@@ -1467,6 +1467,9 @@ class ChatViewModel(
             com.bitchat.android.services.AppStateStore
                 .panicClearPrivateConversations()
 
+        // chabit private rooms: keys, identities and messages
+        try { com.bitchat.android.rooms.PrivateRooms.wipe() } catch (_: Exception) { }
+
         // Clear all UI managers
         com.bitchat.android.services.AppStateStore.clear()
         messageManager.clearAllMessages()

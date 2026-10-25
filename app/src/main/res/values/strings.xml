@@ -861,4 +861,30 @@
     <string name="flood_send_blocked">send blocked</string>
     <string name="flood_send_flagged">send flagged</string>
     <string name="flood_send_chooser">Send the list with…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">Private rooms</string>
+    <string name="rooms_back">Back</string>
+    <string name="rooms_empty">No private room yet. Create one and invite people with a link or a QR code. Messages are end-to-end encrypted and only kept on phones.</string>
+    <string name="rooms_create">Create a room</string>
+    <string name="rooms_name_hint">Room name (only visible to members)</string>
+    <string name="rooms_create_button">Create</string>
+    <string name="rooms_join_title">Join with an invitation</string>
+    <string name="rooms_link_hint">Paste the invitation link</string>
+    <string name="rooms_invalid_invite">This is not a valid chabit invitation.</string>
+    <string name="rooms_join">Join</string>
+    <string name="rooms_ignore">Ignore</string>
+    <string name="rooms_scan">Scan a QR code</string>
+    <string name="rooms_pending_title">Invitation to the room “%1$s”</string>
+    <string name="rooms_invite_warning">Anyone with this link or QR code can read and write in the room. Only share it with people you trust.</string>
+    <string name="rooms_invite">Invite</string>
+    <string name="rooms_invite_title">Invite to “%1$s”</string>
+    <string name="rooms_share_link">Share the link</string>
+    <string name="rooms_copy_link">Copy</string>
+    <string name="rooms_leave">Leave</string>
+    <string name="rooms_leave_title">Leave “%1$s”?</string>
+    <string name="rooms_leave_desc">The room key is deleted from this phone. You will need a new invitation to come back.</string>
+    <string name="rooms_no_messages">No messages yet. Messages are not stored on servers: you only see those sent while chabit is open.</string>
+    <string name="rooms_message_hint">Encrypted message</string>
+    <string name="rooms_send">Send</string>
 </resources>

@@ -52,6 +52,9 @@ class BitchatApplication : Application() {
         // Initialize theme preference
         ThemePreferenceManager.init(this)
 
+        // chabit private rooms (subscribes on the default relays, re-established on reconnect)
+        try { com.bitchat.android.rooms.PrivateRooms.init(this) } catch (_: Exception) { }
+
         // Initialize BitchatShield (anti-bot & anti-Zalgo protection) and PoW preferences
         try {
             com.bitchat.android.nostr.BitchatShield.init(this)

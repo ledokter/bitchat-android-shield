@@ -825,4 +825,30 @@
     <string name="flood_send_blocked">envoyer les bloqués</string>
     <string name="flood_send_flagged">envoyer les signalés</string>
     <string name="flood_send_chooser">Envoyer la liste avec…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">Salons privés</string>
+    <string name="rooms_back">Retour</string>
+    <string name="rooms_empty">Aucun salon privé pour l’instant. Crée-en un et invite des gens par lien ou QR code. Les messages sont chiffrés de bout en bout et gardés seulement sur les téléphones.</string>
+    <string name="rooms_create">Créer un salon</string>
+    <string name="rooms_name_hint">Nom du salon (visible des membres seulement)</string>
+    <string name="rooms_create_button">Créer</string>
+    <string name="rooms_join_title">Rejoindre avec une invitation</string>
+    <string name="rooms_link_hint">Colle le lien d’invitation</string>
+    <string name="rooms_invalid_invite">Ce n’est pas une invitation chabit valide.</string>
+    <string name="rooms_join">Rejoindre</string>
+    <string name="rooms_ignore">Ignorer</string>
+    <string name="rooms_scan">Scanner un QR code</string>
+    <string name="rooms_pending_title">Invitation au salon « %1$s »</string>
+    <string name="rooms_invite_warning">Toute personne qui a ce lien ou ce QR code peut lire et écrire dans le salon. Ne le partage qu’avec des personnes de confiance.</string>
+    <string name="rooms_invite">Inviter</string>
+    <string name="rooms_invite_title">Inviter dans « %1$s »</string>
+    <string name="rooms_share_link">Partager le lien</string>
+    <string name="rooms_copy_link">Copier</string>
+    <string name="rooms_leave">Quitter</string>
+    <string name="rooms_leave_title">Quitter « %1$s » ?</string>
+    <string name="rooms_leave_desc">La clé du salon est effacée de ce téléphone. Il faudra une nouvelle invitation pour revenir.</string>
+    <string name="rooms_no_messages">Aucun message pour l’instant. Les messages ne sont pas stockés sur des serveurs : tu ne vois que ceux envoyés pendant que chabit est ouvert.</string>
+    <string name="rooms_message_hint">Message chiffré</string>
+    <string name="rooms_send">Envoyer</string>
 </resources>

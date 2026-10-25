@@ -1,5 +1,6 @@
 package com.bitchat.android.ui
 
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
@@ -795,6 +796,19 @@ private fun MainHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
+                    // chabit private rooms
+                    HeaderIconButton(
+                        onClick = { com.bitchat.android.rooms.PrivateRooms.openSheet() },
+                        contentDescription = stringResource(R.string.rooms_title)
+                    ) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Filled.Lock,
+                            contentDescription = null,
+                            modifier = Modifier.size(HeaderIconSize),
+                            tint = colorScheme.primary
+                        )
+                    }
+
                     LocationNotesButton(
                         viewModel = viewModel,
                         onClick = onLocationNotesClick

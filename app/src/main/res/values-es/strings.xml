@@ -804,4 +804,30 @@
     <string name="flood_send_blocked">enviar bloqueados</string>
     <string name="flood_send_flagged">enviar señalados</string>
     <string name="flood_send_chooser">Enviar la lista con…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">Salas privadas</string>
+    <string name="rooms_back">Atrás</string>
+    <string name="rooms_empty">Aún no hay salas privadas. Crea una e invita con un enlace o un código QR. Los mensajes están cifrados de extremo a extremo y solo se guardan en los teléfonos.</string>
+    <string name="rooms_create">Crear una sala</string>
+    <string name="rooms_name_hint">Nombre de la sala (solo lo ven los miembros)</string>
+    <string name="rooms_create_button">Crear</string>
+    <string name="rooms_join_title">Unirse con una invitación</string>
+    <string name="rooms_link_hint">Pega el enlace de invitación</string>
+    <string name="rooms_invalid_invite">No es una invitación de chabit válida.</string>
+    <string name="rooms_join">Unirse</string>
+    <string name="rooms_ignore">Ignorar</string>
+    <string name="rooms_scan">Escanear un código QR</string>
+    <string name="rooms_pending_title">Invitación a la sala «%1$s»</string>
+    <string name="rooms_invite_warning">Cualquiera con este enlace o código QR puede leer y escribir en la sala. Compártelo solo con gente de confianza.</string>
+    <string name="rooms_invite">Invitar</string>
+    <string name="rooms_invite_title">Invitar a «%1$s»</string>
+    <string name="rooms_share_link">Compartir el enlace</string>
+    <string name="rooms_copy_link">Copiar</string>
+    <string name="rooms_leave">Salir</string>
+    <string name="rooms_leave_title">¿Salir de «%1$s»?</string>
+    <string name="rooms_leave_desc">La clave de la sala se borra de este teléfono. Necesitarás una nueva invitación para volver.</string>
+    <string name="rooms_no_messages">Aún no hay mensajes. No se guardan en servidores: solo ves los enviados mientras chabit está abierto.</string>
+    <string name="rooms_message_hint">Mensaje cifrado</string>
+    <string name="rooms_send">Enviar</string>
 </resources>

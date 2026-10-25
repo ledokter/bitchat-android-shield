@@ -805,4 +805,30 @@
     <string name="flood_send_blocked">Blockierte senden</string>
     <string name="flood_send_flagged">Markierte senden</string>
     <string name="flood_send_chooser">Liste senden mit…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">Private Räume</string>
+    <string name="rooms_back">Zurück</string>
+    <string name="rooms_empty">Noch kein privater Raum. Erstelle einen und lade Leute per Link oder QR-Code ein. Nachrichten sind Ende-zu-Ende-verschlüsselt und bleiben nur auf den Telefonen.</string>
+    <string name="rooms_create">Raum erstellen</string>
+    <string name="rooms_name_hint">Raumname (nur für Mitglieder sichtbar)</string>
+    <string name="rooms_create_button">Erstellen</string>
+    <string name="rooms_join_title">Mit einer Einladung beitreten</string>
+    <string name="rooms_link_hint">Einladungslink einfügen</string>
+    <string name="rooms_invalid_invite">Das ist keine gültige chabit-Einladung.</string>
+    <string name="rooms_join">Beitreten</string>
+    <string name="rooms_ignore">Ignorieren</string>
+    <string name="rooms_scan">QR-Code scannen</string>
+    <string name="rooms_pending_title">Einladung in den Raum „%1$s“</string>
+    <string name="rooms_invite_warning">Jeder mit diesem Link oder QR-Code kann im Raum lesen und schreiben. Teile ihn nur mit Leuten, denen du vertraust.</string>
+    <string name="rooms_invite">Einladen</string>
+    <string name="rooms_invite_title">In „%1$s“ einladen</string>
+    <string name="rooms_share_link">Link teilen</string>
+    <string name="rooms_copy_link">Kopieren</string>
+    <string name="rooms_leave">Verlassen</string>
+    <string name="rooms_leave_title">„%1$s“ verlassen?</string>
+    <string name="rooms_leave_desc">Der Raumschlüssel wird von diesem Telefon gelöscht. Zum Zurückkehren brauchst du eine neue Einladung.</string>
+    <string name="rooms_no_messages">Noch keine Nachrichten. Nachrichten werden nicht auf Servern gespeichert: Du siehst nur die, die gesendet werden, während chabit offen ist.</string>
+    <string name="rooms_message_hint">Verschlüsselte Nachricht</string>
+    <string name="rooms_send">Senden</string>
 </resources>

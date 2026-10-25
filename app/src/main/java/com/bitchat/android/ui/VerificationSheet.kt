@@ -406,7 +406,7 @@ private fun ScanTabContent(
 }
 
 @Composable
-private fun ScannerView(
+internal fun ScannerView(
     onScan: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -477,7 +477,7 @@ private fun ScannerView(
 }
 
 @Composable
-private fun QRCodeImage(data: String, size: Dp) {
+internal fun QRCodeImage(data: String, size: Dp) {
     val sizePx = with(LocalDensity.current) { size.toPx().toInt() }
     val bitmap = remember(data, sizePx) { generateQrBitmap(data, sizePx) }
     if (bitmap != null) {

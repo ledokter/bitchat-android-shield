@@ -804,4 +804,30 @@
     <string name="flood_send_blocked">ブロック済みを送る</string>
     <string name="flood_send_flagged">検出済みを送る</string>
     <string name="flood_send_chooser">リストの送信方法…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">プライベートルーム</string>
+    <string name="rooms_back">戻る</string>
+    <string name="rooms_empty">プライベートルームはまだありません。作成して、リンクや QR コードで招待しましょう。メッセージはエンドツーエンド暗号化され、端末にのみ保存されます。</string>
+    <string name="rooms_create">ルームを作成</string>
+    <string name="rooms_name_hint">ルーム名（メンバーにのみ表示）</string>
+    <string name="rooms_create_button">作成</string>
+    <string name="rooms_join_title">招待で参加</string>
+    <string name="rooms_link_hint">招待リンクを貼り付け</string>
+    <string name="rooms_invalid_invite">有効な chabit の招待ではありません。</string>
+    <string name="rooms_join">参加</string>
+    <string name="rooms_ignore">無視</string>
+    <string name="rooms_scan">QR コードを読み取る</string>
+    <string name="rooms_pending_title">ルーム「%1$s」への招待</string>
+    <string name="rooms_invite_warning">このリンクや QR コードを持つ人は誰でもルームを読み書きできます。信頼できる人とだけ共有してください。</string>
+    <string name="rooms_invite">招待</string>
+    <string name="rooms_invite_title">「%1$s」に招待</string>
+    <string name="rooms_share_link">リンクを共有</string>
+    <string name="rooms_copy_link">コピー</string>
+    <string name="rooms_leave">退出</string>
+    <string name="rooms_leave_title">「%1$s」から退出しますか？</string>
+    <string name="rooms_leave_desc">ルームの鍵はこの端末から削除されます。戻るには新しい招待が必要です。</string>
+    <string name="rooms_no_messages">まだメッセージはありません。メッセージはサーバーに保存されないため、chabit を開いている間に届いたものだけが表示されます。</string>
+    <string name="rooms_message_hint">暗号化メッセージ</string>
+    <string name="rooms_send">送信</string>
 </resources>

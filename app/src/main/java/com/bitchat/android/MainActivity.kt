@@ -898,6 +898,13 @@ class MainActivity : OrientationAwareActivity() {
 
     private fun handleVerificationIntent(intent: Intent) {
         val uri = intent.data ?: return
+        // chabit private room invitation: ask the user before joining
+        if (uri.scheme == "chabit" && uri.host == "room") {
+            com.bitchat.android.rooms.PrivateRooms.offerInvite(
+                com.bitchat.android.rooms.PrivateRoom.parseInvite(uri.toString())
+            )
+            return
+        }
         if (uri.scheme != "bitchat" || uri.host != "verify") return
 
         chatViewModel.showVerificationSheet()

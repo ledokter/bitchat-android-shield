@@ -801,4 +801,30 @@
     <string name="flood_send_blocked">отправить заблокированных</string>
     <string name="flood_send_flagged">отправить отмеченных</string>
     <string name="flood_send_chooser">Отправить список через…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">Приватные комнаты</string>
+    <string name="rooms_back">Назад</string>
+    <string name="rooms_empty">Приватных комнат пока нет. Создайте комнату и пригласите людей по ссылке или QR-коду. Сообщения шифруются сквозным шифрованием и хранятся только на телефонах.</string>
+    <string name="rooms_create">Создать комнату</string>
+    <string name="rooms_name_hint">Название (видно только участникам)</string>
+    <string name="rooms_create_button">Создать</string>
+    <string name="rooms_join_title">Войти по приглашению</string>
+    <string name="rooms_link_hint">Вставьте ссылку-приглашение</string>
+    <string name="rooms_invalid_invite">Это недействительное приглашение chabit.</string>
+    <string name="rooms_join">Войти</string>
+    <string name="rooms_ignore">Игнорировать</string>
+    <string name="rooms_scan">Сканировать QR-код</string>
+    <string name="rooms_pending_title">Приглашение в комнату «%1$s»</string>
+    <string name="rooms_invite_warning">Любой, у кого есть эта ссылка или QR-код, может читать и писать в комнате. Делитесь только с теми, кому доверяете.</string>
+    <string name="rooms_invite">Пригласить</string>
+    <string name="rooms_invite_title">Пригласить в «%1$s»</string>
+    <string name="rooms_share_link">Поделиться ссылкой</string>
+    <string name="rooms_copy_link">Копировать</string>
+    <string name="rooms_leave">Выйти</string>
+    <string name="rooms_leave_title">Выйти из «%1$s»?</string>
+    <string name="rooms_leave_desc">Ключ комнаты будет удалён с телефона. Чтобы вернуться, понадобится новое приглашение.</string>
+    <string name="rooms_no_messages">Сообщений пока нет. Они не хранятся на серверах: видны только те, что пришли, пока chabit открыт.</string>
+    <string name="rooms_message_hint">Зашифрованное сообщение</string>
+    <string name="rooms_send">Отправить</string>
 </resources>

@@ -825,4 +825,30 @@
     <string name="flood_send_blocked">发送已屏蔽</string>
     <string name="flood_send_flagged">发送已标记</string>
     <string name="flood_send_chooser">发送名单至…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">私密房间</string>
+    <string name="rooms_back">返回</string>
+    <string name="rooms_empty">还没有私密房间。创建一个，并通过链接或二维码邀请他人。消息端到端加密，只保存在手机上。</string>
+    <string name="rooms_create">创建房间</string>
+    <string name="rooms_name_hint">房间名称（仅成员可见）</string>
+    <string name="rooms_create_button">创建</string>
+    <string name="rooms_join_title">通过邀请加入</string>
+    <string name="rooms_link_hint">粘贴邀请链接</string>
+    <string name="rooms_invalid_invite">这不是有效的 chabit 邀请。</string>
+    <string name="rooms_join">加入</string>
+    <string name="rooms_ignore">忽略</string>
+    <string name="rooms_scan">扫描二维码</string>
+    <string name="rooms_pending_title">房间“%1$s”的邀请</string>
+    <string name="rooms_invite_warning">任何拿到此链接或二维码的人都能在房间里读写消息，请只分享给信任的人。</string>
+    <string name="rooms_invite">邀请</string>
+    <string name="rooms_invite_title">邀请加入“%1$s”</string>
+    <string name="rooms_share_link">分享链接</string>
+    <string name="rooms_copy_link">复制</string>
+    <string name="rooms_leave">退出</string>
+    <string name="rooms_leave_title">退出“%1$s”？</string>
+    <string name="rooms_leave_desc">房间密钥将从本机删除，需要新的邀请才能重新加入。</string>
+    <string name="rooms_no_messages">还没有消息。消息不会保存在服务器上：你只能看到 chabit 打开期间收到的消息。</string>
+    <string name="rooms_message_hint">加密消息</string>
+    <string name="rooms_send">发送</string>
 </resources>

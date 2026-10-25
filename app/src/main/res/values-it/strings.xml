@@ -831,4 +831,30 @@
     <string name="flood_send_blocked">invia i bloccati</string>
     <string name="flood_send_flagged">invia i segnalati</string>
     <string name="flood_send_chooser">Invia l’elenco con…</string>
+
+    <!-- chabit -->
+    <string name="rooms_title">Stanze private</string>
+    <string name="rooms_back">Indietro</string>
+    <string name="rooms_empty">Nessuna stanza privata per ora. Creane una e invita le persone con un link o un QR code. I messaggi sono cifrati end-to-end e restano solo sui telefoni.</string>
+    <string name="rooms_create">Crea una stanza</string>
+    <string name="rooms_name_hint">Nome della stanza (visibile solo ai membri)</string>
+    <string name="rooms_create_button">Crea</string>
+    <string name="rooms_join_title">Entra con un invito</string>
+    <string name="rooms_link_hint">Incolla il link di invito</string>
+    <string name="rooms_invalid_invite">Questo non è un invito chabit valido.</string>
+    <string name="rooms_join">Entra</string>
+    <string name="rooms_ignore">Ignora</string>
+    <string name="rooms_scan">Scansiona un QR code</string>
+    <string name="rooms_pending_title">Invito nella stanza «%1$s»</string>
+    <string name="rooms_invite_warning">Chiunque abbia questo link o QR code può leggere e scrivere nella stanza. Condividilo solo con persone fidate.</string>
+    <string name="rooms_invite">Invita</string>
+    <string name="rooms_invite_title">Invita in «%1$s»</string>
+    <string name="rooms_share_link">Condividi il link</string>
+    <string name="rooms_copy_link">Copia</string>
+    <string name="rooms_leave">Esci</string>
+    <string name="rooms_leave_title">Uscire da «%1$s»?</string>
+    <string name="rooms_leave_desc">La chiave della stanza viene cancellata da questo telefono. Per tornare servirà un nuovo invito.</string>
+    <string name="rooms_no_messages">Ancora nessun messaggio. I messaggi non sono salvati sui server: vedi solo quelli inviati mentre chabit è aperto.</string>
+    <string name="rooms_message_hint">Messaggio cifrato</string>
+    <string name="rooms_send">Invia</string>
 </resources>

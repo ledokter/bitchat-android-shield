@@ -861,6 +861,14 @@ private fun ChatDialogs(
         onShowDebug = { showDebugSheet = true },
         onShowFloodSettings = { showFloodSheet = true }
     )
+    // chabit private rooms (header lock button or a chabit://room invitation link)
+    val roomsOpen by com.bitchat.android.rooms.PrivateRooms.sheetOpen.collectAsState()
+    if (roomsOpen) {
+        PrivateRoomsSheet(
+            nickname = viewModel.nickname.collectAsState().value,
+            onDismiss = { com.bitchat.android.rooms.PrivateRooms.closeSheet() }
+        )
+    }
     if (showFloodSheet) {
         FloodSettingsSheet(
             onDismiss = { showFloodSheet = false },
