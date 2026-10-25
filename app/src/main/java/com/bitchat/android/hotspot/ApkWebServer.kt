@@ -1,14 +1,20 @@
 package com.bitchat.android.hotspot
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
+import com.bitchat.android.R
+import com.bitchat.android.nostr.BitchatShield
+import com.bitchat.android.nostr.ShieldLists
 import fi.iki.elonen.NanoHTTPD
 import java.io.File
 import java.io.FileInputStream
+import java.util.Locale
 
 /**
- * Lightweight HTTP server for serving the universal APK over Wi-Fi P2P hotspot.
- * Based on NanoHTTPD.
+ * Offline mini-site served over the sharing hotspot: download chabit and the anti-flood lists
+ * (blocked and flagged keys, in the bitchat-bot formats). The page is written in the visitor's
+ * language, taken from their browser's Accept-Language header. Based on NanoHTTPD.
  */
 class ApkWebServer(
     private val context: Context,
@@ -19,286 +25,143 @@ class ApkWebServer(
     companion object {
         private const val TAG = "ApkWebServer"
         const val DEFAULT_PORT = 9999
+
+        private val LISTS = mapOf(
+            "/lists/blocked.txt" to (ShieldLists.Kind.BLOCKED to false),
+            "/lists/blocked.json" to (ShieldLists.Kind.BLOCKED to true),
+            "/lists/flagged.txt" to (ShieldLists.Kind.FLAGGED to false),
+            "/lists/flagged.json" to (ShieldLists.Kind.FLAGGED to true)
+        )
+
+        // the chabit pixel-art cat, same grid as the launcher icon
+        private const val LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" width="120" shape-rendering="crispEdges"><path fill="#fff" d="M3 1h1v1h-1zM3 2h2v1h-2zM3 3h3v1h-3zM3 4h4v1h-4zM3 5h5v1h-5zM9 5h6v1h-6zM18 5h1v1h-1zM6 6h12v1h-12zM4 7h16v1h-16zM3 8h18v1h-18zM3 9h18v1h-18zM2 10h20v1h-20zM2 11h4v1h-4zM8 11h8v1h-8zM18 11h4v1h-4zM4 12h2v1h-2zM8 12h8v1h-8zM18 12h2v1h-2zM2 13h4v1h-4zM8 13h8v1h-8zM18 13h4v1h-4zM4 14h7v1h-7zM13 14h7v1h-7zM3 15h18v1h-18zM4 16h16v1h-16zM4 17h16v1h-16zM6 18h12v1h-12zM9 19h6v1h-6z"/><path fill="#1a1a1a" d="M3 0h1v1h-1zM15 0h3v1h-3zM19 0h3v1h-3zM2 1h1v1h-1zM4 1h1v1h-1zM14 1h1v1h-1zM18 1h1v1h-1zM22 1h1v1h-1zM2 2h1v1h-1zM5 2h1v1h-1zM14 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM6 3h1v1h-1zM14 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM7 4h1v1h-1zM9 4h6v1h-6zM22 4h1v1h-1zM2 5h1v1h-1zM8 5h1v1h-1zM22 5h1v1h-1zM3 6h3v1h-3zM18 6h4v1h-4zM3 7h1v1h-1zM20 7h1v1h-1zM2 8h1v1h-1zM21 8h1v1h-1zM2 9h1v1h-1zM21 9h1v1h-1zM1 10h1v1h-1zM22 10h1v1h-1zM1 11h1v1h-1zM6 11h2v1h-2zM16 11h2v1h-2zM22 11h1v1h-1zM0 12h4v1h-4zM6 12h2v1h-2zM16 12h2v1h-2zM20 12h4v1h-4zM1 13h1v1h-1zM6 13h2v1h-2zM16 13h2v1h-2zM22 13h1v1h-1zM0 14h4v1h-4zM20 14h4v1h-4zM2 15h1v1h-1zM21 15h1v1h-1zM1 16h3v1h-3zM20 16h3v1h-3zM3 17h1v1h-1zM20 17h1v1h-1zM4 18h2v1h-2zM18 18h2v1h-2zM6 19h3v1h-3zM15 19h3v1h-3zM9 20h6v1h-6z"/><path fill="#ffc828" d="M11 14h2v1h-2z"/><path fill="#e83c78" d="M15 1h3v1h-3zM19 1h3v1h-3zM15 2h3v1h-3zM19 2h3v1h-3zM15 3h2v1h-2zM20 3h2v1h-2zM15 4h3v1h-3zM19 4h3v1h-3zM15 5h3v1h-3zM19 5h3v1h-3z"/><path fill="#a8144f" d="M18 2h1v1h-1zM17 3h3v1h-3zM18 4h1v1h-1z"/></svg>"""
     }
 
     private val appVersion: String by lazy {
         try {
-            context.packageManager
-                .getPackageArchiveInfo(apkFile.absolutePath, 0)
-                ?.versionName
-                ?: "Unknown"
+            context.packageManager.getPackageArchiveInfo(apkFile.absolutePath, 0)?.versionName ?: "?"
         } catch (e: Exception) {
-            "Unknown"
+            "?"
         }
-    }
-
-    // Cache the HTML landing page (generated once, reused for all requests)
-    private val cachedHtml: String by lazy {
-        generateLandingPageHtml()
     }
 
     override fun serve(session: IHTTPSession): Response {
         val uri = session.uri ?: "/"
-
-        Log.d(TAG, "Request: ${session.method} $uri from ${session.remoteIpAddress}")
-
+        Log.d(TAG, "Request: ${session.method} $uri")
         return when {
-            uri == "/bitchat.apk" -> {
-                serveApk()
-            }
-            uri == "/favicon.ico" -> {
-                newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "Not found")
-            }
-            else -> {
-                serveLandingPage()
-            }
+            uri == "/chabit.apk" || uri == "/bitchat.apk" -> serveApk()
+            uri in LISTS -> serveList(uri)
+            uri == "/favicon.ico" -> newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "")
+            else -> newFixedLengthResponse(
+                Response.Status.OK,
+                "text/html; charset=utf-8",
+                landingPage(localized(session.headers["accept-language"]))
+            )
         }
     }
 
-    /**
-     * Serve the APK file.
-     */
     private fun serveApk(): Response {
         return try {
             if (!apkFile.exists()) {
-                Log.e(TAG, "APK file not found: ${apkFile.path}")
-                return newFixedLengthResponse(
-                    Response.Status.NOT_FOUND,
-                    "text/plain",
-                    "APK file not found"
-                )
+                Log.e(TAG, "APK file not found")
+                return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "APK not found")
             }
-
-            Log.d(TAG, "Serving APK: ${apkFile.name} (${apkFile.length() / 1024 / 1024}MB)")
-
-            val inputStream = FileInputStream(apkFile)
             val response = newFixedLengthResponse(
                 Response.Status.OK,
                 "application/vnd.android.package-archive",
-                inputStream,
+                FileInputStream(apkFile),
                 apkFile.length()
             )
-
-            response.addHeader("Content-Disposition", "attachment; filename=\"bitchat-${appVersion}.apk\"")
+            response.addHeader("Content-Disposition", "attachment; filename=\"chabit-$appVersion.apk\"")
             response.addHeader("Accept-Ranges", "bytes")
-
             response
         } catch (e: Exception) {
             Log.e(TAG, "Error serving APK", e)
-            newFixedLengthResponse(
-                Response.Status.INTERNAL_ERROR,
-                "text/plain",
-                "Error serving APK: ${e.message}"
-            )
+            newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain", "Error")
         }
     }
 
-    /**
-     * Serve the HTML landing page.
-     */
-    private fun serveLandingPage(): Response {
-        return newFixedLengthResponse(
+    private fun serveList(uri: String): Response {
+        val (kind, json) = LISTS.getValue(uri)
+        val keys = if (kind == ShieldLists.Kind.BLOCKED) {
+            com.bitchat.android.ui.DataManager(context).apply { loadGeohashBlockedUsers() }.geohashBlockedUsers
+        } else {
+            BitchatShield.flaggedKeys()
+        }
+        val body = ShieldLists.export(kind, keys, { null }, json)
+        val response = newFixedLengthResponse(
             Response.Status.OK,
-            "text/html",
-            cachedHtml
+            if (json) "application/json; charset=utf-8" else "text/plain; charset=utf-8",
+            body
         )
+        response.addHeader("Content-Disposition", "attachment; filename=\"${ShieldLists.fileName(kind, json)}\"")
+        return response
     }
 
-    /**
-     * Generate HTML landing page.
-     */
-    private fun generateLandingPageHtml(): String {
-        val apkSizeMb = apkFile.length() / 1024 / 1024
+    /** Resources in the visitor's language (first Accept-Language tag), falling back to the phone's. */
+    private fun localized(acceptLanguage: String?): Context {
+        val tag = acceptLanguage?.split(',')?.firstOrNull()?.substringBefore(';')?.trim()
+        if (tag.isNullOrEmpty()) return context
+        val config = Configuration(context.resources.configuration)
+        config.setLocale(Locale.forLanguageTag(tag))
+        return context.createConfigurationContext(config)
+    }
 
-        return """
-<!DOCTYPE html>
-<html lang="en">
+    private fun esc(s: String) = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;")
+
+    private fun landingPage(c: Context): String {
+        fun t(id: Int, vararg args: Any) = esc(c.getString(id, *args))
+        val sizeMb = apkFile.length() / 1024 / 1024
+        val lang = esc(c.resources.configuration.locales[0].toLanguageTag())
+        return """<!DOCTYPE html>
+<html lang="$lang">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Download BitChat</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: #333;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            color: #667eea;
-        }
-
-        .subtitle {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .info-box {
-            background: #f5f7fa;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .info-label {
-            font-size: 12px;
-            color: #888;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .info-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .download-button {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 18px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 30px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .download-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-        }
-
-        .download-button:active {
-            transform: translateY(0);
-        }
-
-        .instructions {
-            text-align: left;
-            background: #f5f7fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .instructions h3 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-
-        .instructions ol {
-            margin-left: 20px;
-        }
-
-        .instructions li {
-            margin-bottom: 10px;
-            line-height: 1.6;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #856404;
-            text-align: left;
-        }
-
-        .warning strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chabit</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Roboto,Arial,sans-serif;background:#ffe4ef;color:#1a1a1a;padding:16px;display:flex;justify-content:center}
+main{background:#fff;border-radius:20px;padding:28px 20px;max-width:480px;width:100%;box-shadow:0 8px 30px rgba(194,24,91,.15)}
+.logo{text-align:center;margin-bottom:8px}
+h1{text-align:center;font-size:30px;color:#c2185b}
+.sub{text-align:center;color:#555;margin:4px 0 22px}
+a.btn{display:block;text-align:center;background:#c2185b;color:#fff;text-decoration:none;font-weight:600;font-size:18px;padding:16px;border-radius:14px}
+.meta{text-align:center;color:#666;font-size:13px;margin:8px 0 22px}
+h2{font-size:17px;color:#c2185b;margin:22px 0 10px}
+ol{padding-left:22px;line-height:1.6;font-size:15px}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lists a{display:block;text-align:center;border:2px solid #c2185b;color:#c2185b;text-decoration:none;padding:10px 6px;border-radius:12px;font-size:14px}
+p.note{font-size:13px;color:#555;margin-top:10px;line-height:1.5}
+footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
+</style>
 </head>
-<body>
-    <div class="container">
-        <div class="logo">🔒</div>
-        <h1>BitChat</h1>
-        <p class="subtitle">Secure Mesh Messaging</p>
-
-        <div class="info-grid">
-            <div class="info-box">
-                <div class="info-label">Version</div>
-                <div class="info-value">$appVersion</div>
-            </div>
-            <div class="info-box">
-                <div class="info-label">Size</div>
-                <div class="info-value">${apkSizeMb} MB</div>
-            </div>
-        </div>
-
-        <a href="/bitchat.apk" class="download-button">
-            📥 Download BitChat
-        </a>
-
-        <div class="instructions">
-            <h3>📱 Installation Instructions</h3>
-            <ol>
-                <li>Tap the download button above</li>
-                <li>Wait for the download to complete</li>
-                <li>Open the downloaded APK file</li>
-                <li>If prompted, enable "Install from unknown sources" for your browser</li>
-                <li>Follow the installation prompts</li>
-            </ol>
-        </div>
-
-        <div class="warning">
-            <strong>⚠️ Note:</strong>
-            If you already have BitChat installed, you may need to uninstall it first before installing this version. Make sure to backup your data if needed.
-        </div>
-    </div>
-</body>
-</html>
-        """.trimIndent()
+<body><main>
+<div class="logo">$LOGO_SVG</div>
+<h1>chabit</h1>
+<p class="sub">${t(R.string.about_tagline)}</p>
+<a class="btn" href="/chabit.apk">${t(R.string.web_download)}</a>
+<p class="meta">${t(R.string.web_version_size, esc(appVersion), sizeMb)}</p>
+<h2>${t(R.string.web_install_title)}</h2>
+<ol>
+<li>${t(R.string.web_install_step1)}</li>
+<li>${t(R.string.web_install_step2)}</li>
+<li>${t(R.string.web_install_step3)}</li>
+<li>${t(R.string.web_install_step4)}</li>
+</ol>
+<h2>${t(R.string.web_lists_title)}</h2>
+<div class="lists">
+<a href="/lists/blocked.txt">${t(R.string.flood_blocked_file, "txt")}</a>
+<a href="/lists/blocked.json">${t(R.string.flood_blocked_file, "json")}</a>
+<a href="/lists/flagged.txt">${t(R.string.flood_flagged_file, "txt")}</a>
+<a href="/lists/flagged.json">${t(R.string.flood_flagged_file, "json")}</a>
+</div>
+<p class="note">${t(R.string.web_lists_import)}</p>
+<footer>${t(R.string.web_footer)}</footer>
+</main></body>
+</html>"""
     }
 
-    /**
-     * Start the server.
-     */
     fun startServer() {
         try {
             start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
@@ -309,9 +172,6 @@ class ApkWebServer(
         }
     }
 
-    /**
-     * Stop the server.
-     */
     fun stopServer() {
         try {
             stop()

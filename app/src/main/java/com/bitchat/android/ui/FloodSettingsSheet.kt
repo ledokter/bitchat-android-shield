@@ -117,6 +117,36 @@ fun FloodSettingsSheet(
         exportLauncher.launch(ShieldLists.fileName(kind, json))
     }
 
+    // Direct send (Bluetooth, Quick Share, messaging…) through the Android share sheet
+    fun shareDirect(kind: ShieldLists.Kind) {
+        val keys = if (kind == ShieldLists.Kind.BLOCKED) geohashViewModel.blockedPubkeys() else BitchatShield.flaggedKeys()
+        val body = ShieldLists.export(kind, keys, { geohashViewModel.knownNickname(it) }, json = false)
+        scope.launch {
+            val uri = withContext(Dispatchers.IO) {
+                runCatching {
+                    val dir = java.io.File(context.cacheDir, "lists").apply { mkdirs() }
+                    val file = java.io.File(dir, ShieldLists.fileName(kind, json = false))
+                    file.writeText(body)
+                    androidx.core.content.FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
+                }.getOrNull()
+            }
+            if (uri == null) {
+                Toast.makeText(context, context.getString(R.string.flood_export_failed), Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+            val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(android.content.Intent.EXTRA_STREAM, uri)
+                clipData = android.content.ClipData.newRawUri("", uri)
+                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            context.startActivity(
+                android.content.Intent.createChooser(send, context.getString(R.string.flood_send_chooser))
+                    .addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            )
+        }
+    }
+
     var importTarget by remember { mutableStateOf(ShieldLists.Kind.BLOCKED) }
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
@@ -251,6 +281,11 @@ fun FloodSettingsSheet(
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             SmallButton(stringResource(R.string.flood_flagged_file, "txt")) { export(ShieldLists.Kind.FLAGGED, false) }
                             SmallButton(stringResource(R.string.flood_flagged_file, "json")) { export(ShieldLists.Kind.FLAGGED, true) }
+                        }
+                        Hint(stringResource(R.string.flood_send_direct))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            SmallButton(stringResource(R.string.flood_send_blocked)) { shareDirect(ShieldLists.Kind.BLOCKED) }
+                            SmallButton(stringResource(R.string.flood_send_flagged)) { shareDirect(ShieldLists.Kind.FLAGGED) }
                         }
                         Hint(stringResource(R.string.flood_import_hint))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
