@@ -796,7 +796,7 @@ private fun MainHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
-                    // chabit private rooms
+                    // chatbit private rooms
                     HeaderIconButton(
                         onClick = { com.bitchat.android.rooms.PrivateRooms.openSheet() },
                         contentDescription = stringResource(R.string.rooms_title)

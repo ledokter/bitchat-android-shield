@@ -28,9 +28,9 @@ import org.json.JSONObject
  */
 object PrivateRooms {
     private const val TAG = "PrivateRooms"
-    private const val PREFS = "chabit_private_rooms"
+    private const val PREFS = "chatbit_private_rooms"
     private const val KEY_ROOMS = "rooms"
-    private const val SUBSCRIPTION_ID = "chabit-private-rooms"
+    private const val SUBSCRIPTION_ID = "chatbit-private-rooms"
     private const val MAX_MESSAGES = 500
     private const val MAX_TEXT = 2000
 
@@ -55,7 +55,7 @@ object PrivateRooms {
     private val _messages = MutableStateFlow<Map<String, List<Message>>>(emptyMap())
     val messages: StateFlow<Map<String, List<Message>>> = _messages.asStateFlow()
 
-    /** Invite opened from a chabit://room link, waiting for the user to confirm. */
+    /** Invite opened from a chatbit://room link, waiting for the user to confirm. */
     private val _pendingInvite = MutableStateFlow<PrivateRoom.Invite?>(null)
     val pendingInvite: StateFlow<PrivateRoom.Invite?> = _pendingInvite.asStateFlow()
 

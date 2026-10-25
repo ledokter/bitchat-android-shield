@@ -14,17 +14,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.bitchat.android.R
 
-/** The chabit pixel-art cat; its bow follows the chosen accent colour. */
+/** The chatbit pixel-art cat; its bow follows the chosen accent colour. */
 @Composable
-fun ChabitLogo(height: Dp = 64.dp, modifier: Modifier = Modifier) {
+fun ChatbitLogo(height: Dp = 64.dp, modifier: Modifier = Modifier) {
     Box(modifier.height(height).aspectRatio(24f / 21f)) {
-        Image(painterResource(R.drawable.chabit_cat), contentDescription = null, modifier = Modifier.fillMaxSize())
+        Image(painterResource(R.drawable.chatbit_cat), contentDescription = null, modifier = Modifier.fillMaxSize())
         Image(
-            painterResource(R.drawable.chabit_bow),
+            painterResource(R.drawable.chatbit_bow),
             contentDescription = null,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             modifier = Modifier.fillMaxSize()
         )
-        Image(painterResource(R.drawable.chabit_bow_knot), contentDescription = null, modifier = Modifier.fillMaxSize())
+        Image(painterResource(R.drawable.chatbit_bow_knot), contentDescription = null, modifier = Modifier.fillMaxSize())
     }
 }

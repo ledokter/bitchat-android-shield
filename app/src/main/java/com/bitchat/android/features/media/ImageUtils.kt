@@ -79,7 +79,7 @@ object ImageUtils {
     }
 
     /**
-     * chabit: removes identifying metadata (GPS position, dates, device, serial numbers, comments)
+     * chatbit: removes identifying metadata (GPS position, dates, device, serial numbers, comments)
      * from a JPEG/PNG/WebP file in place, keeping only the orientation. Used for images sent as files,
      * which skip the re-encoding that already drops EXIF for photos.
      */

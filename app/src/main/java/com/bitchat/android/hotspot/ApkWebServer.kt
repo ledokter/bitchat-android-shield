@@ -12,7 +12,7 @@ import java.io.FileInputStream
 import java.util.Locale
 
 /**
- * Offline mini-site served over the sharing hotspot: download chabit and the anti-flood lists
+ * Offline mini-site served over the sharing hotspot: download chatbit and the anti-flood lists
  * (blocked and flagged keys, in the bitchat-bot formats). The page is written in the visitor's
  * language, taken from their browser's Accept-Language header. Based on NanoHTTPD.
  */
@@ -33,7 +33,7 @@ class ApkWebServer(
             "/lists/flagged.json" to (ShieldLists.Kind.FLAGGED to true)
         )
 
-        // the chabit pixel-art cat, same grid as the launcher icon
+        // the chatbit pixel-art cat, same grid as the launcher icon
         private const val LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 21" width="120" shape-rendering="crispEdges"><path fill="#fff" d="M3 1h1v1h-1zM3 2h2v1h-2zM3 3h3v1h-3zM3 4h4v1h-4zM3 5h5v1h-5zM9 5h6v1h-6zM18 5h1v1h-1zM6 6h12v1h-12zM4 7h16v1h-16zM3 8h18v1h-18zM3 9h18v1h-18zM2 10h20v1h-20zM2 11h4v1h-4zM8 11h8v1h-8zM18 11h4v1h-4zM4 12h2v1h-2zM8 12h8v1h-8zM18 12h2v1h-2zM2 13h4v1h-4zM8 13h8v1h-8zM18 13h4v1h-4zM4 14h7v1h-7zM13 14h7v1h-7zM3 15h18v1h-18zM4 16h16v1h-16zM4 17h16v1h-16zM6 18h12v1h-12zM9 19h6v1h-6z"/><path fill="#1a1a1a" d="M3 0h1v1h-1zM15 0h3v1h-3zM19 0h3v1h-3zM2 1h1v1h-1zM4 1h1v1h-1zM14 1h1v1h-1zM18 1h1v1h-1zM22 1h1v1h-1zM2 2h1v1h-1zM5 2h1v1h-1zM14 2h1v1h-1zM22 2h1v1h-1zM2 3h1v1h-1zM6 3h1v1h-1zM14 3h1v1h-1zM22 3h1v1h-1zM2 4h1v1h-1zM7 4h1v1h-1zM9 4h6v1h-6zM22 4h1v1h-1zM2 5h1v1h-1zM8 5h1v1h-1zM22 5h1v1h-1zM3 6h3v1h-3zM18 6h4v1h-4zM3 7h1v1h-1zM20 7h1v1h-1zM2 8h1v1h-1zM21 8h1v1h-1zM2 9h1v1h-1zM21 9h1v1h-1zM1 10h1v1h-1zM22 10h1v1h-1zM1 11h1v1h-1zM6 11h2v1h-2zM16 11h2v1h-2zM22 11h1v1h-1zM0 12h4v1h-4zM6 12h2v1h-2zM16 12h2v1h-2zM20 12h4v1h-4zM1 13h1v1h-1zM6 13h2v1h-2zM16 13h2v1h-2zM22 13h1v1h-1zM0 14h4v1h-4zM20 14h4v1h-4zM2 15h1v1h-1zM21 15h1v1h-1zM1 16h3v1h-3zM20 16h3v1h-3zM3 17h1v1h-1zM20 17h1v1h-1zM4 18h2v1h-2zM18 18h2v1h-2zM6 19h3v1h-3zM15 19h3v1h-3zM9 20h6v1h-6z"/><path fill="#ffc828" d="M11 14h2v1h-2z"/><path fill="#e83c78" d="M15 1h3v1h-3zM19 1h3v1h-3zM15 2h3v1h-3zM19 2h3v1h-3zM15 3h2v1h-2zM20 3h2v1h-2zM15 4h3v1h-3zM19 4h3v1h-3zM15 5h3v1h-3zM19 5h3v1h-3z"/><path fill="#a8144f" d="M18 2h1v1h-1zM17 3h3v1h-3zM18 4h1v1h-1z"/></svg>"""
     }
 
@@ -49,7 +49,7 @@ class ApkWebServer(
         val uri = session.uri ?: "/"
         Log.d(TAG, "Request: ${session.method} $uri")
         return when {
-            uri == "/chabit.apk" || uri == "/bitchat.apk" -> serveApk()
+            uri == "/chatbit.apk" || uri == "/bitchat.apk" -> serveApk()
             uri in LISTS -> serveList(uri)
             uri == "/favicon.ico" -> newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "")
             else -> newFixedLengthResponse(
@@ -72,7 +72,7 @@ class ApkWebServer(
                 FileInputStream(apkFile),
                 apkFile.length()
             )
-            response.addHeader("Content-Disposition", "attachment; filename=\"chabit-$appVersion.apk\"")
+            response.addHeader("Content-Disposition", "attachment; filename=\"chatbit-$appVersion.apk\"")
             response.addHeader("Accept-Ranges", "bytes")
             response
         } catch (e: Exception) {
@@ -118,7 +118,7 @@ class ApkWebServer(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>chabit</title>
+<title>chatbit</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,-apple-system,Roboto,Arial,sans-serif;background:#ffe4ef;color:#1a1a1a;padding:16px;display:flex;justify-content:center}
@@ -138,9 +138,9 @@ footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
 </head>
 <body><main>
 <div class="logo">$LOGO_SVG</div>
-<h1>chabit</h1>
+<h1>chatbit</h1>
 <p class="sub">${t(R.string.about_tagline)}</p>
-<a class="btn" href="/chabit.apk">${t(R.string.web_download)}</a>
+<a class="btn" href="/chatbit.apk">${t(R.string.web_download)}</a>
 <p class="meta">${t(R.string.web_version_size, esc(appVersion), sizeMb)}</p>
 <h2>${t(R.string.web_install_title)}</h2>
 <ol>

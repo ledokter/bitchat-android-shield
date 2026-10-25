@@ -628,7 +628,7 @@ object AppStateStore {
     }
 
     /**
-     * chabit ephemeral messages: drops messages older than [cutoffMs], on disk (private
+     * chatbit ephemeral messages: drops messages older than [cutoffMs], on disk (private
      * conversations) and in memory (public, channel and private lists). Returns how many were stored.
      */
     suspend fun purgeMessagesOlderThan(cutoffMs: Long): Int {

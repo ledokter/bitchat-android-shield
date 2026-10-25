@@ -74,7 +74,7 @@ import kotlin.math.max
  * channel (the result is returned like [GeohashPickerActivity]).
  *
  * Relay data is only requested while this screen is open: the last 15 minutes of public channel
- * events on the relays chabit is already connected to, and recent geocaches.
+ * events on the relays chatbit is already connected to, and recent geocaches.
  */
 class WorldMapActivity : ComponentActivity() {
 
@@ -112,7 +112,7 @@ class WorldMapActivity : ComponentActivity() {
                 var spin by remember { mutableStateOf(true) }
                 var streets by remember { mutableStateOf(false) }
                 var selected by remember { mutableStateOf<GlobeMarker?>(null) }
-                val tiles = remember { GlobeTileLayer("chabit/2.1 (offline-first messenger; https://github.com/ledokter/bitchat-android-shield)") }
+                val tiles = remember { GlobeTileLayer("chatbit/2.1 (offline-first messenger; https://github.com/ledokter/chatbit)") }
                 DisposableEffect(Unit) { onDispose { tiles.close() } }
 
                 val counts by activity.collectAsState()

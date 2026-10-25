@@ -165,7 +165,7 @@ class MainActivity : OrientationAwareActivity() {
                         .padding(innerPadding)
                     )
                 }
-                // chabit app lock: opaque cover until the user authenticates
+                // chatbit app lock: opaque cover until the user authenticates
                 val locked by com.bitchat.android.security.AppLock.locked.collectAsState()
                 if (locked) {
                     com.bitchat.android.ui.AppLockScreen(
@@ -175,7 +175,7 @@ class MainActivity : OrientationAwareActivity() {
             }
         }
 
-        // chabit: wipe everything when the app was not opened for longer than the auto-wipe delay
+        // chatbit: wipe everything when the app was not opened for longer than the auto-wipe delay
         if (com.bitchat.android.security.SecurityPreferences.recordOpenAndCheckWipe()) {
             Log.w("MainActivity", "Auto-wipe: app unused for too long")
             chatViewModel.panicClearAllData()
@@ -898,8 +898,8 @@ class MainActivity : OrientationAwareActivity() {
 
     private fun handleVerificationIntent(intent: Intent) {
         val uri = intent.data ?: return
-        // chabit private room invitation: ask the user before joining
-        if (uri.scheme == "chabit" && uri.host == "room") {
+        // chatbit private room invitation: ask the user before joining
+        if (uri.scheme == "chatbit" && uri.host == "room") {
             com.bitchat.android.rooms.PrivateRooms.offerInvite(
                 com.bitchat.android.rooms.PrivateRoom.parseInvite(uri.toString())
             )

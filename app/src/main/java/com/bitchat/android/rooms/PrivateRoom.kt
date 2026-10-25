@@ -9,7 +9,7 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * A chabit private room: a random 16-byte ID and a 32-byte AES key shared by invitation.
+ * A chatbit private room: a random 16-byte ID and a 32-byte AES key shared by invitation.
  *
  * Messages travel as ephemeral Nostr events tagged ["h", [tag]] where the tag is derived from the
  * ID (relays never see the ID, the key or the room name). The content is AES-256-GCM over a small
@@ -25,7 +25,7 @@ data class PrivateRoom(
 ) {
     val idHex: String get() = id.toHex()
 
-    /** Public routing tag: hex(SHA-256("chabit-room-v1" || id))[0..32]. */
+    /** Public routing tag: hex(SHA-256("chatbit-room-v1" || id))[0..32]. */
     val tag: String get() = tagFor(id)
 
     fun inviteLink(): String = INVITE_PREFIX + encodeInvite(id, key, name)
@@ -57,7 +57,7 @@ data class PrivateRoom(
     data class Invite(val id: ByteArray, val key: ByteArray, val name: String)
 
     companion object {
-        const val INVITE_PREFIX = "chabit://room#"
+        const val INVITE_PREFIX = "chatbit://room#"
         const val MAX_NAME_BYTES = 64
         private const val VERSION: Byte = 1
         private const val NONCE_BYTES = 12
@@ -74,7 +74,7 @@ data class PrivateRoom(
             )
 
         fun tagFor(id: ByteArray): String =
-            MessageDigest.getInstance("SHA-256").digest("chabit-room-v1".toByteArray() + id).toHex().take(32)
+            MessageDigest.getInstance("SHA-256").digest("chatbit-room-v1".toByteArray() + id).toHex().take(32)
 
         fun cleanName(name: String): String {
             var n = name.trim().replace(Regex("\\s+"), " ")

@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * chabit privacy and safety settings. Every protection is ON by default ("optimised defaults");
+ * chatbit privacy and safety settings. Every protection is ON by default ("optimised defaults");
  * the numeric tunables are only shown in advanced mode.
  */
 object SecurityPreferences {
-    private const val PREFS_NAME = "chabit_security"
+    private const val PREFS_NAME = "chatbit_security"
 
     private const val KEY_ADVANCED = "advanced_mode"
     private const val KEY_KILL_SWITCH = "tor_kill_switch"

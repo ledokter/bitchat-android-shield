@@ -29,7 +29,7 @@ import com.bitchat.android.security.SecurityPreferences
 import com.bitchat.android.ui.theme.BitchatFontFamily
 
 /**
- * chabit protections. By default a one-line summary (everything is already set to the safest
+ * chatbit protections. By default a one-line summary (everything is already set to the safest
  * value); in advanced mode every switch and delay can be changed.
  */
 @OptIn(ExperimentalLayoutApi::class)

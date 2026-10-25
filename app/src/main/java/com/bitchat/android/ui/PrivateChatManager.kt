@@ -111,7 +111,7 @@ class PrivateChatManager(
         if (isPeerBlocked(peerID)) {
             val systemMessage = BitchatMessage(
                 sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_cannot_send_blocked, recipientNickname),
+                content = com.bitchat.android.util.AppStrings.get(R.string.sys_cannot_send_blocked, recipientNickname ?: ""),
                 timestamp = Date(),
                 isRelay = false
             )
@@ -154,7 +154,7 @@ class PrivateChatManager(
         if (isPeerBlocked(peerID)) {
             val systemMessage = BitchatMessage(
                 sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_cannot_send_blocked, recipientNickname),
+                content = com.bitchat.android.util.AppStrings.get(R.string.sys_cannot_send_blocked, recipientNickname ?: ""),
                 timestamp = Date(),
                 isRelay = false
             )

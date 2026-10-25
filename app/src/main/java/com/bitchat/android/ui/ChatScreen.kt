@@ -861,7 +861,7 @@ private fun ChatDialogs(
         onShowDebug = { showDebugSheet = true },
         onShowFloodSettings = { showFloodSheet = true }
     )
-    // chabit private rooms (header lock button or a chabit://room invitation link)
+    // chatbit private rooms (header lock button or a chatbit://room invitation link)
     val roomsOpen by com.bitchat.android.rooms.PrivateRooms.sheetOpen.collectAsState()
     if (roomsOpen) {
         PrivateRoomsSheet(

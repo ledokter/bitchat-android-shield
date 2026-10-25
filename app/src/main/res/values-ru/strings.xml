@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">chabit</string>
+    <string name="app_name">chatbit</string>
     <string name="permission_bluetooth_rationale">Требуется разрешение Bluetooth для общения p2p без интернета.</string>
     <string name="permission_location_rationale">Требуется доступ к геопозиции для поиска ближайших устройств по Bluetooth.</string>
     <string name="permission_notification_rationale">Требуется доступ к уведомлениям для оповещения о новых сообщениях.</string>
@@ -381,7 +381,7 @@
     <string name="about_system_default">Системный язык</string>
     <string name="about_select_language">Выбрать язык</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="cashu_pay_via">оплатить через Cashu</string>
     <string name="cashu_payment_description">Платёж Cashu</string>
     <string name="cashu_copy_token">Скопировать токен</string>
@@ -425,7 +425,7 @@
     <string name="notification_reply">Ответить</string>
     <string name="notification_mark_read">Прочитано</string>
     <string name="notification_private_message">Новое личное сообщение</string>
-    <string name="notification_content_hidden">Откройте chabit, чтобы прочитать</string>
+    <string name="notification_content_hidden">Откройте chatbit, чтобы прочитать</string>
     <string name="notification_channel_direct_messages">Личные сообщения</string>
     <string name="notification_channel_direct_messages_description">Уведомления о личных сообщениях от других пользователей</string>
     <string name="notification_channel_geohash">Геочаты</string>
@@ -468,13 +468,13 @@
     <string name="chat_ui_matrix">Matrix</string>
     <string name="chat_ui_bubbles">Пузыри</string>
     <string name="cd_privacy_protected">Конфиденциальность защищена</string>
-    <string name="share_bitchat_title">Поделиться chabit</string>
+    <string name="share_bitchat_title">Поделиться chatbit</string>
     <string name="share_bitchat_subtitle">Поделиться установочным файлом для распространения без сети</string>
-    <string name="share_apk_title">Поделиться приложением chabit</string>
-    <string name="share_apk_explanation">Будут отправлены установочные файлы chabit, чтобы другие могли установить приложение без интернета. Отлично для расширения mesh-сети!</string>
-    <string name="share_apk_receiver_instructions">Получателю нужно:\n• Разрешить «Установку из неизвестных источников» в настройках Android\n• Сначала удалить chabit, если он уже установлен (подписи различаются)</string>
+    <string name="share_apk_title">Поделиться приложением chatbit</string>
+    <string name="share_apk_explanation">Будут отправлены установочные файлы chatbit, чтобы другие могли установить приложение без интернета. Отлично для расширения mesh-сети!</string>
+    <string name="share_apk_receiver_instructions">Получателю нужно:\n• Разрешить «Установку из неизвестных источников» в настройках Android\n• Сначала удалить chatbit, если он уже установлен (подписи различаются)</string>
     <string name="share_apk_confirm">Поделиться</string>
-    <string name="share_apk_chooser_title">Поделиться chabit через…</string>
+    <string name="share_apk_chooser_title">Поделиться chatbit через…</string>
     <string name="share_apk_error">Не удалось подготовить приложение к отправке. Попробуйте ещё раз.</string>
     <string name="prepare_apk_title">Подготовить приложение к отправке</string>
     <string name="prepare_apk_ready_title">Приложение готово к отправке без сети</string>
@@ -524,10 +524,10 @@
     <string name="prepare_apk_error_resume_rejected">%1$s отклонил сохранённую позицию загрузки. Следующая попытка начнётся заново.</string>
     <string name="prepare_apk_error_incomplete">Загрузка с %1$s прервалась раньше времени. Её можно продолжить.</string>
     <string name="prepare_apk_error_invalid_resume">%1$s вернул неверный ответ на продолжение. Следующая попытка начнётся заново.</string>
-    <string name="prepare_apk_error_untrusted_key">APK с %1$s не подписан доверенным ключом релизов chabit.</string>
+    <string name="prepare_apk_error_untrusted_key">APK с %1$s не подписан доверенным ключом релизов chatbit.</string>
     <string name="prepare_apk_error_not_universal">%1$s вернул APK для конкретной архитектуры, а не нужный универсальный APK.</string>
     <string name="prepare_apk_error_apk_unreadable">Не удалось прочитать скачанный APK.</string>
-    <string name="prepare_apk_error_not_bitchat">Скачанный файл не является APK chabit.</string>
+    <string name="prepare_apk_error_not_bitchat">Скачанный файл не является APK chatbit.</string>
     <string name="prepare_apk_error_no_version">В скачанном APK нет информации о версии.</string>
     <string name="prepare_apk_error_source_failed">Ошибка загрузки с %1$s.</string>
     <string name="prepare_apk_error_all_sources">Все настроенные источники APK не сработали.</string>
@@ -546,11 +546,11 @@
     <string name="hotspot_disconnect_message">Запуск точки доступа разорвёт текущее подключение Wi-Fi Direct. Это может прервать Cast, Android Auto, Quick Share или другое ближнее подключение.</string>
     <string name="hotspot_disconnect_confirm">Разорвать и запустить</string>
     <string name="install_bitchat_title">Установить полученный APK</string>
-    <string name="install_bitchat_subtitle">Установить chabit из полученных файлов</string>
-    <string name="install_apk_dialog_title">Установить обновление chabit</string>
-    <string name="install_apk_dialog_message">Установить chabit из полученных APK? Так приложение можно распространять без сети в mesh-сетях.</string>
+    <string name="install_bitchat_subtitle">Установить chatbit из полученных файлов</string>
+    <string name="install_apk_dialog_title">Установить обновление chatbit</string>
+    <string name="install_apk_dialog_message">Установить chatbit из полученных APK? Так приложение можно распространять без сети в mesh-сетях.</string>
     <string name="install_apk_permission_title">Нужно разрешение</string>
-    <string name="install_apk_permission_message">chabit нужно разрешение на установку пакетов для самораспространения. Включите «Установку неизвестных приложений» на следующем экране.</string>
+    <string name="install_apk_permission_message">chatbit нужно разрешение на установку пакетов для самораспространения. Включите «Установку неизвестных приложений» на следующем экране.</string>
     <string name="install_apk_confirm">Установить</string>
     <string name="install_apk_grant_permission">Дать разрешение</string>
     <string name="install_apk_select_files">Выбрать файлы APK</string>
@@ -559,7 +559,7 @@
     <string name="cd_direct_wifi_aware">Напрямую по Wi-Fi Aware</string>
     <string name="cd_direct_bluetooth">Напрямую по Bluetooth</string>
     <string name="cd_routed_mesh">Через mesh</string>
-    <string name="notification_action_quit_bitchat">Выйти из chabit</string>
+    <string name="notification_action_quit_bitchat">Выйти из chatbit</string>
     <string name="about_background_title">Работа в фоне</string>
     <string name="about_background_desc">Держать mesh активной, когда приложение закрыто (служба переднего плана)</string>
     <string name="location_bluetooth_wifi_subtitle">Bluetooth • Wi-Fi • %1$s</string>
@@ -583,9 +583,9 @@
     <string name="debug_rssi_fmt">RSSI: %1$s</string>
     <string name="background_location_required_title">Рекомендуется доступ к местоположению в фоне</string>
     <string name="background_location_required_subtitle">Необязательно, повышает надёжность mesh</string>
-    <string name="background_location_explanation">Android рекомендует доступ к местоположению в фоне, чтобы chabit мог искать устройства рядом, пока приложение закрыто. Так mesh продолжает работать после перезагрузки.</string>
+    <string name="background_location_explanation">Android рекомендует доступ к местоположению в фоне, чтобы chatbit мог искать устройства рядом, пока приложение закрыто. Так mesh продолжает работать после перезагрузки.</string>
     <string name="background_location_settings_tip">Когда откроются настройки, выберите «Разрешить всегда».</string>
-    <string name="background_location_needs_for">chabit использует местоположение в фоне, чтобы:</string>
+    <string name="background_location_needs_for">chatbit использует местоположение в фоне, чтобы:</string>
     <string name="background_location_needs_bullets">- Искать устройства рядом, пока приложение закрыто\n- Переподключаться после перезагрузки\n- Поддерживать mesh в фоне</string>
     <string name="background_location_privacy_note">Мы НИКОГДА не собираем и не храним ваше местоположение. Ваша конфиденциальность защищена.</string>
     <string name="grant_background_location">Разрешить местоположение в фоне</string>
@@ -676,12 +676,12 @@
     <string name="flood_import_block">… и заблокировать</string>
     <string name="flood_import_flag">… как спамеров</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="security_section">Безопасность</string>
     <string name="security_summary">Включено защит: %1$d из %2$d</string>
     <string name="security_summary_hint">Настройки оптимизированы для конфиденциальности. Включите расширенный режим, чтобы их изменить.</string>
     <string name="sec_lock_title">Блокировка приложения</string>
-    <string name="sec_lock_desc">Отпечаток, лицо или код блокировки экрана при открытии chabit</string>
+    <string name="sec_lock_desc">Отпечаток, лицо или код блокировки экрана при открытии chatbit</string>
     <string name="sec_lock_unavailable">Установите блокировку экрана на телефоне, чтобы включить</string>
     <string name="sec_screenshots_title">Запретить снимки экрана</string>
     <string name="sec_screenshots_desc">Никаких снимков, записи экрана и превью в недавних приложениях</string>
@@ -690,16 +690,16 @@
     <string name="sec_presence_title">Сообщать о моём присутствии</string>
     <string name="sec_presence_desc">Выкл.: вас не видно в ближайших каналах, пока вы не напишете</string>
     <string name="sec_clipboard_title">Очищать буфер обмена</string>
-    <string name="sec_clipboard_desc">Скопированное из chabit стирается через 60 секунд</string>
+    <string name="sec_clipboard_desc">Скопированное из chatbit стирается через 60 секунд</string>
     <string name="sec_ephemeral_title">Удалять сообщения с телефона через</string>
     <string name="sec_keep_forever">хранить</string>
-    <string name="sec_autowipe_title">Стереть всё, если chabit не открывали</string>
+    <string name="sec_autowipe_title">Стереть всё, если chatbit не открывали</string>
     <string name="sec_autowipe_desc">Защищает данные, если телефон потерян или изъят</string>
     <string name="duration_days">%1$d дн.</string>
     <string name="advanced_mode_title">Расширенный режим</string>
     <string name="advanced_mode_desc">Показать все технические настройки (PoW, фильтры, Tor, отладка)</string>
-    <string name="app_lock_prompt_title">Разблокировать chabit</string>
-    <string name="app_lock_locked">chabit заблокирован</string>
+    <string name="app_lock_prompt_title">Разблокировать chatbit</string>
+    <string name="app_lock_locked">chatbit заблокирован</string>
     <string name="app_lock_unlock">Разблокировать</string>
     <string name="cmd_desc_block">заблокировать или показать заблокированных</string>
     <string name="cmd_desc_channels">показать все найденные каналы</string>
@@ -753,17 +753,17 @@
     <string name="notes_enable_location">Включить местоположение</string>
     <string name="cd_cancel_recording">Отменить запись</string>
 
-    <!-- chabit -->
-    <string name="hs_title">Поделиться chabit</string>
+    <!-- chatbit -->
+    <string name="hs_title">Поделиться chatbit</string>
     <string name="hs_intro_title">Передача приложения без интернета</string>
     <string name="hs_how_title">Как это работает:</string>
     <string name="hs_how_1">1. Ваш телефон создаёт точку доступа Wi-Fi</string>
     <string name="hs_how_2">2. Другие подключаются к ней</string>
     <string name="hs_how_3">3. Они сканируют QR-код или вводят адрес</string>
-    <string name="hs_how_4">4. Они скачивают chabit и списки блокировки без интернета</string>
-    <string name="hs_perm_nearby_local">chabit нужны разрешения «устройства поблизости» и «локальная сеть», чтобы создать точку доступа и раздать приложение подключённым телефонам.</string>
-    <string name="hs_perm_nearby">chabit нужно разрешение «устройства поблизости», чтобы создать точку доступа для передачи приложения без интернета.</string>
-    <string name="hs_perm_location">chabit нужно разрешение на местоположение для точки доступа. Android требует его для Wi-Fi, но местоположение не собирается.</string>
+    <string name="hs_how_4">4. Они скачивают chatbit и списки блокировки без интернета</string>
+    <string name="hs_perm_nearby_local">chatbit нужны разрешения «устройства поблизости» и «локальная сеть», чтобы создать точку доступа и раздать приложение подключённым телефонам.</string>
+    <string name="hs_perm_nearby">chatbit нужно разрешение «устройства поблизости», чтобы создать точку доступа для передачи приложения без интернета.</string>
+    <string name="hs_perm_location">chatbit нужно разрешение на местоположение для точки доступа. Android требует его для Wi-Fi, но местоположение не собирается.</string>
     <string name="hs_note_title">Примечание</string>
     <string name="hs_note_desc">На телефоне будет создана точка доступа Wi-Fi. Текущее подключение к Wi-Fi может прерваться.</string>
     <string name="hs_start">Запустить точку доступа</string>
@@ -774,12 +774,12 @@
     <string name="hs_step1_desc">Пусть другие отсканируют этот QR-код для подключения:</string>
     <string name="hs_wifi_qr">QR-код Wi-Fi</string>
     <string name="hs_manual">Или ввести вручную:</string>
-    <string name="hs_step2">Шаг 2: скачать chabit</string>
+    <string name="hs_step2">Шаг 2: скачать chatbit</string>
     <string name="hs_step2_desc">После подключения к Wi-Fi отсканируйте этот QR-код:</string>
     <string name="hs_url_qr">QR-код адреса сайта</string>
     <string name="hs_open_browser">Или откройте в браузере:</string>
     <string name="hs_instructions_title">Инструкция</string>
-    <string name="hs_instructions">1. Подключитесь к сети Wi-Fi выше\n2. Откройте браузер\n3. Перейдите по адресу выше или отсканируйте QR-код\n4. Нажмите «Скачать chabit»\n5. Установите скачанный файл</string>
+    <string name="hs_instructions">1. Подключитесь к сети Wi-Fi выше\n2. Откройте браузер\n3. Перейдите по адресу выше или отсканируйте QR-код\n4. Нажмите «Скачать chatbit»\n5. Установите скачанный файл</string>
     <string name="hs_copy">Копировать</string>
     <string name="hs_error">Ошибка</string>
     <string name="hs_try_again">Повторить</string>
@@ -787,22 +787,22 @@
     <string name="hs_ssid">Имя сети (SSID)</string>
     <string name="hs_password">Пароль</string>
     <string name="hs_url">Адрес сайта</string>
-    <string name="web_download">Скачать chabit</string>
+    <string name="web_download">Скачать chatbit</string>
     <string name="web_version_size">версия %1$s · %2$d МБ · Android 8 и новее</string>
     <string name="web_install_title">Установка за 4 шага</string>
     <string name="web_install_step1">Нажмите кнопку выше и дождитесь окончания загрузки.</string>
     <string name="web_install_step2">Откройте скачанный файл из уведомления или папки «Загрузки».</string>
     <string name="web_install_step3">Если Android спросит, разрешите браузеру устанавливать неизвестные приложения.</string>
-    <string name="web_install_step4">Нажмите «Установить» и откройте chabit.</string>
+    <string name="web_install_step4">Нажмите «Установить» и откройте chatbit.</string>
     <string name="web_lists_title">Общие списки блокировки</string>
-    <string name="web_lists_import">Чтобы использовать список: в chabit откройте Настройки → расширенный режим → Антифлуд → Списки → Импорт файла.</string>
+    <string name="web_lists_import">Чтобы использовать список: в chatbit откройте Настройки → расширенный режим → Антифлуд → Списки → Импорт файла.</string>
     <string name="web_footer">Раздаётся без интернета с телефона поблизости · без слежки</string>
     <string name="flood_send_direct">Отправить напрямую (Bluetooth, Quick Share, мессенджер…)</string>
     <string name="flood_send_blocked">отправить заблокированных</string>
     <string name="flood_send_flagged">отправить отмеченных</string>
     <string name="flood_send_chooser">Отправить список через…</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="rooms_title">Приватные комнаты</string>
     <string name="rooms_back">Назад</string>
     <string name="rooms_empty">Приватных комнат пока нет. Создайте комнату и пригласите людей по ссылке или QR-коду. Сообщения шифруются сквозным шифрованием и хранятся только на телефонах.</string>
@@ -811,7 +811,7 @@
     <string name="rooms_create_button">Создать</string>
     <string name="rooms_join_title">Войти по приглашению</string>
     <string name="rooms_link_hint">Вставьте ссылку-приглашение</string>
-    <string name="rooms_invalid_invite">Это недействительное приглашение chabit.</string>
+    <string name="rooms_invalid_invite">Это недействительное приглашение chatbit.</string>
     <string name="rooms_join">Войти</string>
     <string name="rooms_ignore">Игнорировать</string>
     <string name="rooms_scan">Сканировать QR-код</string>
@@ -824,11 +824,11 @@
     <string name="rooms_leave">Выйти</string>
     <string name="rooms_leave_title">Выйти из «%1$s»?</string>
     <string name="rooms_leave_desc">Ключ комнаты будет удалён с телефона. Чтобы вернуться, понадобится новое приглашение.</string>
-    <string name="rooms_no_messages">Сообщений пока нет. Они не хранятся на серверах: видны только те, что пришли, пока chabit открыт.</string>
+    <string name="rooms_no_messages">Сообщений пока нет. Они не хранятся на серверах: видны только те, что пришли, пока chatbit открыт.</string>
     <string name="rooms_message_hint">Зашифрованное сообщение</string>
     <string name="rooms_send">Отправить</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="map_open">Карта мира (активность в реальном времени)</string>
     <string name="map_title">Карта мира</string>
     <string name="map_layer_activity">активность</string>
@@ -840,4 +840,9 @@
     <string name="map_cell_quiet">Здесь недавно не было публичной активности</string>
     <string name="map_geocache">Геотайник: %1$s</string>
     <string name="map_join">Войти в #%1$s</string>
+
+    <!-- chabit -->
+    <string name="action_report_title">Пожаловаться на %1$s</string>
+    <string name="action_report_subtitle">Блокирует человека и скрывает его сообщения как спам</string>
+    <string name="action_report_done">Жалоба принята: заблокирован и скрыт. Спасибо!</string>
 </resources>

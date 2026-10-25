@@ -325,7 +325,7 @@ class ConversationRepository internal constructor(
         }
     }
 
-    /** chabit ephemeral messages: deletes messages older than [cutoffMs] with their media; returns their IDs. */
+    /** chatbit ephemeral messages: deletes messages older than [cutoffMs] with their media; returns their IDs. */
     suspend fun deleteMessagesOlderThan(cutoffMs: Long): Set<String> = withContext(dispatcher) {
         try {
             val ids = database.messageIDsOlderThan(cutoffMs)

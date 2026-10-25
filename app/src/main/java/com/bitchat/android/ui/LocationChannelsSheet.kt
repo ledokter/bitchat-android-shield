@@ -548,7 +548,7 @@ fun LocationChannelsSheet(
                         }
                     }
 
-                    // chabit world map: live activity, geocaches, day/night (glub.chat style)
+                    // chatbit world map: live activity, geocaches, day/night (glub.chat style)
                     item(key = "world_map") {
                         androidx.compose.material3.OutlinedButton(
                             onClick = {

@@ -169,6 +169,33 @@ fun ChatUserSheet(
                                 }
                             )
                         }
+
+                        // Report (required for public chat): block + flag the key as a spammer,
+                        // which hides its messages and adds it to the shareable flagged list
+                        item {
+                            UserActionRow(
+                                title = stringResource(R.string.action_report_title, targetNickname),
+                                subtitle = stringResource(R.string.action_report_subtitle),
+                                titleColor = standardRed,
+                                onClick = {
+                                    val selectedLocationChannel = viewModel.selectedLocationChannel.value
+                                    if (selectedLocationChannel is com.bitchat.android.geohash.ChannelID.Location) {
+                                        viewModel.blockUserInGeohash(targetNickname)
+                                    } else {
+                                        viewModel.sendMessage("/block $targetNickname")
+                                    }
+                                    selectedMessage?.senderNostrPubkey?.let {
+                                        com.bitchat.android.nostr.BitchatShield.flagKeys(listOf(it))
+                                    }
+                                    android.widget.Toast.makeText(
+                                        secureCopyContext,
+                                        secureCopyContext.getString(R.string.action_report_done),
+                                        android.widget.Toast.LENGTH_LONG
+                                    ).show()
+                                    onDismiss()
+                                }
+                            )
+                        }
                     }
                 }
                 

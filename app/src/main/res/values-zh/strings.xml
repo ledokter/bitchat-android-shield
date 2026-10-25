@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">chabit</string>
+    <string name="app_name">chatbit</string>
 
     <!-- 权限说明 -->
     <string name="permission_bluetooth_rationale">需要蓝牙权限以在无网络时进行点对点聊天。</string>
@@ -405,7 +405,7 @@
     <string name="about_system_default">跟随系统</string>
     <string name="about_select_language">选择语言</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="cashu_pay_via">通过 Cashu 支付</string>
     <string name="cashu_payment_description">Cashu 付款</string>
     <string name="cashu_copy_token">复制代币</string>
@@ -449,7 +449,7 @@
     <string name="notification_reply">回复</string>
     <string name="notification_mark_read">标为已读</string>
     <string name="notification_private_message">新私信</string>
-    <string name="notification_content_hidden">打开 chabit 查看</string>
+    <string name="notification_content_hidden">打开 chatbit 查看</string>
     <string name="notification_channel_direct_messages">私信</string>
     <string name="notification_channel_direct_messages_description">其他用户发来私信时通知</string>
     <string name="notification_channel_geohash">地理位置聊天</string>
@@ -492,13 +492,13 @@
     <string name="chat_ui_matrix">矩阵</string>
     <string name="chat_ui_bubbles">气泡</string>
     <string name="cd_privacy_protected">隐私已保护</string>
-    <string name="share_bitchat_title">分享 chabit</string>
+    <string name="share_bitchat_title">分享 chatbit</string>
     <string name="share_bitchat_subtitle">分享安装文件，以便离线传播</string>
-    <string name="share_apk_title">分享 chabit 应用</string>
-    <string name="share_apk_explanation">将分享 chabit 的安装文件，让其他人无需联网即可安装。非常适合扩展网状网络！</string>
-    <string name="share_apk_receiver_instructions">接收方需要：\n• 在 Android 设置中允许“安装未知应用”\n• 如已安装 chabit，请先卸载（签名不同）</string>
+    <string name="share_apk_title">分享 chatbit 应用</string>
+    <string name="share_apk_explanation">将分享 chatbit 的安装文件，让其他人无需联网即可安装。非常适合扩展网状网络！</string>
+    <string name="share_apk_receiver_instructions">接收方需要：\n• 在 Android 设置中允许“安装未知应用”\n• 如已安装 chatbit，请先卸载（签名不同）</string>
     <string name="share_apk_confirm">分享应用</string>
-    <string name="share_apk_chooser_title">分享 chabit 至…</string>
+    <string name="share_apk_chooser_title">分享 chatbit 至…</string>
     <string name="share_apk_error">无法准备要分享的应用，请重试。</string>
     <string name="prepare_apk_title">准备要分享的应用</string>
     <string name="prepare_apk_ready_title">应用已可离线分享</string>
@@ -548,10 +548,10 @@
     <string name="prepare_apk_error_resume_rejected">%1$s 拒绝了已保存的下载位置，下次将重新开始下载。</string>
     <string name="prepare_apk_error_incomplete">从 %1$s 的下载提前结束，可以继续下载。</string>
     <string name="prepare_apk_error_invalid_resume">%1$s 返回了无效的续传响应，下次将重新开始下载。</string>
-    <string name="prepare_apk_error_untrusted_key">来自 %1$s 的 APK 未使用受信任的 chabit 发布密钥签名。</string>
+    <string name="prepare_apk_error_untrusted_key">来自 %1$s 的 APK 未使用受信任的 chatbit 发布密钥签名。</string>
     <string name="prepare_apk_error_not_universal">%1$s 返回的是特定架构的 APK，而非所需的通用 APK。</string>
     <string name="prepare_apk_error_apk_unreadable">无法读取已下载的 APK。</string>
-    <string name="prepare_apk_error_not_bitchat">下载的文件不是 chabit APK。</string>
+    <string name="prepare_apk_error_not_bitchat">下载的文件不是 chatbit APK。</string>
     <string name="prepare_apk_error_no_version">下载的 APK 没有版本信息。</string>
     <string name="prepare_apk_error_source_failed">从 %1$s 下载失败。</string>
     <string name="prepare_apk_error_all_sources">所有已配置的 APK 来源均失败。</string>
@@ -570,11 +570,11 @@
     <string name="hotspot_disconnect_message">开启热点会断开当前的 Wi-Fi 直连，可能会中断投屏、Android Auto、快速分享或其他近距离连接。</string>
     <string name="hotspot_disconnect_confirm">断开并开启</string>
     <string name="install_bitchat_title">安装收到的 APK</string>
-    <string name="install_bitchat_subtitle">用收到的文件安装 chabit</string>
-    <string name="install_apk_dialog_title">安装 chabit 更新</string>
-    <string name="install_apk_dialog_message">要用收到的 APK 安装 chabit 吗？这样可以在网状网络中离线传播应用。</string>
+    <string name="install_bitchat_subtitle">用收到的文件安装 chatbit</string>
+    <string name="install_apk_dialog_title">安装 chatbit 更新</string>
+    <string name="install_apk_dialog_message">要用收到的 APK 安装 chatbit 吗？这样可以在网状网络中离线传播应用。</string>
     <string name="install_apk_permission_title">需要权限</string>
-    <string name="install_apk_permission_message">chabit 需要安装应用的权限才能自行传播。请在下一个界面中开启“安装未知应用”。</string>
+    <string name="install_apk_permission_message">chatbit 需要安装应用的权限才能自行传播。请在下一个界面中开启“安装未知应用”。</string>
     <string name="install_apk_confirm">安装</string>
     <string name="install_apk_grant_permission">授予权限</string>
     <string name="install_apk_select_files">选择 APK 文件</string>
@@ -583,7 +583,7 @@
     <string name="cd_direct_wifi_aware">Wi-Fi Aware 直连</string>
     <string name="cd_direct_bluetooth">蓝牙直连</string>
     <string name="cd_routed_mesh">经网状网络转发</string>
-    <string name="notification_action_quit_bitchat">退出 chabit</string>
+    <string name="notification_action_quit_bitchat">退出 chatbit</string>
     <string name="about_background_title">后台运行</string>
     <string name="about_background_desc">关闭应用后仍保持网状网络运行（前台服务）</string>
     <string name="location_bluetooth_wifi_subtitle">蓝牙 • Wi-Fi • %1$s</string>
@@ -607,9 +607,9 @@
     <string name="debug_rssi_fmt">RSSI：%1$s</string>
     <string name="background_location_required_title">建议开启后台定位</string>
     <string name="background_location_required_subtitle">可选，可提高网状网络的稳定性</string>
-    <string name="background_location_explanation">Android 建议开启后台定位，让 chabit 在应用未打开时也能搜索附近设备。这样重启后网状网络也能保持运行。</string>
+    <string name="background_location_explanation">Android 建议开启后台定位，让 chatbit 在应用未打开时也能搜索附近设备。这样重启后网状网络也能保持运行。</string>
     <string name="background_location_settings_tip">打开设置后，请选择“始终允许”。</string>
-    <string name="background_location_needs_for">chabit 使用后台定位来：</string>
+    <string name="background_location_needs_for">chatbit 使用后台定位来：</string>
     <string name="background_location_needs_bullets">- 应用关闭时搜索附近设备\n- 重启后重新连接\n- 让网状网络在后台运行</string>
     <string name="background_location_privacy_note">我们绝不收集或存储你的位置。你的隐私是安全的。</string>
     <string name="grant_background_location">允许后台定位</string>
@@ -700,12 +700,12 @@
     <string name="flood_import_block">…并屏蔽</string>
     <string name="flood_import_flag">…标记为刷屏者</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="security_section">安全</string>
     <string name="security_summary">已启用 %1$d / %2$d 项保护</string>
     <string name="security_summary_hint">已针对隐私进行优化。开启高级模式可自行调整。</string>
     <string name="sec_lock_title">应用锁</string>
-    <string name="sec_lock_desc">打开 chabit 时需要指纹、面容或锁屏密码</string>
+    <string name="sec_lock_desc">打开 chatbit 时需要指纹、面容或锁屏密码</string>
     <string name="sec_lock_unavailable">请先在手机上设置锁屏，才能启用</string>
     <string name="sec_screenshots_title">禁止截屏</string>
     <string name="sec_screenshots_desc">禁止截屏、录屏和最近任务预览</string>
@@ -714,16 +714,16 @@
     <string name="sec_presence_title">公开我的在线状态</string>
     <string name="sec_presence_desc">关闭时：在你发言前，附近频道看不到你</string>
     <string name="sec_clipboard_title">清空剪贴板</string>
-    <string name="sec_clipboard_desc">从 chabit 复制的内容会在 60 秒后清除</string>
+    <string name="sec_clipboard_desc">从 chatbit 复制的内容会在 60 秒后清除</string>
     <string name="sec_ephemeral_title">多久后从本机删除消息</string>
     <string name="sec_keep_forever">保留</string>
-    <string name="sec_autowipe_title">多久未打开 chabit 就清除全部数据</string>
+    <string name="sec_autowipe_title">多久未打开 chatbit 就清除全部数据</string>
     <string name="sec_autowipe_desc">手机丢失或被扣押时保护你的数据</string>
     <string name="duration_days">%1$d 天</string>
     <string name="advanced_mode_title">高级模式</string>
     <string name="advanced_mode_desc">显示所有技术设置（工作量证明、过滤、Tor、调试）</string>
-    <string name="app_lock_prompt_title">解锁 chabit</string>
-    <string name="app_lock_locked">chabit 已锁定</string>
+    <string name="app_lock_prompt_title">解锁 chatbit</string>
+    <string name="app_lock_locked">chatbit 已锁定</string>
     <string name="app_lock_unlock">解锁</string>
     <string name="cmd_desc_block">屏蔽或列出已屏蔽用户</string>
     <string name="cmd_desc_channels">显示发现的所有频道</string>
@@ -777,17 +777,17 @@
     <string name="notes_enable_location">开启定位</string>
     <string name="cd_cancel_recording">取消录音</string>
 
-    <!-- chabit -->
-    <string name="hs_title">分享 chabit</string>
+    <!-- chatbit -->
+    <string name="hs_title">分享 chatbit</string>
     <string name="hs_intro_title">离线分享应用</string>
     <string name="hs_how_title">使用方法：</string>
     <string name="hs_how_1">1. 你的手机创建一个 Wi-Fi 热点</string>
     <string name="hs_how_2">2. 其他人连接到该热点</string>
     <string name="hs_how_3">3. 对方扫描二维码或输入网址</string>
-    <string name="hs_how_4">4. 无需联网即可下载 chabit 和屏蔽名单</string>
-    <string name="hs_perm_nearby_local">chabit 需要“附近的设备”和“本地网络”权限，才能创建 Wi-Fi 热点并向已连接的手机提供应用。</string>
-    <string name="hs_perm_nearby">chabit 需要“附近的设备”权限，才能创建用于离线分享的 Wi-Fi 热点。</string>
-    <string name="hs_perm_location">创建 Wi-Fi 热点需要位置权限。这是 Android 对 Wi-Fi 的要求，chabit 不会收集任何位置信息。</string>
+    <string name="hs_how_4">4. 无需联网即可下载 chatbit 和屏蔽名单</string>
+    <string name="hs_perm_nearby_local">chatbit 需要“附近的设备”和“本地网络”权限，才能创建 Wi-Fi 热点并向已连接的手机提供应用。</string>
+    <string name="hs_perm_nearby">chatbit 需要“附近的设备”权限，才能创建用于离线分享的 Wi-Fi 热点。</string>
+    <string name="hs_perm_location">创建 Wi-Fi 热点需要位置权限。这是 Android 对 Wi-Fi 的要求，chatbit 不会收集任何位置信息。</string>
     <string name="hs_note_title">提示</string>
     <string name="hs_note_desc">这会在你的手机上创建 Wi-Fi 热点，当前的 Wi-Fi 连接可能会中断。</string>
     <string name="hs_start">开启热点</string>
@@ -798,12 +798,12 @@
     <string name="hs_step1_desc">让对方扫描此二维码进行连接：</string>
     <string name="hs_wifi_qr">Wi-Fi 二维码</string>
     <string name="hs_manual">或手动输入：</string>
-    <string name="hs_step2">第 2 步：下载 chabit</string>
+    <string name="hs_step2">第 2 步：下载 chatbit</string>
     <string name="hs_step2_desc">连上 Wi-Fi 后，扫描此二维码：</string>
     <string name="hs_url_qr">网址二维码</string>
     <string name="hs_open_browser">或在浏览器中打开：</string>
     <string name="hs_instructions_title">说明</string>
-    <string name="hs_instructions">1. 连接上方的 Wi-Fi\n2. 打开浏览器\n3. 访问上方网址或扫描二维码\n4. 点击“下载 chabit”\n5. 安装下载的文件</string>
+    <string name="hs_instructions">1. 连接上方的 Wi-Fi\n2. 打开浏览器\n3. 访问上方网址或扫描二维码\n4. 点击“下载 chatbit”\n5. 安装下载的文件</string>
     <string name="hs_copy">复制</string>
     <string name="hs_error">错误</string>
     <string name="hs_try_again">重试</string>
@@ -811,22 +811,22 @@
     <string name="hs_ssid">网络名称（SSID）</string>
     <string name="hs_password">密码</string>
     <string name="hs_url">网址</string>
-    <string name="web_download">下载 chabit</string>
+    <string name="web_download">下载 chatbit</string>
     <string name="web_version_size">版本 %1$s · %2$d MB · Android 8 及以上</string>
     <string name="web_install_title">4 步完成安装</string>
     <string name="web_install_step1">点击上方按钮，等待下载完成。</string>
     <string name="web_install_step2">从通知栏或“下载”文件夹打开下载的文件。</string>
     <string name="web_install_step3">如果 Android 提示，请允许浏览器安装未知应用。</string>
-    <string name="web_install_step4">点击“安装”，然后打开 chabit。</string>
+    <string name="web_install_step4">点击“安装”，然后打开 chatbit。</string>
     <string name="web_lists_title">共享屏蔽名单</string>
-    <string name="web_lists_import">使用名单：在 chabit 中打开 设置 → 高级模式 → 防刷屏 → 名单 → 导入文件。</string>
+    <string name="web_lists_import">使用名单：在 chatbit 中打开 设置 → 高级模式 → 防刷屏 → 名单 → 导入文件。</string>
     <string name="web_footer">由附近手机离线提供 · 无需联网，无追踪</string>
     <string name="flood_send_direct">直接发送（蓝牙、快速分享、聊天应用…）</string>
     <string name="flood_send_blocked">发送已屏蔽</string>
     <string name="flood_send_flagged">发送已标记</string>
     <string name="flood_send_chooser">发送名单至…</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="rooms_title">私密房间</string>
     <string name="rooms_back">返回</string>
     <string name="rooms_empty">还没有私密房间。创建一个，并通过链接或二维码邀请他人。消息端到端加密，只保存在手机上。</string>
@@ -835,7 +835,7 @@
     <string name="rooms_create_button">创建</string>
     <string name="rooms_join_title">通过邀请加入</string>
     <string name="rooms_link_hint">粘贴邀请链接</string>
-    <string name="rooms_invalid_invite">这不是有效的 chabit 邀请。</string>
+    <string name="rooms_invalid_invite">这不是有效的 chatbit 邀请。</string>
     <string name="rooms_join">加入</string>
     <string name="rooms_ignore">忽略</string>
     <string name="rooms_scan">扫描二维码</string>
@@ -848,11 +848,11 @@
     <string name="rooms_leave">退出</string>
     <string name="rooms_leave_title">退出“%1$s”？</string>
     <string name="rooms_leave_desc">房间密钥将从本机删除，需要新的邀请才能重新加入。</string>
-    <string name="rooms_no_messages">还没有消息。消息不会保存在服务器上：你只能看到 chabit 打开期间收到的消息。</string>
+    <string name="rooms_no_messages">还没有消息。消息不会保存在服务器上：你只能看到 chatbit 打开期间收到的消息。</string>
     <string name="rooms_message_hint">加密消息</string>
     <string name="rooms_send">发送</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="map_open">世界地图（实时动态）</string>
     <string name="map_title">世界地图</string>
     <string name="map_layer_activity">实时动态</string>
@@ -864,4 +864,9 @@
     <string name="map_cell_quiet">最近这里没有公开动态</string>
     <string name="map_geocache">地理藏宝：%1$s</string>
     <string name="map_join">加入 #%1$s</string>
+
+    <!-- chabit -->
+    <string name="action_report_title">举报 %1$s</string>
+    <string name="action_report_subtitle">屏蔽此人并将其消息作为垃圾信息隐藏</string>
+    <string name="action_report_done">已举报：已屏蔽并隐藏。谢谢！</string>
 </resources>

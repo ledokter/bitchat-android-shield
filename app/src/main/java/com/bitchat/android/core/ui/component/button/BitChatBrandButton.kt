@@ -20,7 +20,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.bitchat.android.ui.ChabitLogo
+import com.bitchat.android.ui.ChatbitLogo
 import com.bitchat.android.ui.rememberPressScale
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
@@ -77,8 +77,8 @@ fun BitChatBrandButton(
             },
         contentAlignment = Alignment.Center
     ) {
-        // chabit cat; its bow follows the accent colour
-        ChabitLogo(
+        // chatbit cat; its bow follows the accent colour
+        ChatbitLogo(
             height = iconSize,
             modifier = Modifier
                 .scale(pressScale)

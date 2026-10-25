@@ -155,7 +155,7 @@ fun GlobeView(
     labelTypeface: Typeface?,
     labelTypefaceBold: Typeface?,
     modifier: Modifier = Modifier,
-    // chabit world map layers (all optional: the geohash picker passes none)
+    // chatbit world map layers (all optional: the geohash picker passes none)
     markers: List<GlobeMarker> = emptyList(),
     nightShading: Boolean = false,
     tileLayer: GlobeTileLayer? = null,

@@ -27,7 +27,7 @@ android {
     buildToolsVersion = libs.versions.buildTools.get()
 
     defaultConfig {
-        applicationId = "com.bitchat.shield"
+        applicationId = "app.chatbit"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 41
@@ -53,7 +53,7 @@ android {
 
     buildTypes {
         debug {
-            // chabit: pseudo-locales (en-XA, ar-XB) make any hard-coded, untranslated text stand out
+            // chatbit: pseudo-locales (en-XA, ar-XB) make any hard-coded, untranslated text stand out
             isPseudoLocalesEnabled = true
             ndk {
                 // Include x86_64 for emulator support during development

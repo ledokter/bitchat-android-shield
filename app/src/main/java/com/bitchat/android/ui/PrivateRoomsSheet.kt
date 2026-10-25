@@ -62,7 +62,7 @@ import java.text.DateFormat
 import java.util.Date
 
 /**
- * chabit private rooms: list, create, join by link or QR code, chat, invite.
+ * chatbit private rooms: list, create, join by link or QR code, chat, invite.
  * Messages are end-to-end encrypted with the room key and kept in memory only.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -284,7 +284,7 @@ private fun RoomChat(room: PrivateRoom, nickname: String, onBack: () -> Unit) {
                 }) { Text(stringResource(R.string.rooms_share_link), fontFamily = BitchatFontFamily) }
             },
             dismissButton = {
-                TextButton(onClick = { SecureClipboard.copy(context, "chabit room", link) }) {
+                TextButton(onClick = { SecureClipboard.copy(context, "chatbit room", link) }) {
                     Text(stringResource(R.string.rooms_copy_link), fontFamily = BitchatFontFamily)
                 }
             }

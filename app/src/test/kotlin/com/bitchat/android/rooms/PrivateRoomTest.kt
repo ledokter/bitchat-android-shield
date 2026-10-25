@@ -25,7 +25,7 @@ class PrivateRoomTest {
 
     @Test
     fun invalidInvitesAreRejected() {
-        assertNull(PrivateRoom.parseInvite("chabit://room#pas-une-invitation"))
+        assertNull(PrivateRoom.parseInvite("chatbit://room#pas-une-invitation"))
         assertNull(PrivateRoom.parseInvite(""))
         assertNull(PrivateRoom.parseInvite("https://exemple.org"))
     }

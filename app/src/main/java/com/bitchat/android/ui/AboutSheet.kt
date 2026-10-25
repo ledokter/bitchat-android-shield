@@ -1238,7 +1238,7 @@ fun AboutSheet(
                     }
 
                     // PoW Difficulty Sliders (Incoming filter + Outgoing send PoW)
-                    // chabit protections: summary by default, every switch in advanced mode
+                    // chatbit protections: summary by default, every switch in advanced mode
                     item(key = "security") {
                         SecuritySettingsCard(advanced = advancedMode)
                     }

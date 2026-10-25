@@ -197,7 +197,7 @@ object NostrBackgroundRuntime {
                 LiveLocationPrivacyGate.enabled,
                 nostrSchedule
             ) { channels, liveLocationEnabled, schedule ->
-                // chabit: presence heartbeats reveal who is around without writing; off by default
+                // chatbit: presence heartbeats reveal who is around without writing; off by default
                 val targets = if (!com.bitchat.android.security.SecurityPreferences.sendPresence.value) emptySet()
                 else GeohashNostrPrivacyPolicy.livePresenceTargets(
                     availableChannels = channels,

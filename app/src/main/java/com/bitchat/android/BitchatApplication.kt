@@ -13,7 +13,7 @@ class BitchatApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // chabit security settings first: the Tor kill switch must apply before any network use
+        // chatbit security settings first: the Tor kill switch must apply before any network use
         com.bitchat.android.security.SecurityPreferences.init(this)
         com.bitchat.android.util.AppStrings.init(this)
 
@@ -52,7 +52,7 @@ class BitchatApplication : Application() {
         // Initialize theme preference
         ThemePreferenceManager.init(this)
 
-        // chabit private rooms (subscribes on the default relays, re-established on reconnect)
+        // chatbit private rooms (subscribes on the default relays, re-established on reconnect)
         try { com.bitchat.android.rooms.PrivateRooms.init(this) } catch (_: Exception) { }
 
         // Initialize BitchatShield (anti-bot & anti-Zalgo protection) and PoW preferences

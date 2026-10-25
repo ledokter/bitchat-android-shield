@@ -185,7 +185,7 @@ internal fun AboutHero(
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ChabitLogo(height = 64.dp)
+        ChatbitLogo(height = 64.dp)
 
         Spacer(modifier = Modifier.height(16.dp))
 

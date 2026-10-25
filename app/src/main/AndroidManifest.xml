@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!-- chatbit app lock (fingerprint / face / screen-lock code) -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     
     <!-- Notification permissions -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -131,12 +133,12 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="bitchat" android:host="verify" />
             </intent-filter>
-            <!-- chabit private room invitations: chabit://room#<invite> -->
+            <!-- chatbit private room invitations: chatbit://room#<invite> -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="chabit" android:host="room" />
+                <data android:scheme="chatbit" android:host="room" />
             </intent-filter>
         </activity>
 
@@ -168,7 +170,7 @@
         <activity
             android:name=".hotspot.HotspotActivity"
             android:exported="false"
-            android:label="Partager via chabit"
+            android:label="Partager via chatbit"
             android:theme="@style/Theme.BitchatAndroid"
             android:launchMode="singleTop" />
 

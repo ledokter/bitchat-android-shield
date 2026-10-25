@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * App lock with the platform BiometricPrompt (fingerprint, face or the screen-lock code) — no extra
- * dependency. Locks on cold start and after [RELOCK_AFTER_MS] in the background. A device without
+ * dependency. Locks on cold start and after [RELOCK_AFTER_MS] (5 min) in the background. A device without
  * a secure screen lock cannot be locked, so the app stays open there.
  */
 object AppLock {
-    private const val RELOCK_AFTER_MS = 30_000L
+    private const val RELOCK_AFTER_MS = 5 * 60_000L
     const val REQUEST_DEVICE_CREDENTIAL = 0xC4AB
 
     private val _locked = MutableStateFlow(true)
@@ -60,6 +60,16 @@ object AppLock {
         }
         prompting = true
         val title = activity.getString(com.bitchat.android.R.string.app_lock_prompt_title)
+        try {
+            prompt(activity, title)
+        } catch (e: Exception) {
+            // biometric service refused (OEM quirk, missing hardware…): use the screen-lock code
+            android.util.Log.w("AppLock", "BiometricPrompt failed, falling back: ${e.message}")
+            confirmCredential(activity, title)
+        }
+    }
+
+    private fun prompt(activity: Activity, title: String) {
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
                 BiometricPrompt.Builder(activity)
@@ -79,19 +89,21 @@ object AppLock {
                     .build()
                     .authenticate(CancellationSignal(), activity.mainExecutor, callback())
             }
-            else -> {
-                // Android 8-9: confirm the screen-lock credential; result in onActivityResult
-                @Suppress("DEPRECATION")
-                val intent = activity.getSystemService(KeyguardManager::class.java)
-                    ?.createConfirmDeviceCredentialIntent(title, null)
-                if (intent == null) {
-                    prompting = false
-                    _locked.value = false
-                } else {
-                    @Suppress("DEPRECATION")
-                    activity.startActivityForResult(intent, REQUEST_DEVICE_CREDENTIAL)
-                }
-            }
+            else -> confirmCredential(activity, title)
+        }
+    }
+
+    /** Screen-lock credential screen (Android 8-9, or fallback); result in onActivityResult. */
+    private fun confirmCredential(activity: Activity, title: String) {
+        @Suppress("DEPRECATION")
+        val intent = activity.getSystemService(KeyguardManager::class.java)
+            ?.createConfirmDeviceCredentialIntent(title, null)
+        if (intent == null) {
+            prompting = false
+            _locked.value = false
+        } else {
+            @Suppress("DEPRECATION")
+            activity.startActivityForResult(intent, REQUEST_DEVICE_CREDENTIAL)
         }
     }
 

@@ -5,7 +5,7 @@
     <string name="cashu_copy_token">Copy token</string>
     <string name="cashu_redeem_wallet">Redeem in wallet</string>
     <string name="cashu_redeem_web">Redeem on web</string>
-    <string name="app_name">chabit</string>
+    <string name="app_name">chatbit</string>
     <string name="permission_bluetooth_rationale">Bluetooth permission is required for peer-to-peer messaging without internet.</string>
     <string name="permission_location_rationale">Location permission is required to discover nearby devices via Bluetooth.</string>
     <string name="permission_notification_rationale">Notification permission is required to alert you of new messages.</string>
@@ -115,7 +115,7 @@
   <string name="notification_reply">Reply</string>
   <string name="notification_mark_read">Mark read</string>
   <string name="notification_private_message">New private message</string>
-  <string name="notification_content_hidden">Open chabit to view it</string>
+  <string name="notification_content_hidden">Open chatbit to view it</string>
   <string name="notification_channel_direct_messages">Direct Messages</string>
   <string name="notification_channel_direct_messages_description">Notifications for private messages from other users</string>
   <string name="notification_channel_geohash">Geohash Chats</string>
@@ -225,13 +225,13 @@
   <string name="cancel_lower">Cancel</string>
 
   <!-- APK Sharing -->
-  <string name="share_bitchat_title">Share chabit</string>
+  <string name="share_bitchat_title">Share chatbit</string>
   <string name="share_bitchat_subtitle">Share installation file for offline distribution</string>
-  <string name="share_apk_title">Share chabit App</string>
-  <string name="share_apk_explanation">This will share the chabit installation file(s) so others can install the app without internet access. Perfect for mesh network expansion!</string>
-  <string name="share_apk_receiver_instructions">The receiver will need to:\n• Enable \"Install from unknown sources\" in Android settings\n• Uninstall chabit first if already installed (signatures differ)</string>
+  <string name="share_apk_title">Share chatbit App</string>
+  <string name="share_apk_explanation">This will share the chatbit installation file(s) so others can install the app without internet access. Perfect for mesh network expansion!</string>
+  <string name="share_apk_receiver_instructions">The receiver will need to:\n• Enable \"Install from unknown sources\" in Android settings\n• Uninstall chatbit first if already installed (signatures differ)</string>
   <string name="share_apk_confirm">Share App</string>
-  <string name="share_apk_chooser_title">Share chabit via…</string>
+  <string name="share_apk_chooser_title">Share chatbit via…</string>
   <string name="share_apk_error">Failed to prepare app for sharing. Please try again.</string>
 
   <!-- Universal APK Preparation -->
@@ -291,10 +291,10 @@
   <string name="prepare_apk_error_resume_rejected">%1$s rejected the saved download position. The next attempt will restart the download.</string>
   <string name="prepare_apk_error_incomplete">%1$s download ended before all bytes arrived. It can be resumed.</string>
   <string name="prepare_apk_error_invalid_resume">%1$s returned an invalid resume response. The next attempt will restart the download.</string>
-  <string name="prepare_apk_error_untrusted_key">The APK from %1$s is not signed by a trusted chabit release key.</string>
+  <string name="prepare_apk_error_untrusted_key">The APK from %1$s is not signed by a trusted chatbit release key.</string>
   <string name="prepare_apk_error_not_universal">%1$s returned an architecture-specific APK, not the required universal APK.</string>
   <string name="prepare_apk_error_apk_unreadable">The downloaded APK could not be read.</string>
-  <string name="prepare_apk_error_not_bitchat">The downloaded file is not a chabit APK.</string>
+  <string name="prepare_apk_error_not_bitchat">The downloaded file is not a chatbit APK.</string>
   <string name="prepare_apk_error_no_version">The downloaded APK has no version information.</string>
   <string name="prepare_apk_error_source_failed">%1$s download failed.</string>
   <string name="prepare_apk_error_all_sources">All configured APK sources failed.</string>
@@ -317,11 +317,11 @@
 
   <!-- APK Installation -->
   <string name="install_bitchat_title">Install Received APK</string>
-  <string name="install_bitchat_subtitle">Install chabit from received files</string>
-  <string name="install_apk_dialog_title">Install chabit Update</string>
-  <string name="install_apk_dialog_message">Install chabit from the received APK file(s)? This allows offline app distribution in mesh networks.</string>
+  <string name="install_bitchat_subtitle">Install chatbit from received files</string>
+  <string name="install_apk_dialog_title">Install chatbit Update</string>
+  <string name="install_apk_dialog_message">Install chatbit from the received APK file(s)? This allows offline app distribution in mesh networks.</string>
   <string name="install_apk_permission_title">Permission Required</string>
-  <string name="install_apk_permission_message">chabit needs permission to install packages for self-distribution. Please enable \"Install unknown apps\" in the next screen.</string>
+  <string name="install_apk_permission_message">chatbit needs permission to install packages for self-distribution. Please enable \"Install unknown apps\" in the next screen.</string>
   <string name="install_apk_confirm">Install</string>
   <string name="install_apk_grant_permission">Grant Permission</string>
   <string name="install_apk_select_files">Select APK Files</string>
@@ -345,7 +345,7 @@
   <string name="cd_open_map">Open map</string>
   <string name="cd_remove_bookmark">Remove bookmark</string>
   <string name="cd_teleport">Teleport</string>
-  <string name="notification_action_quit_bitchat">Quit chabit</string>
+  <string name="notification_action_quit_bitchat">Quit chatbit</string>
   <string name="about_background_title">Run in Background</string>
   <string name="about_background_desc">Keep mesh active when app is closed (foreground service)</string>
   <string name="cd_leave_channel">Leave channel</string>
@@ -530,9 +530,9 @@
   <string name="location_needs_bullets">• Bluetooth device scanning\n• Discovering nearby users on mesh network\n• Geohash chat feature\n• No tracking or location collection</string>
   <string name="background_location_required_title">Background Location Recommended</string>
   <string name="background_location_required_subtitle">Optional, improves mesh reliability</string>
-  <string name="background_location_explanation">Android recommends background location so chabit can scan for nearby devices while the app is not open. This keeps the mesh alive after reboot.</string>
+  <string name="background_location_explanation">Android recommends background location so chatbit can scan for nearby devices while the app is not open. This keeps the mesh alive after reboot.</string>
   <string name="background_location_settings_tip">When settings opens, choose "Allow all the time".</string>
-  <string name="background_location_needs_for">chabit uses background location for:</string>
+  <string name="background_location_needs_for">chatbit uses background location for:</string>
   <string name="background_location_needs_bullets">- Scan for nearby devices while the app is closed\n- Reconnect after reboot\n- Keep the mesh running in the background</string>
   <string name="background_location_privacy_note">We NEVER collect or store your location. Your privacy is safe.</string>
   <string name="grant_background_location">Allow Background Location</string>
@@ -655,7 +655,7 @@
   <string name="about_system_default">System default</string>
   <string name="about_select_language">Select language</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="live_ptt_title">Live push-to-talk</string>
     <string name="live_ptt_desc">Play voice bursts live on the mesh; voice notes are always sent on release</string>
     <string name="pow_receive_title">Incoming proof of work (%1$d bits)</string>
@@ -736,12 +736,12 @@
     <string name="flood_import_block">… and block them</string>
     <string name="flood_import_flag">… as spammers</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="security_section">Security</string>
     <string name="security_summary">%1$d of %2$d protections active</string>
     <string name="security_summary_hint">Settings are optimised for privacy. Switch on advanced mode to fine-tune them.</string>
     <string name="sec_lock_title">App lock</string>
-    <string name="sec_lock_desc">Fingerprint, face or screen-lock code when opening chabit</string>
+    <string name="sec_lock_desc">Fingerprint, face or screen-lock code when opening chatbit</string>
     <string name="sec_lock_unavailable">Set a screen lock on the phone to enable it</string>
     <string name="sec_screenshots_title">Block screenshots</string>
     <string name="sec_screenshots_desc">No screenshots, screen recording or preview in recent apps</string>
@@ -750,16 +750,16 @@
     <string name="sec_presence_title">Announce my presence</string>
     <string name="sec_presence_desc">Off: you are invisible in nearby channels until you write</string>
     <string name="sec_clipboard_title">Clear the clipboard</string>
-    <string name="sec_clipboard_desc">What you copy from chabit is erased after 60 seconds</string>
+    <string name="sec_clipboard_desc">What you copy from chatbit is erased after 60 seconds</string>
     <string name="sec_ephemeral_title">Delete messages from this phone after</string>
     <string name="sec_keep_forever">keep</string>
-    <string name="sec_autowipe_title">Wipe everything if chabit is not opened for</string>
+    <string name="sec_autowipe_title">Wipe everything if chatbit is not opened for</string>
     <string name="sec_autowipe_desc">Protects your data if the phone is lost or seized</string>
     <string name="duration_days">%1$d d</string>
     <string name="advanced_mode_title">Advanced mode</string>
     <string name="advanced_mode_desc">Show every technical setting (proof of work, filters, Tor, debug)</string>
-    <string name="app_lock_prompt_title">Unlock chabit</string>
-    <string name="app_lock_locked">chabit is locked</string>
+    <string name="app_lock_prompt_title">Unlock chatbit</string>
+    <string name="app_lock_locked">chatbit is locked</string>
     <string name="app_lock_unlock">Unlock</string>
     <string name="cmd_desc_block">block or list blocked peers</string>
     <string name="cmd_desc_channels">show all discovered channels</string>
@@ -813,17 +813,17 @@
     <string name="notes_enable_location">Enable location</string>
     <string name="cd_cancel_recording">Cancel recording</string>
 
-    <!-- chabit -->
-    <string name="hs_title">Share chabit</string>
+    <!-- chatbit -->
+    <string name="hs_title">Share chatbit</string>
     <string name="hs_intro_title">Offline app sharing</string>
     <string name="hs_how_title">How it works:</string>
     <string name="hs_how_1">1. Your phone creates a Wi-Fi hotspot</string>
     <string name="hs_how_2">2. Others connect to it</string>
     <string name="hs_how_3">3. They scan a QR code or type an address</string>
-    <string name="hs_how_4">4. They download chabit and the block lists, no internet needed</string>
-    <string name="hs_perm_nearby_local">chabit needs the nearby devices and local network permissions to create a Wi-Fi hotspot and serve the app to connected phones.</string>
-    <string name="hs_perm_nearby">chabit needs the nearby devices permission to create a Wi-Fi hotspot for sharing the app offline.</string>
-    <string name="hs_perm_location">chabit needs the location permission to create a Wi-Fi hotspot. Android requires it for Wi-Fi, but no location data is collected.</string>
+    <string name="hs_how_4">4. They download chatbit and the block lists, no internet needed</string>
+    <string name="hs_perm_nearby_local">chatbit needs the nearby devices and local network permissions to create a Wi-Fi hotspot and serve the app to connected phones.</string>
+    <string name="hs_perm_nearby">chatbit needs the nearby devices permission to create a Wi-Fi hotspot for sharing the app offline.</string>
+    <string name="hs_perm_location">chatbit needs the location permission to create a Wi-Fi hotspot. Android requires it for Wi-Fi, but no location data is collected.</string>
     <string name="hs_note_title">Note</string>
     <string name="hs_note_desc">This creates a Wi-Fi hotspot on your phone. Your current Wi-Fi connection may be interrupted.</string>
     <string name="hs_start">Start the hotspot</string>
@@ -834,12 +834,12 @@
     <string name="hs_step1_desc">Have others scan this QR code to connect:</string>
     <string name="hs_wifi_qr">Wi-Fi QR code</string>
     <string name="hs_manual">Or enter manually:</string>
-    <string name="hs_step2">Step 2: download chabit</string>
+    <string name="hs_step2">Step 2: download chatbit</string>
     <string name="hs_step2_desc">Once connected to the Wi-Fi, scan this QR code:</string>
     <string name="hs_url_qr">Website address QR code</string>
     <string name="hs_open_browser">Or open in a browser:</string>
     <string name="hs_instructions_title">Instructions</string>
-    <string name="hs_instructions">1. Connect to the Wi-Fi network above\n2. Open a web browser\n3. Visit the address above or scan the QR code\n4. Tap “Download chabit”\n5. Install the downloaded file</string>
+    <string name="hs_instructions">1. Connect to the Wi-Fi network above\n2. Open a web browser\n3. Visit the address above or scan the QR code\n4. Tap “Download chatbit”\n5. Install the downloaded file</string>
     <string name="hs_copy">Copy</string>
     <string name="hs_error">Error</string>
     <string name="hs_try_again">Try again</string>
@@ -847,22 +847,22 @@
     <string name="hs_ssid">Network name (SSID)</string>
     <string name="hs_password">Password</string>
     <string name="hs_url">Website address</string>
-    <string name="web_download">Download chabit</string>
+    <string name="web_download">Download chatbit</string>
     <string name="web_version_size">version %1$s · %2$d MB · Android 8 or newer</string>
     <string name="web_install_title">Install in 4 steps</string>
     <string name="web_install_step1">Tap the button above and wait for the download to finish.</string>
     <string name="web_install_step2">Open the downloaded file from the notification or the Downloads folder.</string>
     <string name="web_install_step3">If Android asks, allow your browser to install unknown apps.</string>
-    <string name="web_install_step4">Tap Install, then open chabit.</string>
+    <string name="web_install_step4">Tap Install, then open chatbit.</string>
     <string name="web_lists_title">Shared block lists</string>
-    <string name="web_lists_import">To use a list: in chabit, open Settings → advanced mode → Anti-flood → Lists → Import a file.</string>
+    <string name="web_lists_import">To use a list: in chatbit, open Settings → advanced mode → Anti-flood → Lists → Import a file.</string>
     <string name="web_footer">Served offline by a nearby phone · no internet, no tracking</string>
     <string name="flood_send_direct">Send directly (Bluetooth, Quick Share, messaging…)</string>
     <string name="flood_send_blocked">send blocked</string>
     <string name="flood_send_flagged">send flagged</string>
     <string name="flood_send_chooser">Send the list with…</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="rooms_title">Private rooms</string>
     <string name="rooms_back">Back</string>
     <string name="rooms_empty">No private room yet. Create one and invite people with a link or a QR code. Messages are end-to-end encrypted and only kept on phones.</string>
@@ -871,7 +871,7 @@
     <string name="rooms_create_button">Create</string>
     <string name="rooms_join_title">Join with an invitation</string>
     <string name="rooms_link_hint">Paste the invitation link</string>
-    <string name="rooms_invalid_invite">This is not a valid chabit invitation.</string>
+    <string name="rooms_invalid_invite">This is not a valid chatbit invitation.</string>
     <string name="rooms_join">Join</string>
     <string name="rooms_ignore">Ignore</string>
     <string name="rooms_scan">Scan a QR code</string>
@@ -884,11 +884,11 @@
     <string name="rooms_leave">Leave</string>
     <string name="rooms_leave_title">Leave “%1$s”?</string>
     <string name="rooms_leave_desc">The room key is deleted from this phone. You will need a new invitation to come back.</string>
-    <string name="rooms_no_messages">No messages yet. Messages are not stored on servers: you only see those sent while chabit is open.</string>
+    <string name="rooms_no_messages">No messages yet. Messages are not stored on servers: you only see those sent while chatbit is open.</string>
     <string name="rooms_message_hint">Encrypted message</string>
     <string name="rooms_send">Send</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="map_open">World map (live activity)</string>
     <string name="map_title">World map</string>
     <string name="map_layer_activity">live activity</string>
@@ -900,4 +900,9 @@
     <string name="map_cell_quiet">No public activity seen here recently</string>
     <string name="map_geocache">Geocache: %1$s</string>
     <string name="map_join">Join #%1$s</string>
+
+    <!-- chabit -->
+    <string name="action_report_title">Report %1$s</string>
+    <string name="action_report_subtitle">Blocks this person and hides their messages as spam</string>
+    <string name="action_report_done">Reported: blocked and hidden. Thank you!</string>
 </resources>

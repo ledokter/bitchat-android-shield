@@ -243,7 +243,7 @@ class MediaSendingManager(
                 } catch (_: Exception) {
                     "application/octet-stream"
                 }
-                // chabit: an image sent as a file keeps its EXIF (GPS, device…): strip it first
+                // chatbit: an image sent as a file keeps its EXIF (GPS, device…): strip it first
                 if (mimeType == "image/jpeg" || mimeType == "image/png" || mimeType == "image/webp") {
                     com.bitchat.android.features.media.ImageUtils.stripIdentifyingExifInPlace(file.absolutePath)
                 }

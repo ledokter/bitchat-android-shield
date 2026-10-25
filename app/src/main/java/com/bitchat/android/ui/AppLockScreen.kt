@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.bitchat.android.R
 import com.bitchat.android.ui.theme.BitchatFontFamily
 
-/** Opaque cover shown while chabit is locked; it swallows every touch underneath. */
+/** Opaque cover shown while chatbit is locked; it swallows every touch underneath. */
 @Composable
 fun AppLockScreen(onUnlock: () -> Unit) {
     Column(
@@ -29,7 +29,7 @@ fun AppLockScreen(onUnlock: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
     ) {
-        ChabitLogo(height = 96.dp)
+        ChatbitLogo(height = 96.dp)
         Text(stringResource(R.string.app_lock_locked), fontFamily = BitchatFontFamily, color = MaterialTheme.colorScheme.onBackground)
         Button(onClick = onUnlock) {
             Text(stringResource(R.string.app_lock_unlock), fontFamily = BitchatFontFamily)

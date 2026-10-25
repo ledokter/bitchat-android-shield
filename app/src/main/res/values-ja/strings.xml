@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">chabit</string>
+    <string name="app_name">chatbit</string>
 
     <!-- 権限の説明 -->
     <string name="permission_bluetooth_rationale">Bluetooth の許可は、インターネットなしで他の人と直接チャットするために必要です。</string>
@@ -394,7 +394,7 @@
     <string name="about_system_default">システムのデフォルト</string>
     <string name="about_select_language">言語を選択</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="cashu_pay_via">Cashu で支払う</string>
     <string name="cashu_payment_description">Cashu 支払い</string>
     <string name="cashu_copy_token">トークンをコピー</string>
@@ -438,7 +438,7 @@
     <string name="notification_reply">返信</string>
     <string name="notification_mark_read">既読にする</string>
     <string name="notification_private_message">新しいプライベートメッセージ</string>
-    <string name="notification_content_hidden">chabit を開いて確認してください</string>
+    <string name="notification_content_hidden">chatbit を開いて確認してください</string>
     <string name="notification_channel_direct_messages">ダイレクトメッセージ</string>
     <string name="notification_channel_direct_messages_description">他のユーザーからのプライベートメッセージの通知</string>
     <string name="notification_channel_geohash">ジオハッシュチャット</string>
@@ -474,13 +474,13 @@
     <string name="about_tor_disconnected">未接続</string>
     <string name="chat_ui_matrix">マトリックス</string>
     <string name="chat_ui_bubbles">吹き出し</string>
-    <string name="share_bitchat_title">chabit を共有</string>
+    <string name="share_bitchat_title">chatbit を共有</string>
     <string name="share_bitchat_subtitle">オフライン配布用にインストールファイルを共有</string>
-    <string name="share_apk_title">chabit アプリを共有</string>
-    <string name="share_apk_explanation">chabit のインストールファイルを共有し、ほかの人がインターネットなしでアプリをインストールできるようにします。メッシュネットワークを広げるのに最適です！</string>
-    <string name="share_apk_receiver_instructions">受け取る人は次の操作が必要です:\n• Android の設定で「不明なアプリのインストール」を許可\n• chabit がすでに入っている場合は先にアンインストール（署名が異なるため）</string>
+    <string name="share_apk_title">chatbit アプリを共有</string>
+    <string name="share_apk_explanation">chatbit のインストールファイルを共有し、ほかの人がインターネットなしでアプリをインストールできるようにします。メッシュネットワークを広げるのに最適です！</string>
+    <string name="share_apk_receiver_instructions">受け取る人は次の操作が必要です:\n• Android の設定で「不明なアプリのインストール」を許可\n• chatbit がすでに入っている場合は先にアンインストール（署名が異なるため）</string>
     <string name="share_apk_confirm">アプリを共有</string>
-    <string name="share_apk_chooser_title">chabit の共有方法…</string>
+    <string name="share_apk_chooser_title">chatbit の共有方法…</string>
     <string name="share_apk_error">共有用にアプリを準備できませんでした。もう一度お試しください。</string>
     <string name="prepare_apk_title">共有用にアプリを準備</string>
     <string name="prepare_apk_ready_title">オフライン共有の準備ができました</string>
@@ -530,10 +530,10 @@
     <string name="prepare_apk_error_resume_rejected">%1$s が保存済みのダウンロード位置を拒否しました。次回は最初からやり直します。</string>
     <string name="prepare_apk_error_incomplete">%1$s からのダウンロードが途中で終了しました。再開できます。</string>
     <string name="prepare_apk_error_invalid_resume">%1$s が無効な再開応答を返しました。次回は最初からやり直します。</string>
-    <string name="prepare_apk_error_untrusted_key">%1$s の APK は信頼できる chabit のリリース鍵で署名されていません。</string>
+    <string name="prepare_apk_error_untrusted_key">%1$s の APK は信頼できる chatbit のリリース鍵で署名されていません。</string>
     <string name="prepare_apk_error_not_universal">%1$s が返したのはアーキテクチャ専用の APK で、必要なユニバーサル APK ではありません。</string>
     <string name="prepare_apk_error_apk_unreadable">ダウンロードした APK を読み込めませんでした。</string>
-    <string name="prepare_apk_error_not_bitchat">ダウンロードしたファイルは chabit の APK ではありません。</string>
+    <string name="prepare_apk_error_not_bitchat">ダウンロードしたファイルは chatbit の APK ではありません。</string>
     <string name="prepare_apk_error_no_version">ダウンロードした APK にバージョン情報がありません。</string>
     <string name="prepare_apk_error_source_failed">%1$s からのダウンロードに失敗しました。</string>
     <string name="prepare_apk_error_all_sources">設定されたすべての APK ダウンロード元で失敗しました。</string>
@@ -552,11 +552,11 @@
     <string name="hotspot_disconnect_message">ホットスポットを開始すると現在の Wi-Fi Direct 接続が切断されます。Cast、Android Auto、Quick Share などの近距離接続が中断される場合があります。</string>
     <string name="hotspot_disconnect_confirm">切断して開始</string>
     <string name="install_bitchat_title">受け取った APK をインストール</string>
-    <string name="install_bitchat_subtitle">受け取ったファイルから chabit をインストール</string>
-    <string name="install_apk_dialog_title">chabit のアップデートをインストール</string>
-    <string name="install_apk_dialog_message">受け取った APK から chabit をインストールしますか？メッシュネットワークでアプリをオフライン配布できます。</string>
+    <string name="install_bitchat_subtitle">受け取ったファイルから chatbit をインストール</string>
+    <string name="install_apk_dialog_title">chatbit のアップデートをインストール</string>
+    <string name="install_apk_dialog_message">受け取った APK から chatbit をインストールしますか？メッシュネットワークでアプリをオフライン配布できます。</string>
     <string name="install_apk_permission_title">許可が必要です</string>
-    <string name="install_apk_permission_message">chabit が自身を配布するには、パッケージのインストール許可が必要です。次の画面で「不明なアプリのインストール」を有効にしてください。</string>
+    <string name="install_apk_permission_message">chatbit が自身を配布するには、パッケージのインストール許可が必要です。次の画面で「不明なアプリのインストール」を有効にしてください。</string>
     <string name="install_apk_confirm">インストール</string>
     <string name="install_apk_grant_permission">許可する</string>
     <string name="install_apk_select_files">APK ファイルを選択</string>
@@ -565,7 +565,7 @@
     <string name="cd_direct_wifi_aware">Wi-Fi Aware で直接</string>
     <string name="cd_direct_bluetooth">Bluetooth で直接</string>
     <string name="cd_routed_mesh">メッシュ経由</string>
-    <string name="notification_action_quit_bitchat">chabit を終了</string>
+    <string name="notification_action_quit_bitchat">chatbit を終了</string>
     <string name="about_background_title">バックグラウンドで実行</string>
     <string name="about_background_desc">アプリを閉じてもメッシュを動かし続けます（フォアグラウンドサービス）</string>
     <string name="location_bluetooth_wifi_subtitle">Bluetooth • Wi-Fi • %1$s</string>
@@ -586,9 +586,9 @@
     <string name="debug_rssi_fmt">RSSI: %1$s</string>
     <string name="background_location_required_title">バックグラウンドでの位置情報を推奨</string>
     <string name="background_location_required_subtitle">任意。メッシュの安定性が向上します</string>
-    <string name="background_location_explanation">Android では、アプリを開いていないときも chabit が近くの端末を探せるよう、バックグラウンドでの位置情報の利用が推奨されています。再起動後もメッシュが維持されます。</string>
+    <string name="background_location_explanation">Android では、アプリを開いていないときも chatbit が近くの端末を探せるよう、バックグラウンドでの位置情報の利用が推奨されています。再起動後もメッシュが維持されます。</string>
     <string name="background_location_settings_tip">設定が開いたら「常に許可」を選んでください。</string>
-    <string name="background_location_needs_for">chabit はバックグラウンドの位置情報を次の目的で使います:</string>
+    <string name="background_location_needs_for">chatbit はバックグラウンドの位置情報を次の目的で使います:</string>
     <string name="background_location_needs_bullets">- アプリを閉じているときに近くの端末を探す\n- 再起動後に再接続する\n- バックグラウンドでメッシュを動かし続ける</string>
     <string name="background_location_privacy_note">位置情報を収集・保存することは絶対にありません。プライバシーは守られます。</string>
     <string name="grant_background_location">バックグラウンドの位置情報を許可</string>
@@ -679,12 +679,12 @@
     <string name="flood_import_block">…してブロック</string>
     <string name="flood_import_flag">…をスパマーとして</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="security_section">セキュリティ</string>
     <string name="security_summary">%2$d 件中 %1$d 件の保護が有効</string>
     <string name="security_summary_hint">プライバシー重視の設定になっています。詳細モードで調整できます。</string>
     <string name="sec_lock_title">アプリのロック</string>
-    <string name="sec_lock_desc">chabit を開くときに指紋・顔・画面ロックの暗証番号を要求</string>
+    <string name="sec_lock_desc">chatbit を開くときに指紋・顔・画面ロックの暗証番号を要求</string>
     <string name="sec_lock_unavailable">有効にするには端末に画面ロックを設定してください</string>
     <string name="sec_screenshots_title">スクリーンショットを禁止</string>
     <string name="sec_screenshots_desc">スクリーンショット・画面録画・最近のアプリのプレビューを禁止</string>
@@ -693,16 +693,16 @@
     <string name="sec_presence_title">自分の在席を知らせる</string>
     <string name="sec_presence_desc">オフ：書き込むまで近くのチャンネルに表示されません</string>
     <string name="sec_clipboard_title">クリップボードを消去</string>
-    <string name="sec_clipboard_desc">chabit からコピーした内容は 60 秒後に消去されます</string>
+    <string name="sec_clipboard_desc">chatbit からコピーした内容は 60 秒後に消去されます</string>
     <string name="sec_ephemeral_title">この端末からメッセージを削除するまで</string>
     <string name="sec_keep_forever">保持</string>
-    <string name="sec_autowipe_title">chabit を開かない期間がこれを超えたら全消去</string>
+    <string name="sec_autowipe_title">chatbit を開かない期間がこれを超えたら全消去</string>
     <string name="sec_autowipe_desc">端末の紛失や押収時にデータを守ります</string>
     <string name="duration_days">%1$d 日</string>
     <string name="advanced_mode_title">詳細モード</string>
     <string name="advanced_mode_desc">すべての技術設定を表示（PoW、フィルター、Tor、デバッグ）</string>
-    <string name="app_lock_prompt_title">chabit のロックを解除</string>
-    <string name="app_lock_locked">chabit はロックされています</string>
+    <string name="app_lock_prompt_title">chatbit のロックを解除</string>
+    <string name="app_lock_locked">chatbit はロックされています</string>
     <string name="app_lock_unlock">ロック解除</string>
     <string name="cmd_desc_block">ブロックする／ブロック一覧を表示</string>
     <string name="cmd_desc_channels">見つかったチャンネルをすべて表示</string>
@@ -756,16 +756,16 @@
     <string name="notes_enable_location">位置情報を有効にする</string>
     <string name="cd_cancel_recording">録音をキャンセル</string>
 
-    <!-- chabit -->
-    <string name="hs_title">chabit を共有</string>
+    <!-- chatbit -->
+    <string name="hs_title">chatbit を共有</string>
     <string name="hs_intro_title">オフラインでアプリを共有</string>
     <string name="hs_how_title">しくみ:</string>
     <string name="hs_how_1">1. あなたの端末が Wi-Fi ホットスポットを作ります</string>
     <string name="hs_how_2">2. ほかの人がそれに接続します</string>
     <string name="hs_how_3">3. QR コードを読み取るかアドレスを入力します</string>
-    <string name="hs_how_4">4. インターネットなしで chabit とブロックリストをダウンロード</string>
-    <string name="hs_perm_nearby_local">Wi-Fi ホットスポットを作り、接続した端末にアプリを配るため、chabit には「付近のデバイス」と「ローカルネットワーク」の許可が必要です。</string>
-    <string name="hs_perm_nearby">オフライン共有用の Wi-Fi ホットスポットを作るため、chabit には「付近のデバイス」の許可が必要です。</string>
+    <string name="hs_how_4">4. インターネットなしで chatbit とブロックリストをダウンロード</string>
+    <string name="hs_perm_nearby_local">Wi-Fi ホットスポットを作り、接続した端末にアプリを配るため、chatbit には「付近のデバイス」と「ローカルネットワーク」の許可が必要です。</string>
+    <string name="hs_perm_nearby">オフライン共有用の Wi-Fi ホットスポットを作るため、chatbit には「付近のデバイス」の許可が必要です。</string>
     <string name="hs_perm_location">Wi-Fi ホットスポットの作成には位置情報の許可が必要です。Android の Wi-Fi の仕様によるもので、位置情報は収集しません。</string>
     <string name="hs_note_title">注意</string>
     <string name="hs_note_desc">端末に Wi-Fi ホットスポットを作成します。現在の Wi-Fi 接続が切れる場合があります。</string>
@@ -777,12 +777,12 @@
     <string name="hs_step1_desc">この QR コードを読み取ってもらうと接続できます:</string>
     <string name="hs_wifi_qr">Wi-Fi の QR コード</string>
     <string name="hs_manual">または手動で入力:</string>
-    <string name="hs_step2">ステップ 2: chabit をダウンロード</string>
+    <string name="hs_step2">ステップ 2: chatbit をダウンロード</string>
     <string name="hs_step2_desc">Wi-Fi に接続したら、この QR コードを読み取ります:</string>
     <string name="hs_url_qr">サイトのアドレスの QR コード</string>
     <string name="hs_open_browser">またはブラウザで開く:</string>
     <string name="hs_instructions_title">手順</string>
-    <string name="hs_instructions">1. 上の Wi-Fi に接続\n2. ブラウザを開く\n3. 上のアドレスを開くか QR コードを読み取る\n4. 「chabit をダウンロード」をタップ\n5. ダウンロードしたファイルをインストール</string>
+    <string name="hs_instructions">1. 上の Wi-Fi に接続\n2. ブラウザを開く\n3. 上のアドレスを開くか QR コードを読み取る\n4. 「chatbit をダウンロード」をタップ\n5. ダウンロードしたファイルをインストール</string>
     <string name="hs_copy">コピー</string>
     <string name="hs_error">エラー</string>
     <string name="hs_try_again">再試行</string>
@@ -790,22 +790,22 @@
     <string name="hs_ssid">ネットワーク名（SSID）</string>
     <string name="hs_password">パスワード</string>
     <string name="hs_url">サイトのアドレス</string>
-    <string name="web_download">chabit をダウンロード</string>
+    <string name="web_download">chatbit をダウンロード</string>
     <string name="web_version_size">バージョン %1$s · %2$d MB · Android 8 以降</string>
     <string name="web_install_title">4 ステップでインストール</string>
     <string name="web_install_step1">上のボタンをタップし、ダウンロードが終わるまで待ちます。</string>
     <string name="web_install_step2">通知またはダウンロードフォルダからファイルを開きます。</string>
     <string name="web_install_step3">確認が出たら、ブラウザに「不明なアプリのインストール」を許可します。</string>
-    <string name="web_install_step4">「インストール」をタップし、chabit を開きます。</string>
+    <string name="web_install_step4">「インストール」をタップし、chatbit を開きます。</string>
     <string name="web_lists_title">共有ブロックリスト</string>
-    <string name="web_lists_import">リストを使うには: chabit で 設定 → 詳細モード → フラッド対策 → リスト → ファイルを読み込む。</string>
+    <string name="web_lists_import">リストを使うには: chatbit で 設定 → 詳細モード → フラッド対策 → リスト → ファイルを読み込む。</string>
     <string name="web_footer">近くの端末からオフラインで配信 · インターネット不要・トラッキングなし</string>
     <string name="flood_send_direct">直接送る（Bluetooth・Quick Share・メッセージなど）</string>
     <string name="flood_send_blocked">ブロック済みを送る</string>
     <string name="flood_send_flagged">検出済みを送る</string>
     <string name="flood_send_chooser">リストの送信方法…</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="rooms_title">プライベートルーム</string>
     <string name="rooms_back">戻る</string>
     <string name="rooms_empty">プライベートルームはまだありません。作成して、リンクや QR コードで招待しましょう。メッセージはエンドツーエンド暗号化され、端末にのみ保存されます。</string>
@@ -814,7 +814,7 @@
     <string name="rooms_create_button">作成</string>
     <string name="rooms_join_title">招待で参加</string>
     <string name="rooms_link_hint">招待リンクを貼り付け</string>
-    <string name="rooms_invalid_invite">有効な chabit の招待ではありません。</string>
+    <string name="rooms_invalid_invite">有効な chatbit の招待ではありません。</string>
     <string name="rooms_join">参加</string>
     <string name="rooms_ignore">無視</string>
     <string name="rooms_scan">QR コードを読み取る</string>
@@ -827,11 +827,11 @@
     <string name="rooms_leave">退出</string>
     <string name="rooms_leave_title">「%1$s」から退出しますか？</string>
     <string name="rooms_leave_desc">ルームの鍵はこの端末から削除されます。戻るには新しい招待が必要です。</string>
-    <string name="rooms_no_messages">まだメッセージはありません。メッセージはサーバーに保存されないため、chabit を開いている間に届いたものだけが表示されます。</string>
+    <string name="rooms_no_messages">まだメッセージはありません。メッセージはサーバーに保存されないため、chatbit を開いている間に届いたものだけが表示されます。</string>
     <string name="rooms_message_hint">暗号化メッセージ</string>
     <string name="rooms_send">送信</string>
 
-    <!-- chabit -->
+    <!-- chatbit -->
     <string name="map_open">世界地図（リアルタイムの活動）</string>
     <string name="map_title">世界地図</string>
     <string name="map_layer_activity">リアルタイム</string>
@@ -843,4 +843,9 @@
     <string name="map_cell_quiet">最近ここで公開の活動はありません</string>
     <string name="map_geocache">ジオキャッシュ: %1$s</string>
     <string name="map_join">#%1$s に参加</string>
+
+    <!-- chabit -->
+    <string name="action_report_title">%1$s を報告</string>
+    <string name="action_report_subtitle">この人をブロックし、メッセージをスパムとして非表示にします</string>
+    <string name="action_report_done">報告しました：ブロックして非表示にしました。ありがとうございます！</string>
 </resources>
