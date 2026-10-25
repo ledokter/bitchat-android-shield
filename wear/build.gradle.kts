@@ -108,6 +108,7 @@ val sharedSourceIncludes = listOf(
     "com/bitchat/android/nostr/Bech32.kt",
     "com/bitchat/android/nostr/GeohashAliasRegistry.kt",
     "com/bitchat/android/nostr/BitchatShield.kt",
+    "com/bitchat/android/nostr/FloodDetector.kt",
     "com/bitchat/android/features/file/FileUtils.kt",
     "com/bitchat/android/features/voice/**",
     "com/bitchat/android/ui/debug/DebugSettingsManager.kt",

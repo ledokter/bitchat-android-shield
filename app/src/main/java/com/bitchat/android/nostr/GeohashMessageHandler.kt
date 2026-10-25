@@ -77,7 +77,9 @@ class GeohashMessageHandler(
                     pubkey = pubkey,
                     rawContent = if (event.kind == NostrKind.GEOHASH_PRESENCE) "" else event.content,
                     rawNickname = rawNick,
-                    createdAtSeconds = event.createdAt.toLong()
+                    createdAtSeconds = event.createdAt.toLong(),
+                    geohash = subscribedGeohash,
+                    teleport = event.tags.any { it.size >= 2 && it[0] == "t" && it[1] == "teleport" }
                 )
                 val allowed = when (inspection) {
                     is BitchatShield.InspectionResult.Blocked -> return@launch
