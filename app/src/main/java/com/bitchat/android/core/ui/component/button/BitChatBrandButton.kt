@@ -3,10 +3,7 @@ package com.bitchat.android.core.ui.component.button
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -19,15 +16,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.bitchat.android.core.ui.icon.BitChatIcon
+import com.bitchat.android.ui.ChabitLogo
 import com.bitchat.android.ui.rememberPressScale
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.milliseconds
 
 private val MultiClickThreshold = 300.milliseconds
 
@@ -37,8 +35,7 @@ fun BitChatBrandButton(
     onTripleClick: () -> Unit,
     contentDescription: String,
     modifier: Modifier = Modifier,
-    tint: Color = MaterialTheme.colorScheme.primary,
-    iconSize: Dp = 22.dp,
+    iconSize: Dp = 24.dp,
 ) {
     var tapCount by remember { mutableIntStateOf(0) }
     var resetJob by remember { mutableStateOf<Job?>(null) }
@@ -80,13 +77,12 @@ fun BitChatBrandButton(
             },
         contentAlignment = Alignment.Center
     ) {
-        Icon(
-            imageVector = BitChatIcon,
-            contentDescription = contentDescription,
-            tint = tint,
+        // chabit cat; its bow follows the accent colour
+        ChabitLogo(
+            height = iconSize,
             modifier = Modifier
-                .size(iconSize)
-                .scale(pressScale),
+                .scale(pressScale)
+                .semantics { this.contentDescription = contentDescription },
         )
     }
 }
