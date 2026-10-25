@@ -185,12 +185,7 @@ internal fun AboutHero(
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = BitChatIcon,
-            contentDescription = null,
-            tint = colorScheme.primary,
-            modifier = Modifier.size(64.dp)
-        )
+        ChabitLogo(height = 64.dp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
