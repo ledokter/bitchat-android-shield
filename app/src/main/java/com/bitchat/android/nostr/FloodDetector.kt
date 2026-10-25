@@ -424,7 +424,7 @@ class FloodDetector(@Volatile var rules: Rules = Rules()) {
         private val RE_LINK = Regex("""(?:https?://|www\.)([a-z0-9.-]+\.[a-z]{2,})""", RegexOption.IGNORE_CASE)
         private val RE_DIGITS = Regex("""\d+""")
         private val RE_RUN = Regex("""(.)\1{3,}""")
-        private val RE_SEP = Regex("""(?U)[^\w#]+""")
+        private val RE_SEP = Regex("""[^\p{L}\p{N}_#]+""") // \w of Python; (?U) is not supported by Android ICU
         private val RE_SPACES = Regex("""\s+""")
         private val RE_HEX = Regex("""[0-9a-f]{6,}""")
 
