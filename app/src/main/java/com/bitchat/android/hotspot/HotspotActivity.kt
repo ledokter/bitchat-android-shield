@@ -445,6 +445,7 @@ fun ActiveHotspotScreen(state: HotspotViewModel.HotspotState.Active) {
 @Composable
 fun WifiTabContent(ssid: String, password: String) {
     val clipboardManager = LocalClipboardManager.current
+    val secureCopyContext = androidx.compose.ui.platform.LocalContext.current
     val context = LocalContext.current
 
     Column(
@@ -501,7 +502,7 @@ fun WifiTabContent(ssid: String, password: String) {
             label = "Network Name (SSID)",
             value = ssid,
             onCopy = {
-                clipboardManager.setText(AnnotatedString(ssid))
+                com.bitchat.android.security.SecureClipboard.copy(secureCopyContext, "ssid", ssid, sensitive = false)
             }
         )
 
@@ -510,7 +511,7 @@ fun WifiTabContent(ssid: String, password: String) {
             label = "Password",
             value = password,
             onCopy = {
-                clipboardManager.setText(AnnotatedString(password))
+                com.bitchat.android.security.SecureClipboard.copy(secureCopyContext, "password", password)
             }
         )
     }
@@ -520,6 +521,7 @@ fun WifiTabContent(ssid: String, password: String) {
 fun WebsiteTabContent(ipAddress: String, port: Int) {
     val url = "http://$ipAddress:$port"
     val clipboardManager = LocalClipboardManager.current
+    val secureCopyContext = androidx.compose.ui.platform.LocalContext.current
 
     Column(
         modifier = Modifier
@@ -575,7 +577,7 @@ fun WebsiteTabContent(ipAddress: String, port: Int) {
             label = "Website URL",
             value = url,
             onCopy = {
-                clipboardManager.setText(AnnotatedString(url))
+                com.bitchat.android.security.SecureClipboard.copy(secureCopyContext, "url", url, sensitive = false)
             }
         )
 

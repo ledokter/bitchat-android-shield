@@ -1182,8 +1182,7 @@ internal fun CashuPaymentChip(
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.cashu_copy_token)) },
                 onClick = {
-                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    clipboard.setPrimaryClip(ClipData.newPlainText("Cashu token", token))
+                    com.bitchat.android.security.SecureClipboard.copy(context, "Cashu token", token)
                     showMenu = false
                 }
             )

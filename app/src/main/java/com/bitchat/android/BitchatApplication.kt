@@ -13,6 +13,10 @@ class BitchatApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // chabit security settings first: the Tor kill switch must apply before any network use
+        com.bitchat.android.security.SecurityPreferences.init(this)
+        com.bitchat.android.util.AppStrings.init(this)
+
         // Start the single process-wide power policy before transport components are constructed.
         com.bitchat.android.mesh.PowerManager.getInstance(this).start()
 

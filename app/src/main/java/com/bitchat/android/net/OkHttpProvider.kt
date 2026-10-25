@@ -69,7 +69,12 @@ object OkHttpProvider {
     private fun baseBuilderForCurrentProxy(): Pair<OkHttpClient.Builder, Route> {
         val builder = OkHttpClient.Builder()
         val torProvider = ArtiTorManager.getInstance()
+        // Kill switch: while Tor mode is ON, a missing SOCKS address (Arti restarting for a new route,
+        // crashed or stopping) must never fall back to a direct connection.
         val socks: InetSocketAddress? = torProvider.currentSocksAddress()
+            ?: if (com.bitchat.android.security.SecurityPreferences.killSwitch.value &&
+                TorPreferenceManager.modeFlow.value == TorMode.ON
+            ) BLACKHOLE_SOCKS else null
         // If a SOCKS address is defined, always use it. TorProvider sets this as soon as Tor mode is ON,
         // even before bootstrap, to prevent any direct connections from occurring.
         if (socks != null) {
@@ -78,4 +83,7 @@ object OkHttpProvider {
         }
         return builder to if (socks == null) Route.DIRECT else Route.TOR
     }
+
+    /** Nothing listens on the discard port: connections fail instead of leaking outside Tor. */
+    private val BLACKHOLE_SOCKS = InetSocketAddress("127.0.0.1", 9)
 }

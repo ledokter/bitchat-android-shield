@@ -372,6 +372,7 @@ private fun FingerprintBlock(
     accent: Color
 ) {
     val clipboardManager = LocalClipboardManager.current
+    val secureCopyContext = androidx.compose.ui.platform.LocalContext.current
     var showMenu by remember(fingerprint) { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -415,7 +416,7 @@ private fun FingerprintBlock(
                     DropdownMenuItem(
                         text = { Text(text = stringResource(R.string.fingerprint_copy)) },
                         onClick = {
-                            clipboardManager.setText(AnnotatedString(fingerprint))
+                            com.bitchat.android.security.SecureClipboard.copy(secureCopyContext, "fingerprint", fingerprint, sensitive = false)
                             showMenu = false
                         }
                     )

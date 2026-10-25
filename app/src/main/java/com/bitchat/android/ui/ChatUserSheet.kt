@@ -35,6 +35,7 @@ fun ChatUserSheet(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
+    val secureCopyContext = androidx.compose.ui.platform.LocalContext.current
     
     val colorScheme = MaterialTheme.colorScheme
     val palette = LocalBitchatPalette.current
@@ -84,7 +85,7 @@ fun ChatUserSheet(
                                 titleColor = standardGrey,
                                 onClick = {
                                     // Copy the message content to clipboard
-                                    clipboardManager.setText(AnnotatedString(message.content))
+                                    com.bitchat.android.security.SecureClipboard.copy(secureCopyContext, "message", message.content)
                                     onDismiss()
                                 }
                             )

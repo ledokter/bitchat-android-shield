@@ -53,6 +53,8 @@ android {
 
     buildTypes {
         debug {
+            // chabit: pseudo-locales (en-XA, ar-XB) make any hard-coded, untranslated text stand out
+            isPseudoLocalesEnabled = true
             ndk {
                 // Include x86_64 for emulator support during development
                 abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")

@@ -1,5 +1,7 @@
 package com.bitchat.android.ui
 
+import com.bitchat.android.R
+
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -304,7 +306,7 @@ class GeohashViewModel(
             repo.updateReactiveParticipantCounts()
             val sysMsg = com.bitchat.android.model.BitchatMessage(
                 sender = "system",
-                content = "blocked $targetNickname in geohash channels",
+                content = com.bitchat.android.util.AppStrings.get(R.string.sys_blocked_geohash, targetNickname),
                 timestamp = Date(),
                 isRelay = false
             )
@@ -312,7 +314,7 @@ class GeohashViewModel(
         } else {
             val sysMsg = com.bitchat.android.model.BitchatMessage(
                 sender = "system",
-                content = "user '$targetNickname' not found in current geohash",
+                content = com.bitchat.android.util.AppStrings.get(R.string.sys_user_not_in_geohash, targetNickname),
                 timestamp = Date(),
                 isRelay = false
             )

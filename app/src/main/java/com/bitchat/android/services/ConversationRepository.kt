@@ -325,6 +325,18 @@ class ConversationRepository internal constructor(
         }
     }
 
+    /** chabit ephemeral messages: deletes messages older than [cutoffMs] with their media; returns their IDs. */
+    suspend fun deleteMessagesOlderThan(cutoffMs: Long): Set<String> = withContext(dispatcher) {
+        try {
+            val ids = database.messageIDsOlderThan(cutoffMs)
+            ids.forEach { deleteStoredMedia(database.deleteMessage(it)) }
+            ids.toSet()
+        } catch (error: Exception) {
+            Log.e(TAG, "Unable to delete expired private messages: ${error.message}")
+            emptySet()
+        }
+    }
+
     private fun deleteStoredMedia(paths: Collection<String>) {
         if (paths.isEmpty()) return
         com.bitchat.android.features.file.FileUtils.deleteStoredMediaPaths(
@@ -1016,6 +1028,17 @@ internal class ConversationDatabase(
             pruneDeletedMessageIDsLocked(this)
             unreferencedAttachmentPathsLocked(this, attachmentCandidates)
         }
+
+    fun messageIDsOlderThan(cutoffMs: Long): List<String> =
+        readableDatabase.query(
+            "private_messages",
+            arrayOf("message_id"),
+            "sent_at < ? AND received_at < ?",
+            arrayOf(cutoffMs.toString(), cutoffMs.toString()),
+            null,
+            null,
+            null
+        ).use { cursor -> buildList { while (cursor.moveToNext()) add(cursor.getString(0)) } }
 
     fun deleteMessage(messageID: String): Set<String> =
         writableDatabase.inTransaction {

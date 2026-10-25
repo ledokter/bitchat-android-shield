@@ -314,6 +314,7 @@ fun AboutSheet(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val advancedMode by com.bitchat.android.security.SecurityPreferences.advancedMode.collectAsState()
     
     // Get version name from package info
     val versionName = remember {
@@ -618,6 +619,7 @@ fun AboutSheet(
                                         color = colorScheme.outlineVariant
                                     )
 
+                                    if (advancedMode) {
                                     // Incoming Proof of Work Filter Toggle (default: 0 bits / disabled)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Speed,
@@ -693,6 +695,8 @@ fun AboutSheet(
                                         color = colorScheme.outlineVariant
                                     )
 
+                                    }
+
                                     // Two-stage anti-flood (detection ported from bitchat-bot)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Shield,
@@ -701,7 +705,7 @@ fun AboutSheet(
                                         checked = floodEnabled,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setFloodEnabled(it) }
                                     )
-                                    if (onShowFloodSettings != null) {
+                                    if (advancedMode && onShowFloodSettings != null) {
                                         TextButton(
                                             onClick = onShowFloodSettings,
                                             modifier = Modifier.padding(start = 46.dp)
@@ -1234,7 +1238,12 @@ fun AboutSheet(
                     }
 
                     // PoW Difficulty Sliders (Incoming filter + Outgoing send PoW)
-                    item(key = "pow_slider") {
+                    // chabit protections: summary by default, every switch in advanced mode
+                    item(key = "security") {
+                        SecuritySettingsCard(advanced = advancedMode)
+                    }
+
+                    if (advancedMode) item(key = "pow_slider") {
                         val powEnabled by PoWPreferenceManager.powEnabled.collectAsState()
                         val powDifficulty by PoWPreferenceManager.powDifficulty.collectAsState()
                         val sendPowEnabled by PoWPreferenceManager.sendPowEnabled.collectAsState()
@@ -1453,6 +1462,7 @@ fun AboutSheet(
                                                 )
                                             }
                                         }
+                                        if (advancedMode) {
                                         Text(
                                             text = stringResource(R.string.tor_auto_rotation),
                                             fontFamily = BitchatFontFamily,
@@ -1478,6 +1488,7 @@ fun AboutSheet(
                                                 )
                                             }
                                         }
+                                        }
                                     }
                                 }
                             }
@@ -1499,7 +1510,10 @@ fun AboutSheet(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            if (selectedTab == AboutTab.Settings && onShowDebug != null) {
+                            if (selectedTab == AboutTab.Settings) {
+                                AdvancedModeToggle(advanced = advancedMode)
+                            }
+                            if (selectedTab == AboutTab.Settings && advancedMode && onShowDebug != null) {
                                 TextButton(onClick = onShowDebug) {
                                     Text(
                                         text = stringResource(R.string.about_debug_settings),

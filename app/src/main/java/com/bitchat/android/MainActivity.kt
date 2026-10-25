@@ -165,6 +165,39 @@ class MainActivity : OrientationAwareActivity() {
                         .padding(innerPadding)
                     )
                 }
+                // chabit app lock: opaque cover until the user authenticates
+                val locked by com.bitchat.android.security.AppLock.locked.collectAsState()
+                if (locked) {
+                    com.bitchat.android.ui.AppLockScreen(
+                        onUnlock = { com.bitchat.android.security.AppLock.authenticate(this@MainActivity) }
+                    )
+                }
+            }
+        }
+
+        // chabit: wipe everything when the app was not opened for longer than the auto-wipe delay
+        if (com.bitchat.android.security.SecurityPreferences.recordOpenAndCheckWipe()) {
+            Log.w("MainActivity", "Auto-wipe: app unused for too long")
+            chatViewModel.panicClearAllData()
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // no screenshots or screen recording of the app
+                launch {
+                    com.bitchat.android.security.SecurityPreferences.blockScreenshots.collect { block ->
+                        if (block) window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+                        else window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+                    }
+                }
+                // ephemeral messages: delete old ones now, then every 15 minutes
+                launch {
+                    while (true) {
+                        com.bitchat.android.security.SecurityPreferences.ephemeralCutoffMs()?.let {
+                            com.bitchat.android.services.AppStateStore.purgeMessagesOlderThan(it)
+                        }
+                        kotlinx.coroutines.delay(15 * 60_000L)
+                    }
+                }
             }
         }
         
@@ -739,6 +772,7 @@ class MainActivity : OrientationAwareActivity() {
 
     override fun onStart() {
         super.onStart()
+        com.bitchat.android.security.AppLock.onStart(this)
         if (pendingMeshForegroundServiceStart) {
             startMeshForegroundServiceBestEffort()
         }
@@ -779,6 +813,20 @@ class MainActivity : OrientationAwareActivity() {
         }
     }
     
+    override fun onStop() {
+        super.onStop()
+        com.bitchat.android.security.AppLock.onStop()
+    }
+
+    @Deprecated("Android 8-9 screen-lock confirmation for the app lock")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        @Suppress("DEPRECATION")
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == com.bitchat.android.security.AppLock.REQUEST_DEVICE_CREDENTIAL) {
+            com.bitchat.android.security.AppLock.onCredentialResult(resultCode == RESULT_OK)
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         // Only set background state if app is fully initialized
