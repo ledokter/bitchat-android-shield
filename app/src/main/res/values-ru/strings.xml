@@ -827,4 +827,17 @@
     <string name="rooms_no_messages">Сообщений пока нет. Они не хранятся на серверах: видны только те, что пришли, пока chabit открыт.</string>
     <string name="rooms_message_hint">Зашифрованное сообщение</string>
     <string name="rooms_send">Отправить</string>
+
+    <!-- chabit -->
+    <string name="map_open">Карта мира (активность в реальном времени)</string>
+    <string name="map_title">Карта мира</string>
+    <string name="map_layer_activity">активность</string>
+    <string name="map_layer_geocaches">геотайники</string>
+    <string name="map_daynight">день/ночь</string>
+    <string name="map_spin">вращение</string>
+    <string name="map_streets">улицы (через Tor)</string>
+    <string name="map_cell_activity">Публичных сообщений и присутствий за 15 минут: %1$d</string>
+    <string name="map_cell_quiet">Здесь недавно не было публичной активности</string>
+    <string name="map_geocache">Геотайник: %1$s</string>
+    <string name="map_join">Войти в #%1$s</string>
 </resources>

@@ -830,4 +830,17 @@
     <string name="rooms_no_messages">Aún no hay mensajes. No se guardan en servidores: solo ves los enviados mientras chabit está abierto.</string>
     <string name="rooms_message_hint">Mensaje cifrado</string>
     <string name="rooms_send">Enviar</string>
+
+    <!-- chabit -->
+    <string name="map_open">Mapa del mundo (actividad en directo)</string>
+    <string name="map_title">Mapa del mundo</string>
+    <string name="map_layer_activity">actividad en directo</string>
+    <string name="map_layer_geocaches">geocachés</string>
+    <string name="map_daynight">día/noche</string>
+    <string name="map_spin">rotación</string>
+    <string name="map_streets">calles (vía Tor)</string>
+    <string name="map_cell_activity">%1$d mensajes o presencias públicos en los últimos 15 minutos</string>
+    <string name="map_cell_quiet">No se ha visto actividad pública aquí recientemente</string>
+    <string name="map_geocache">Geocaché: %1$s</string>
+    <string name="map_join">Unirse a #%1$s</string>
 </resources>

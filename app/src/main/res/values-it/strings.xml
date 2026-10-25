@@ -857,4 +857,17 @@
     <string name="rooms_no_messages">Ancora nessun messaggio. I messaggi non sono salvati sui server: vedi solo quelli inviati mentre chabit è aperto.</string>
     <string name="rooms_message_hint">Messaggio cifrato</string>
     <string name="rooms_send">Invia</string>
+
+    <!-- chabit -->
+    <string name="map_open">Mappa del mondo (attività dal vivo)</string>
+    <string name="map_title">Mappa del mondo</string>
+    <string name="map_layer_activity">attività dal vivo</string>
+    <string name="map_layer_geocaches">geocache</string>
+    <string name="map_daynight">giorno/notte</string>
+    <string name="map_spin">rotazione</string>
+    <string name="map_streets">strade (via Tor)</string>
+    <string name="map_cell_activity">%1$d messaggi o presenze pubblici negli ultimi 15 minuti</string>
+    <string name="map_cell_quiet">Nessuna attività pubblica vista qui di recente</string>
+    <string name="map_geocache">Geocache: %1$s</string>
+    <string name="map_join">Entra in #%1$s</string>
 </resources>

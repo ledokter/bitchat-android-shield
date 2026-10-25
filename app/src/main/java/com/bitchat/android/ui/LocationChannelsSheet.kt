@@ -548,6 +548,23 @@ fun LocationChannelsSheet(
                         }
                     }
 
+                    // chabit world map: live activity, geocaches, day/night (glub.chat style)
+                    item(key = "world_map") {
+                        androidx.compose.material3.OutlinedButton(
+                            onClick = {
+                                mapPickerLauncher.launch(Intent(context, WorldMapActivity::class.java))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            Text(
+                                text = "🌍 " + stringResource(R.string.map_open),
+                                fontFamily = BitchatFontFamily
+                            )
+                        }
+                    }
+
                     item(key = "location_notes_card") {
                         Surface(
                             modifier = Modifier

@@ -831,4 +831,17 @@
     <string name="rooms_no_messages">Noch keine Nachrichten. Nachrichten werden nicht auf Servern gespeichert: Du siehst nur die, die gesendet werden, während chabit offen ist.</string>
     <string name="rooms_message_hint">Verschlüsselte Nachricht</string>
     <string name="rooms_send">Senden</string>
+
+    <!-- chabit -->
+    <string name="map_open">Weltkarte (Live-Aktivität)</string>
+    <string name="map_title">Weltkarte</string>
+    <string name="map_layer_activity">Live-Aktivität</string>
+    <string name="map_layer_geocaches">Geocaches</string>
+    <string name="map_daynight">Tag/Nacht</string>
+    <string name="map_spin">Drehen</string>
+    <string name="map_streets">Straßen (über Tor)</string>
+    <string name="map_cell_activity">%1$d öffentliche Nachrichten oder Anwesenheiten in den letzten 15 Minuten</string>
+    <string name="map_cell_quiet">Hier zuletzt keine öffentliche Aktivität gesehen</string>
+    <string name="map_geocache">Geocache: %1$s</string>
+    <string name="map_join">#%1$s beitreten</string>
 </resources>

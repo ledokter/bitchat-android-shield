@@ -851,4 +851,17 @@
     <string name="rooms_no_messages">还没有消息。消息不会保存在服务器上：你只能看到 chabit 打开期间收到的消息。</string>
     <string name="rooms_message_hint">加密消息</string>
     <string name="rooms_send">发送</string>
+
+    <!-- chabit -->
+    <string name="map_open">世界地图（实时动态）</string>
+    <string name="map_title">世界地图</string>
+    <string name="map_layer_activity">实时动态</string>
+    <string name="map_layer_geocaches">地理藏宝</string>
+    <string name="map_daynight">昼夜</string>
+    <string name="map_spin">旋转</string>
+    <string name="map_streets">街道（经 Tor）</string>
+    <string name="map_cell_activity">最近 15 分钟内有 %1$d 条公开消息或在线状态</string>
+    <string name="map_cell_quiet">最近这里没有公开动态</string>
+    <string name="map_geocache">地理藏宝：%1$s</string>
+    <string name="map_join">加入 #%1$s</string>
 </resources>

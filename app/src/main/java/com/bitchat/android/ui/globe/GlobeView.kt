@@ -20,9 +20,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -152,10 +154,18 @@ fun GlobeView(
     cities: List<LandData.City>,
     labelTypeface: Typeface?,
     labelTypefaceBold: Typeface?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // chabit world map layers (all optional: the geohash picker passes none)
+    markers: List<GlobeMarker> = emptyList(),
+    nightShading: Boolean = false,
+    tileLayer: GlobeTileLayer? = null,
+    onTap: ((lat: Double, lon: Double, marker: GlobeMarker?) -> Unit)? = null
 ) {
     val view = LocalView.current
     val density = LocalDensity.current
+    // read inside the long-lived gesture handler, so always the latest values
+    val markersNow = rememberUpdatedState(markers)
+    val onTapNow = rememberUpdatedState(onTap)
 
     val stars = remember {
         val rnd = kotlin.random.Random(42)
@@ -337,6 +347,14 @@ fun GlobeView(
                                 } else {
                                     state.animateTo(latLon.first, latLon.second, null, null, 450)
                                 }
+                                onTapNow.value?.invoke(
+                                    latLon.first, latLon.second,
+                                    nearestMarker(
+                                        markersNow.value, downPos.x, downPos.y, cx, cy, r,
+                                        state.centerLat.toDouble(), state.centerLon.toDouble(),
+                                        28.dp.toPx()
+                                    )
+                                )
                             }
                         }
                     } else if (dragStarted && !hadMultiplePointers) {
@@ -423,6 +441,7 @@ fun GlobeView(
             }
         }
 
+        tileLayer?.draw(this, cx, cy, r, cLat, cLon)
         // Sphere shading: dark limb + night side for 3D depth
         drawCircle(
             brush = Brush.radialGradient(
@@ -448,6 +467,8 @@ fun GlobeView(
             center = Offset(cx, cy)
         )
 
+        if (nightShading) drawNightShading(cx, cy, r, cLat, cLon)
+        if (markers.isNotEmpty()) drawMarkers(markers, cx, cy, r, cLat, cLon, density.density)
         // Cities are detail-only; omitting them while moving keeps touch latency predictable.
         val cityMaxRank = frameDetail.cityMaxRank
         if (cityMaxRank == null || cityMaxRank >= 0) {

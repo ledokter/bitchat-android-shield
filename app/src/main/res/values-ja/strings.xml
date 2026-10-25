@@ -830,4 +830,17 @@
     <string name="rooms_no_messages">まだメッセージはありません。メッセージはサーバーに保存されないため、chabit を開いている間に届いたものだけが表示されます。</string>
     <string name="rooms_message_hint">暗号化メッセージ</string>
     <string name="rooms_send">送信</string>
+
+    <!-- chabit -->
+    <string name="map_open">世界地図（リアルタイムの活動）</string>
+    <string name="map_title">世界地図</string>
+    <string name="map_layer_activity">リアルタイム</string>
+    <string name="map_layer_geocaches">ジオキャッシュ</string>
+    <string name="map_daynight">昼夜</string>
+    <string name="map_spin">回転</string>
+    <string name="map_streets">道路（Tor 経由）</string>
+    <string name="map_cell_activity">直近 15 分の公開メッセージ・在席: %1$d 件</string>
+    <string name="map_cell_quiet">最近ここで公開の活動はありません</string>
+    <string name="map_geocache">ジオキャッシュ: %1$s</string>
+    <string name="map_join">#%1$s に参加</string>
 </resources>
