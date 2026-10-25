@@ -5,6 +5,7 @@ import android.os.Build
 import android.view.View
 import android.view.WindowInsetsController
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -13,6 +14,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
@@ -65,6 +67,28 @@ internal val LightBitchatColorScheme = lightColorScheme(
     onError = Color.White
 )
 
+private fun mix(a: Color, b: Color, t: Float) = Color(
+    red = a.red + (b.red - a.red) * t,
+    green = a.green + (b.green - a.green) * t,
+    blue = a.blue + (b.blue - a.blue) * t
+)
+
+/** Applies the chosen accent to a base scheme; container tones are derived so text on them stays readable. */
+internal fun ColorScheme.withAccent(accent: AccentColor, dark: Boolean): ColorScheme {
+    val primary = Color(if (dark) accent.dark else accent.light)
+    return if (dark) copy(
+        primary = primary,
+        onPrimary = Color.Black,
+        primaryContainer = mix(primary, Color.Black, 0.75f),
+        onPrimaryContainer = mix(primary, Color.White, 0.7f)
+    ) else copy(
+        primary = primary,
+        onPrimary = Color.White,
+        primaryContainer = mix(primary, Color.White, 0.85f),
+        onPrimaryContainer = mix(primary, Color.Black, 0.6f)
+    )
+}
+
 @Composable
 fun BitchatTheme(
     darkTheme: Boolean? = null,
@@ -82,7 +106,10 @@ fun BitchatTheme(
         }
     }
 
-    val colorScheme = if (shouldUseDark) DarkBitchatColorScheme else LightBitchatColorScheme
+    val accent by ThemePreferenceManager.accentFlow.collectAsState(initial = AccentColor.DEFAULT)
+    val colorScheme = remember(shouldUseDark, accent) {
+        (if (shouldUseDark) DarkBitchatColorScheme else LightBitchatColorScheme).withAccent(accent, shouldUseDark)
+    }
     val palette = if (shouldUseDark) DarkBitchatPalette else LightBitchatPalette
 
     val view = LocalView.current

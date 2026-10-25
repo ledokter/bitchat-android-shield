@@ -62,6 +62,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.border
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -424,6 +429,38 @@ fun AboutSheet(
                                             onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.Dark) },
                                             modifier = Modifier.weight(1f)
                                         )
+                                    }
+                                    // Accent palette: every tone meets WCAG AA in light and dark themes
+                                    val accent by com.bitchat.android.ui.theme.ThemePreferenceManager.accentFlow.collectAsState()
+                                    val darkNow = colorScheme.background.luminance() < 0.5f
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        com.bitchat.android.ui.theme.AccentColor.entries.forEach { a ->
+                                            val selected = a == accent
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .clip(CircleShape)
+                                                    .background(Color(if (darkNow) a.dark else a.light))
+                                                    .border(
+                                                        width = if (selected) 3.dp else 0.dp,
+                                                        color = if (selected) colorScheme.onSurface else Color.Transparent,
+                                                        shape = CircleShape
+                                                    )
+                                                    .clickable { com.bitchat.android.ui.theme.ThemePreferenceManager.setAccent(context, a) }
+                                                    .semantics { contentDescription = a.label },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                if (selected) Icon(
+                                                    Icons.Filled.Check,
+                                                    contentDescription = null,
+                                                    tint = if (darkNow) Color.Black else Color.White,
+                                                    modifier = Modifier.size(16.dp)
+                                                )
+                                            }
+                                        }
                                     }
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),

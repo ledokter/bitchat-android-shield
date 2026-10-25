@@ -82,7 +82,7 @@
         android:icon="@mipmap/ic_launcher"
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:label="Bitchat Shield"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.BitchatAndroid"
         tools:targetApi="33">
@@ -113,7 +113,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="Bitchat Shield"
+            android:label="@string/app_name"
             android:theme="@style/Theme.BitchatAndroid"
             android:windowSoftInputMode="adjustResize"
             android:launchMode="singleTop">
@@ -157,7 +157,7 @@
         <activity
             android:name=".hotspot.HotspotActivity"
             android:exported="false"
-            android:label="Share BitChat"
+            android:label="Partager via chabit"
             android:theme="@style/Theme.BitchatAndroid"
             android:launchMode="singleTop" />
 
