@@ -38,10 +38,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bitchat.android.R
 import com.bitchat.android.core.ui.component.sheet.BitchatBottomSheet
 import com.bitchat.android.core.ui.component.sheet.BitchatSheetTitle
 import com.bitchat.android.core.ui.component.sheet.BitchatSheetTopBar
@@ -57,18 +59,18 @@ import java.text.DateFormat
 import java.util.Date
 
 private val RULE_LABELS = mapOf(
-    FloodDetector.RULE_RATE to "Débit (trop de messages en peu de temps)",
-    FloodDetector.RULE_REPEAT to "Répétition du même texte",
-    FloodDetector.RULE_SHORT to "Rafales de messages vides (« g », « hh »…)",
-    FloodDetector.RULE_COPY to "Copie d'un texte de flooder",
-    FloodDetector.RULE_SAME_TEXT to "Même texte depuis plusieurs clés",
-    FloodDetector.RULE_NICKNAMES to "Changements de pseudo sur une clé",
-    FloodDetector.RULE_NICK_KEYS to "Même pseudo sur plusieurs clés",
-    FloodDetector.RULE_PATTERN to "Même modèle de pseudo (bot_3fa9…)",
-    FloodDetector.RULE_LINK to "Même lien posté par des clés neuves",
-    FloodDetector.RULE_GIANT to "Messages géants ou très répétitifs",
-    FloodDetector.RULE_ZALGO to "Texte zalgo (diacritiques empilés)",
-    FloodDetector.RULE_KEYWORD to "Mots-clés choisis"
+    FloodDetector.RULE_RATE to R.string.flood_rule_rate,
+    FloodDetector.RULE_REPEAT to R.string.flood_rule_repeat,
+    FloodDetector.RULE_SHORT to R.string.flood_rule_short,
+    FloodDetector.RULE_COPY to R.string.flood_rule_copy,
+    FloodDetector.RULE_SAME_TEXT to R.string.flood_rule_same_text,
+    FloodDetector.RULE_NICKNAMES to R.string.flood_rule_nicknames,
+    FloodDetector.RULE_NICK_KEYS to R.string.flood_rule_nickname_keys,
+    FloodDetector.RULE_PATTERN to R.string.flood_rule_pattern,
+    FloodDetector.RULE_LINK to R.string.flood_rule_link,
+    FloodDetector.RULE_GIANT to R.string.flood_rule_giant,
+    FloodDetector.RULE_ZALGO to R.string.flood_rule_zalgo,
+    FloodDetector.RULE_KEYWORD to R.string.flood_rule_keyword
 )
 
 /**
@@ -106,7 +108,7 @@ fun FloodSettingsSheet(
             val ok = withContext(Dispatchers.IO) {
                 runCatching { context.contentResolver.openOutputStream(uri)?.use { it.write(body.toByteArray()) } }.isSuccess
             }
-            Toast.makeText(context, if (ok) "Liste exportée" else "Échec de l'export", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(if (ok) R.string.flood_export_done else R.string.flood_export_failed), Toast.LENGTH_SHORT).show()
         }
     }
     fun export(kind: ShieldLists.Kind, json: Boolean) {
@@ -126,12 +128,12 @@ fun FloodSettingsSheet(
                 }.getOrNull()
             }
             if (text == null) {
-                Toast.makeText(context, "Fichier illisible", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.flood_import_unreadable), Toast.LENGTH_SHORT).show()
                 return@launch
             }
             val keys = withContext(Dispatchers.Default) { ShieldLists.parse(text).keys }
             val added = if (target == ShieldLists.Kind.BLOCKED) geohashViewModel.blockPubkeys(keys) else BitchatShield.flagKeys(keys)
-            Toast.makeText(context, "${keys.size} clé(s) trouvée(s), $added ajoutée(s)", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.flood_import_result, keys.size, added), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -146,8 +148,8 @@ fun FloodSettingsSheet(
                     FloodCard {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Column(Modifier.weight(1f)) {
-                                Label("Masquer les flooders", bold = true)
-                                Hint("Détection en deux temps : d'abord les clés bavardes, ensuite seulement le contenu. $flaggedCount clé(s) signalée(s).")
+                                Label(stringResource(R.string.flood_hide_title), bold = true)
+                                Hint(stringResource(R.string.flood_hide_desc, flaggedCount))
                             }
                             Switch(checked = enabled, onCheckedChange = { BitchatShield.setFloodEnabled(it) })
                         }
@@ -155,36 +157,36 @@ fun FloodSettingsSheet(
                 }
                 item {
                     FloodCard {
-                        Label("Détection", bold = true)
-                        RuleSlider("Messages en 10 min pour être « bavard »", rules.minChatty.toFloat(), 2f..30f, 27, "%.0f") {
+                        Label(stringResource(R.string.flood_detection), bold = true)
+                        RuleSlider(stringResource(R.string.flood_slider_chatty), rules.minChatty.toFloat(), 2f..30f, 27, "%.0f") {
                             BitchatShield.setFloodRules(rules.copy(minChatty = it.toInt()))
                         }
-                        RuleSlider("Diversité maximale d'un spammeur", rules.maxDiversity.toFloat(), 0.1f..1f, 17, "%.2f") {
+                        RuleSlider(stringResource(R.string.flood_slider_diversity), rules.maxDiversity.toFloat(), 0.1f..1f, 17, "%.2f") {
                             BitchatShield.setFloodRules(rules.copy(maxDiversity = it.toDouble()))
                         }
-                        RuleSlider("Part de messages vides à partir de laquelle c'est du bruit", rules.minEmpty.toFloat(), 0.1f..1f, 17, "%.2f") {
+                        RuleSlider(stringResource(R.string.flood_slider_empty), rules.minEmpty.toFloat(), 0.1f..1f, 17, "%.2f") {
                             BitchatShield.setFloodRules(rules.copy(minEmpty = it.toDouble()))
                         }
-                        RuleSlider("Seuil de points d'un groupe", rules.threshold.toFloat(), 2f..20f, 17, "%.0f") {
+                        RuleSlider(stringResource(R.string.flood_slider_threshold), rules.threshold.toFloat(), 2f..20f, 17, "%.0f") {
                             BitchatShield.setFloodRules(rules.copy(threshold = it.toDouble()))
                         }
-                        RuleSlider("Messages par ${rules.rateWindow} s avant pénalité", rules.maxRate.toFloat(), 2f..30f, 27, "%.0f") {
+                        RuleSlider(stringResource(R.string.flood_slider_rate, rules.rateWindow), rules.maxRate.toFloat(), 2f..30f, 27, "%.0f") {
                             BitchatShield.setFloodRules(rules.copy(maxRate = it.toInt()))
                         }
-                        RuleSlider("Bombe zalgo (diacritiques dans un message)", rules.zalgoBomb.toFloat(), 20f..500f, 47, "%.0f") {
+                        RuleSlider(stringResource(R.string.flood_slider_zalgo), rules.zalgoBomb.toFloat(), 20f..500f, 47, "%.0f") {
                             BitchatShield.setFloodRules(rules.copy(zalgoBomb = it.toInt()))
                         }
                         TextButton(onClick = { BitchatShield.setFloodRules(FloodDetector.Rules(disabled = rules.disabled, keywords = rules.keywords)) }) {
-                            Text("Valeurs par défaut", fontFamily = BitchatFontFamily, fontSize = 12.sp)
+                            Text(stringResource(R.string.flood_defaults), fontFamily = BitchatFontFamily, fontSize = 12.sp)
                         }
                     }
                 }
                 item {
                     FloodCard {
-                        Label("Règles", bold = true)
+                        Label(stringResource(R.string.flood_rules), bold = true)
                         for (id in FloodDetector.RULE_IDS) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(RULE_LABELS[id] ?: id, fontFamily = BitchatFontFamily, fontSize = 13.sp, modifier = Modifier.weight(1f))
+                                Text(RULE_LABELS[id]?.let { stringResource(it) } ?: id, fontFamily = BitchatFontFamily, fontSize = 13.sp, modifier = Modifier.weight(1f))
                                 Switch(checked = id !in rules.disabled, onCheckedChange = { on ->
                                     BitchatShield.setFloodRules(rules.copy(disabled = if (on) rules.disabled - id else rules.disabled + id))
                                 })
@@ -194,35 +196,35 @@ fun FloodSettingsSheet(
                         OutlinedTextField(
                             value = keywords,
                             onValueChange = { keywords = it },
-                            label = { Text("Mots-clés (séparés par des virgules)", fontSize = 12.sp) },
+                            label = { Text(stringResource(R.string.flood_keywords), fontSize = 12.sp) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
                         TextButton(onClick = {
                             BitchatShield.setFloodRules(rules.copy(keywords = keywords.split(",").map { it.trim() }.filter { it.isNotEmpty() }))
-                        }) { Text("Enregistrer les mots-clés", fontFamily = BitchatFontFamily, fontSize = 12.sp) }
+                        }) { Text(stringResource(R.string.flood_keywords_save), fontFamily = BitchatFontFamily, fontSize = 12.sp) }
                     }
                 }
                 item {
                     FloodCard {
-                        Label("Clés bavardes (10 dernières minutes)", bold = true)
-                        if (chatty.isEmpty()) Hint("Personne pour l'instant.")
+                        Label(stringResource(R.string.flood_chatty_title), bold = true)
+                        if (chatty.isEmpty()) Hint(stringResource(R.string.flood_chatty_none))
                         for (c in chatty) {
                             val v = c.verdict
-                            Label("${c.name}${if (c.keys > 1) " (+${c.keys - 1} clés liées)" else ""}${if (c.flagged) "  ⚠ signalé" else ""}")
-                            Hint("${v.messages} msg · diversité ${"%.2f".format(v.diversity)} · vides ${"%.2f".format(v.empty)} · ${if (v.spam) "spam" else "humain"} — « ${c.example} »")
+                            Label(c.name + (if (c.keys > 1) " " + stringResource(R.string.flood_chatty_linked, c.keys - 1) else "") + (if (c.flagged) "  ⚠ " + stringResource(R.string.flood_chatty_flagged) else ""))
+                            Hint(stringResource(R.string.flood_chatty_stats, v.messages, "%.2f".format(v.diversity), "%.2f".format(v.empty), stringResource(if (v.spam) R.string.flood_verdict_spam else R.string.flood_verdict_human)) + " — « ${c.example} »")
                         }
                     }
                 }
                 item {
                     FloodCard {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Label("Messages masqués (${hidden.size})", bold = true, modifier = Modifier.weight(1f))
+                            Label(stringResource(R.string.flood_hidden_title, hidden.size), bold = true, modifier = Modifier.weight(1f))
                             if (hidden.isNotEmpty()) TextButton(onClick = { BitchatShield.clearHidden() }) {
-                                Text("Vider", fontFamily = BitchatFontFamily, fontSize = 12.sp)
+                                Text(stringResource(R.string.flood_hidden_clear), fontFamily = BitchatFontFamily, fontSize = 12.sp)
                             }
                         }
-                        if (hidden.isEmpty()) Hint("Aucun message masqué.")
+                        if (hidden.isEmpty()) Hint(stringResource(R.string.flood_hidden_none))
                     }
                 }
                 items(hidden.take(50), key = { "${it.pubkey}-${it.atMs}-${it.content.hashCode()}" }) { h ->
@@ -233,30 +235,30 @@ fun FloodSettingsSheet(
                                 Text(h.content, fontFamily = BitchatFontFamily, fontSize = 12.sp, maxLines = 3, overflow = TextOverflow.Ellipsis)
                             }
                             TextButton(onClick = { BitchatShield.unflag(h.pubkey) }) {
-                                Text("pas un\nspammeur", fontFamily = BitchatFontFamily, fontSize = 11.sp)
+                                Text(stringResource(R.string.flood_not_spammer), fontFamily = BitchatFontFamily, fontSize = 11.sp)
                             }
                         }
                     }
                 }
                 item {
                     FloodCard {
-                        Label("Listes (compatibles avec le bot)", bold = true)
-                        Hint("Exporter")
+                        Label(stringResource(R.string.flood_lists_title), bold = true)
+                        Hint(stringResource(R.string.flood_export))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            SmallButton("bloqués .txt") { export(ShieldLists.Kind.BLOCKED, false) }
-                            SmallButton("bloqués .json") { export(ShieldLists.Kind.BLOCKED, true) }
+                            SmallButton(stringResource(R.string.flood_blocked_file, "txt")) { export(ShieldLists.Kind.BLOCKED, false) }
+                            SmallButton(stringResource(R.string.flood_blocked_file, "json")) { export(ShieldLists.Kind.BLOCKED, true) }
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            SmallButton("signalés .txt") { export(ShieldLists.Kind.FLAGGED, false) }
-                            SmallButton("signalés .json") { export(ShieldLists.Kind.FLAGGED, true) }
+                            SmallButton(stringResource(R.string.flood_flagged_file, "txt")) { export(ShieldLists.Kind.FLAGGED, false) }
+                            SmallButton(stringResource(R.string.flood_flagged_file, "json")) { export(ShieldLists.Kind.FLAGGED, true) }
                         }
-                        Hint("Importer un fichier (export du bot ou n'importe quel texte : chaque clé hex ou npub1… trouvée est prise)")
+                        Hint(stringResource(R.string.flood_import_hint))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            SmallButton("… et les bloquer") {
+                            SmallButton(stringResource(R.string.flood_import_block)) {
                                 importTarget = ShieldLists.Kind.BLOCKED
                                 importLauncher.launch(arrayOf("text/*", "application/json", "application/octet-stream"))
                             }
-                            SmallButton("… comme spammeurs") {
+                            SmallButton(stringResource(R.string.flood_import_flag)) {
                                 importTarget = ShieldLists.Kind.FLAGGED
                                 importLauncher.launch(arrayOf("text/*", "application/json", "application/octet-stream"))
                             }
@@ -270,7 +272,7 @@ fun FloodSettingsSheet(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Icon(Icons.Filled.Shield, contentDescription = null)
-                        BitchatSheetTitle("Anti-flood")
+                        BitchatSheetTitle(stringResource(R.string.flood_sheet_title))
                     }
                 }
             )

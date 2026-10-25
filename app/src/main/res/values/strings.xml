@@ -115,7 +115,7 @@
   <string name="notification_reply">Reply</string>
   <string name="notification_mark_read">Mark read</string>
   <string name="notification_private_message">New private message</string>
-  <string name="notification_content_hidden">Open bitchat to view it</string>
+  <string name="notification_content_hidden">Open chabit to view it</string>
   <string name="notification_channel_direct_messages">Direct Messages</string>
   <string name="notification_channel_direct_messages_description">Notifications for private messages from other users</string>
   <string name="notification_channel_geohash">Geohash Chats</string>
@@ -225,13 +225,13 @@
   <string name="cancel_lower">Cancel</string>
 
   <!-- APK Sharing -->
-  <string name="share_bitchat_title">Share BitChat</string>
+  <string name="share_bitchat_title">Share chabit</string>
   <string name="share_bitchat_subtitle">Share installation file for offline distribution</string>
-  <string name="share_apk_title">Share BitChat App</string>
-  <string name="share_apk_explanation">This will share the BitChat installation file(s) so others can install the app without internet access. Perfect for mesh network expansion!</string>
-  <string name="share_apk_receiver_instructions">The receiver will need to:\n• Enable \"Install from unknown sources\" in Android settings\n• Uninstall BitChat first if already installed (signatures differ)</string>
+  <string name="share_apk_title">Share chabit App</string>
+  <string name="share_apk_explanation">This will share the chabit installation file(s) so others can install the app without internet access. Perfect for mesh network expansion!</string>
+  <string name="share_apk_receiver_instructions">The receiver will need to:\n• Enable \"Install from unknown sources\" in Android settings\n• Uninstall chabit first if already installed (signatures differ)</string>
   <string name="share_apk_confirm">Share App</string>
-  <string name="share_apk_chooser_title">Share BitChat via…</string>
+  <string name="share_apk_chooser_title">Share chabit via…</string>
   <string name="share_apk_error">Failed to prepare app for sharing. Please try again.</string>
 
   <!-- Universal APK Preparation -->
@@ -317,11 +317,11 @@
 
   <!-- APK Installation -->
   <string name="install_bitchat_title">Install Received APK</string>
-  <string name="install_bitchat_subtitle">Install BitChat from received files</string>
-  <string name="install_apk_dialog_title">Install BitChat Update</string>
-  <string name="install_apk_dialog_message">Install BitChat from the received APK file(s)? This allows offline app distribution in mesh networks.</string>
+  <string name="install_bitchat_subtitle">Install chabit from received files</string>
+  <string name="install_apk_dialog_title">Install chabit Update</string>
+  <string name="install_apk_dialog_message">Install chabit from the received APK file(s)? This allows offline app distribution in mesh networks.</string>
   <string name="install_apk_permission_title">Permission Required</string>
-  <string name="install_apk_permission_message">BitChat needs permission to install packages for self-distribution. Please enable \"Install unknown apps\" in the next screen.</string>
+  <string name="install_apk_permission_message">chabit needs permission to install packages for self-distribution. Please enable \"Install unknown apps\" in the next screen.</string>
   <string name="install_apk_confirm">Install</string>
   <string name="install_apk_grant_permission">Grant Permission</string>
   <string name="install_apk_select_files">Select APK Files</string>
@@ -345,7 +345,7 @@
   <string name="cd_open_map">Open map</string>
   <string name="cd_remove_bookmark">Remove bookmark</string>
   <string name="cd_teleport">Teleport</string>
-  <string name="notification_action_quit_bitchat">Quit bitchat</string>
+  <string name="notification_action_quit_bitchat">Quit chabit</string>
   <string name="about_background_title">Run in Background</string>
   <string name="about_background_desc">Keep mesh active when app is closed (foreground service)</string>
   <string name="cd_leave_channel">Leave channel</string>
@@ -530,9 +530,9 @@
   <string name="location_needs_bullets">• Bluetooth device scanning\n• Discovering nearby users on mesh network\n• Geohash chat feature\n• No tracking or location collection</string>
   <string name="background_location_required_title">Background Location Recommended</string>
   <string name="background_location_required_subtitle">Optional, improves mesh reliability</string>
-  <string name="background_location_explanation">Android recommends background location so bitchat can scan for nearby devices while the app is not open. This keeps the mesh alive after reboot.</string>
+  <string name="background_location_explanation">Android recommends background location so chabit can scan for nearby devices while the app is not open. This keeps the mesh alive after reboot.</string>
   <string name="background_location_settings_tip">When settings opens, choose "Allow all the time".</string>
-  <string name="background_location_needs_for">bitchat uses background location for:</string>
+  <string name="background_location_needs_for">chabit uses background location for:</string>
   <string name="background_location_needs_bullets">- Scan for nearby devices while the app is closed\n- Reconnect after reboot\n- Keep the mesh running in the background</string>
   <string name="background_location_privacy_note">We NEVER collect or store your location. Your privacy is safe.</string>
   <string name="grant_background_location">Allow Background Location</string>
@@ -654,4 +654,85 @@
   <string name="about_app_language">App language</string>
   <string name="about_system_default">System default</string>
   <string name="about_select_language">Select language</string>
+
+    <!-- chabit -->
+    <string name="live_ptt_title">Live push-to-talk</string>
+    <string name="live_ptt_desc">Play voice bursts live on the mesh; voice notes are always sent on release</string>
+    <string name="pow_receive_title">Incoming proof of work (%1$d bits)</string>
+    <string name="pow_receive_desc">Minimum required to see incoming messages (0 by default)</string>
+    <string name="pow_send_title">Outgoing proof of work (%1$d bits)</string>
+    <string name="pow_send_desc">Mines your sent messages (12 bits by default to pass filters)</string>
+    <string name="pow_receive_header">Incoming PoW (filter)</string>
+    <string name="pow_send_header">Outgoing PoW (your messages)</string>
+    <string name="shield_zalgo_title">Anti-zalgo &amp; forbidden characters</string>
+    <string name="shield_zalgo_desc">Blocks stacked diacritics, invisible characters and # in nicknames</string>
+    <string name="shield_bots_title">Anti-bot protection (%1$d blocked)</string>
+    <string name="shield_bots_desc">Blocks auto-generated nicknames (bot_xxxx), repeated multi-key spam and Sybil bursts</string>
+    <string name="shield_links_title">Link spam protection</string>
+    <string name="shield_links_desc">Allows normal links but blocks the same link or domain posted again and again</string>
+    <string name="flood_row_title">Anti-flood (%1$d flagged)</string>
+    <string name="flood_row_desc">Hides flooders: chatty keys first, then a verdict on the content</string>
+    <string name="flood_open_settings">Anti-flood settings, hidden messages, lists ›</string>
+    <string name="tor_new_route">New Tor route</string>
+    <string name="tor_route_changed_at">changed at %1$s</string>
+    <string name="tor_auto_rotation">Automatic rotation</string>
+    <string name="tor_rotation_never">never</string>
+    <string name="duration_minutes">%1$d min</string>
+    <string name="duration_hours">%1$d h</string>
+    <string name="accent_pink">Pink</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_blue">Blue</string>
+    <string name="accent_purple">Purple</string>
+    <string name="accent_orange">Orange</string>
+    <string name="accent_red">Red</string>
+    <string name="accent_teal">Teal</string>
+    <string name="accent_yellow">Yellow</string>
+    <string name="flood_sheet_title">Anti-flood</string>
+    <string name="flood_rule_rate">Rate (too many messages in a short time)</string>
+    <string name="flood_rule_repeat">Same text repeated</string>
+    <string name="flood_rule_short">Bursts of empty messages (“g”, “hh”…)</string>
+    <string name="flood_rule_copy">Copy of a flooder\'s text</string>
+    <string name="flood_rule_same_text">Same text from several keys</string>
+    <string name="flood_rule_nicknames">Nickname changes on one key</string>
+    <string name="flood_rule_nickname_keys">Same nickname on several keys</string>
+    <string name="flood_rule_pattern">Same nickname pattern (bot_3fa9…)</string>
+    <string name="flood_rule_link">Same link posted by new keys</string>
+    <string name="flood_rule_giant">Giant or highly repetitive messages</string>
+    <string name="flood_rule_zalgo">Zalgo text (stacked diacritics)</string>
+    <string name="flood_rule_keyword">Chosen keywords</string>
+    <string name="flood_export_done">List exported</string>
+    <string name="flood_export_failed">Export failed</string>
+    <string name="flood_import_unreadable">Unreadable file</string>
+    <string name="flood_import_result">%1$d key(s) found, %2$d added</string>
+    <string name="flood_hide_title">Hide flooders</string>
+    <string name="flood_hide_desc">Two-step detection: chatty keys first, content only after. %1$d key(s) flagged.</string>
+    <string name="flood_detection">Detection</string>
+    <string name="flood_slider_chatty">Messages in 10 min to be “chatty”</string>
+    <string name="flood_slider_diversity">Maximum diversity of a spammer</string>
+    <string name="flood_slider_empty">Share of empty messages that counts as noise</string>
+    <string name="flood_slider_threshold">Group score threshold</string>
+    <string name="flood_slider_rate">Messages per %1$d s before penalty</string>
+    <string name="flood_slider_zalgo">Zalgo bomb (diacritics in one message)</string>
+    <string name="flood_defaults">Default values</string>
+    <string name="flood_rules">Rules</string>
+    <string name="flood_keywords">Keywords (comma-separated)</string>
+    <string name="flood_keywords_save">Save keywords</string>
+    <string name="flood_chatty_title">Chatty keys (last 10 minutes)</string>
+    <string name="flood_chatty_none">Nobody for now.</string>
+    <string name="flood_chatty_linked">(+%1$d linked keys)</string>
+    <string name="flood_chatty_flagged">flagged</string>
+    <string name="flood_chatty_stats">%1$d msg · diversity %2$s · empty %3$s · %4$s</string>
+    <string name="flood_verdict_spam">spam</string>
+    <string name="flood_verdict_human">human</string>
+    <string name="flood_hidden_title">Hidden messages (%1$d)</string>
+    <string name="flood_hidden_clear">Clear</string>
+    <string name="flood_hidden_none">No hidden messages.</string>
+    <string name="flood_not_spammer">not a\nspammer</string>
+    <string name="flood_lists_title">Lists (compatible with the bot)</string>
+    <string name="flood_export">Export</string>
+    <string name="flood_blocked_file">blocked .%1$s</string>
+    <string name="flood_flagged_file">flagged .%1$s</string>
+    <string name="flood_import_hint">Import a file (bot export or any text: every hex key or npub1… found is taken)</string>
+    <string name="flood_import_block">… and block them</string>
+    <string name="flood_import_flag">… as spammers</string>
 </resources>

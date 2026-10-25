@@ -439,6 +439,7 @@ fun AboutSheet(
                                     ) {
                                         com.bitchat.android.ui.theme.AccentColor.entries.forEach { a ->
                                             val selected = a == accent
+                                            val accentLabel = stringResource(a.label)
                                             Box(
                                                 modifier = Modifier
                                                     .size(30.dp)
@@ -450,7 +451,7 @@ fun AboutSheet(
                                                         shape = CircleShape
                                                     )
                                                     .clickable { com.bitchat.android.ui.theme.ThemePreferenceManager.setAccent(context, a) }
-                                                    .semantics { contentDescription = a.label },
+                                                    .semantics { contentDescription = accentLabel },
                                                 contentAlignment = Alignment.Center
                                             ) {
                                                 if (selected) Icon(
@@ -602,8 +603,8 @@ fun AboutSheet(
 
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Mic,
-                                        title = "Live push-to-talk",
-                                        subtitle = "Play voice bursts live on the mesh; voice notes are always sent on release",
+                                        title = stringResource(R.string.live_ptt_title),
+                                        subtitle = stringResource(R.string.live_ptt_desc),
                                         checked = liveVoiceEnabled,
                                         onCheckedChange = { enabled ->
                                             liveVoiceEnabled = enabled
@@ -620,8 +621,8 @@ fun AboutSheet(
                                     // Incoming Proof of Work Filter Toggle (default: 0 bits / disabled)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Speed,
-                                        title = "Proof of Work Réception (${if (powEnabled) "${powDifficulty} bits" else "0 bit"})",
-                                        subtitle = "Filtre minimum requis pour voir les messages reçus (0 par défaut)",
+                                        title = stringResource(R.string.pow_receive_title, if (powEnabled) powDifficulty else 0),
+                                        subtitle = stringResource(R.string.pow_receive_desc),
                                         checked = powEnabled,
                                         onCheckedChange = { PoWPreferenceManager.setPowEnabled(it) }
                                     )
@@ -635,8 +636,8 @@ fun AboutSheet(
                                     // Outgoing Send Proof of Work Toggle (default: 12 bits / enabled)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Speed,
-                                        title = "Proof of Work d'Envoi (${if (sendPowEnabled) "${sendPowDifficulty} bits" else "0 bit"})",
-                                        subtitle = "Mine tes messages envoyés (12 bits par défaut pour passer les filtres)",
+                                        title = stringResource(R.string.pow_send_title, if (sendPowEnabled) sendPowDifficulty else 0),
+                                        subtitle = stringResource(R.string.pow_send_desc),
                                         checked = sendPowEnabled,
                                         onCheckedChange = { PoWPreferenceManager.setSendPowEnabled(it) }
                                     )
@@ -650,8 +651,8 @@ fun AboutSheet(
                                     // Anti-Zalgo & Forbidden Characters Toggle
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Warning,
-                                        title = "Anti-Zalgo & Caractères interdits",
-                                        subtitle = "Bloque les diacritiques empilés (baguette#̢̛ͥ...), caractères invisibles et # dans les pseudos",
+                                        title = stringResource(R.string.shield_zalgo_title),
+                                        subtitle = stringResource(R.string.shield_zalgo_desc),
                                         checked = shieldZalgo,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockZalgo(it) }
                                     )
@@ -665,8 +666,8 @@ fun AboutSheet(
                                     // Anti-Bot Heuristics Toggle
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Lock,
-                                        title = "Protection Anti-Bot ($shieldBlockedCount bloqués)",
-                                        subtitle = "Bloque les pseudos auto-générés (bot_xxxx), le spam répété multi-clés et les rafales Sybil",
+                                        title = stringResource(R.string.shield_bots_title, shieldBlockedCount),
+                                        subtitle = stringResource(R.string.shield_bots_desc),
                                         checked = shieldBots,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockBots(it) }
                                     )
@@ -680,8 +681,8 @@ fun AboutSheet(
                                     // Anti-Link Spam Toggle
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Public,
-                                        title = "Anti-Spam de Liens (URLs)",
-                                        subtitle = "Autorise les liens normaux mais bloque le spam répété d'un même lien/domaine",
+                                        title = stringResource(R.string.shield_links_title),
+                                        subtitle = stringResource(R.string.shield_links_desc),
                                         checked = shieldLinks,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockLinks(it) }
                                     )
@@ -695,8 +696,8 @@ fun AboutSheet(
                                     // Two-stage anti-flood (detection ported from bitchat-bot)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Shield,
-                                        title = "Anti-flood ($floodFlagged signalés)",
-                                        subtitle = "Masque les flooders : clés bavardes d'abord, puis verdict sur le contenu",
+                                        title = stringResource(R.string.flood_row_title, floodFlagged),
+                                        subtitle = stringResource(R.string.flood_row_desc),
                                         checked = floodEnabled,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setFloodEnabled(it) }
                                     )
@@ -705,7 +706,7 @@ fun AboutSheet(
                                             onClick = onShowFloodSettings,
                                             modifier = Modifier.padding(start = 46.dp)
                                         ) {
-                                            Text("Réglages anti-flood, masqués, listes ›", fontSize = 13.sp)
+                                            Text(stringResource(R.string.flood_open_settings), fontSize = 13.sp)
                                         }
                                     }
 
@@ -1258,7 +1259,7 @@ fun AboutSheet(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = "PoW Réception (filtre entrant)",
+                                                text = stringResource(R.string.pow_receive_header),
                                                 fontFamily = BitchatFontFamily,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
@@ -1328,7 +1329,7 @@ fun AboutSheet(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = "PoW d'Envoi (tes messages)",
+                                                text = stringResource(R.string.pow_send_header),
                                                 fontFamily = BitchatFontFamily,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
@@ -1441,11 +1442,11 @@ fun AboutSheet(
                                                 onClick = { torProvider.requestNewRoute() },
                                                 enabled = torStatus.running && torStatus.bootstrapPercent >= 100
                                             ) {
-                                                Text("Nouvelle route Tor", fontFamily = BitchatFontFamily, fontSize = 13.sp)
+                                                Text(stringResource(R.string.tor_new_route), fontFamily = BitchatFontFamily, fontSize = 13.sp)
                                             }
                                             if (derniereRoute > 0) {
                                                 Text(
-                                                    text = "changée à " + java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault()).format(java.util.Date(derniereRoute)),
+                                                    text = stringResource(R.string.tor_route_changed_at, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(derniereRoute))),
                                                     fontFamily = BitchatFontFamily,
                                                     fontSize = 11.sp,
                                                     color = palette.textTertiary
@@ -1453,7 +1454,7 @@ fun AboutSheet(
                                             }
                                         }
                                         Text(
-                                            text = "Rotation automatique",
+                                            text = stringResource(R.string.tor_auto_rotation),
                                             fontFamily = BitchatFontFamily,
                                             fontSize = 12.sp,
                                             color = colorScheme.onSurface
@@ -1466,9 +1467,9 @@ fun AboutSheet(
                                                     label = {
                                                         Text(
                                                             when {
-                                                                m == 0 -> "jamais"
-                                                                m < 60 -> "$m min"
-                                                                else -> "${m / 60} h"
+                                                                m == 0 -> stringResource(R.string.tor_rotation_never)
+                                                                m < 60 -> stringResource(R.string.duration_minutes, m)
+                                                                else -> stringResource(R.string.duration_hours, m / 60)
                                                             },
                                                             fontFamily = BitchatFontFamily,
                                                             fontSize = 11.sp
