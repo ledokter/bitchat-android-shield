@@ -155,6 +155,7 @@ class MainActivity : OrientationAwareActivity() {
         )
         
         setContent {
+            com.bitchat.android.security.IncognitoKeyboard {
             BitchatTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -173,6 +174,7 @@ class MainActivity : OrientationAwareActivity() {
                         onDuress = { chatViewModel.panicClearAllData() }
                     )
                 }
+            }
             }
         }
 

@@ -183,7 +183,6 @@ dependencies {
     // Note: AAR is kept in libs/ for reference, but libraries loaded from jniLibs/
 
     // Google Play Services Location
-    implementation(libs.gms.location)
 
     // Security preferences
     implementation(libs.androidx.security.crypto)

@@ -4,7 +4,7 @@ import android.location.Location
 
 /**
  * Abstraction for location providers to support both
- * System (LocationManager) and Google Play Services (FusedLocationProvider).
+ * Implemented by SystemLocationProvider (Android LocationManager, satellites only).
  */
 internal interface LocationProvider {
     /**
