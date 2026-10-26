@@ -909,4 +909,9 @@
     <string name="blocked_users_title">Personas bloqueadas (%1$d)</string>
     <string name="blocked_users_none">No hay nadie bloqueado</string>
     <string name="unblock_short">Desbloquear</string>
+
+    <!-- chabit -->
+    <string name="duress_onboarding_explain">Un segundo código para cuando alguien te obligue a abrir chatbit (control, robo, persona insistente…). Escríbelo en lugar de tu PIN: todo se borra en silencio (mensajes, contactos, claves, salas) y la app se abre vacía, como nueva. Nada indica que hubo un borrado.</string>
+    <string name="duress_create">Elige tu PIN de coacción</string>
+    <string name="duress_later">Más tarde (Ajustes → Seguridad)</string>
 </resources>

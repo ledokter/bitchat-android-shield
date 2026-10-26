@@ -936,4 +936,9 @@
     <string name="blocked_users_title">Utenti bloccati (%1$d)</string>
     <string name="blocked_users_none">Nessuno è bloccato</string>
     <string name="unblock_short">Sblocca</string>
+
+    <!-- chabit -->
+    <string name="duress_onboarding_explain">Un secondo codice per quando qualcuno ti costringe ad aprire chatbit (controllo, furto, persona insistente…). Digitalo al posto del PIN: tutto viene cancellato in silenzio (messaggi, contatti, chiavi, stanze) e l\'app si apre vuota, come nuova. Nulla indica che sia avvenuta una cancellazione.</string>
+    <string name="duress_create">Scegli il PIN di coercizione</string>
+    <string name="duress_later">Più tardi (Impostazioni → Sicurezza)</string>
 </resources>

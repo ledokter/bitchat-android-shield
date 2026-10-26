@@ -966,4 +966,9 @@
     <string name="blocked_users_title">Blocked people (%1$d)</string>
     <string name="blocked_users_none">Nobody is blocked</string>
     <string name="unblock_short">Unblock</string>
+
+    <!-- chabit -->
+    <string name="duress_onboarding_explain">A second code for when someone forces you to open chatbit (police, thief, partner…). Type it instead of your PIN: everything is erased in silence (messages, contacts, keys, rooms) and the app opens empty, as if new. Nothing shows that a wipe happened.</string>
+    <string name="duress_create">Choose your duress PIN</string>
+    <string name="duress_later">Later (Settings → Security)</string>
 </resources>

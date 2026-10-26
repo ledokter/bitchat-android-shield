@@ -906,4 +906,9 @@
     <string name="blocked_users_title">Заблокированные (%1$d)</string>
     <string name="blocked_users_none">Никто не заблокирован</string>
     <string name="unblock_short">Разблокировать</string>
+
+    <!-- chabit -->
+    <string name="duress_onboarding_explain">Второй код на случай, если вас заставят открыть chatbit (проверка, кража, давление близких…). Введите его вместо PIN: всё тихо стирается (сообщения, контакты, ключи, комнаты), и приложение открывается пустым, как новое. Ничто не выдаёт, что было удаление.</string>
+    <string name="duress_create">Придумайте PIN под принуждением</string>
+    <string name="duress_later">Позже (Настройки → Безопасность)</string>
 </resources>

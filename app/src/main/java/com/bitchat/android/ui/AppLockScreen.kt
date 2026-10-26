@@ -2,12 +2,14 @@ package com.bitchat.android.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -49,44 +51,74 @@ import kotlinx.coroutines.withContext
 @Composable
 fun AppLockScreen(onDuress: () -> Unit = {}) {
     val hasPin by SecurityPreferences.hasPin.collectAsState()
+    // decided once: the setup flow keeps going (duress step) after the PIN itself is saved
+    val setup = remember { !SecurityPreferences.hasPin.value }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {},
+            .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {}
+            .verticalScroll(androidx.compose.foundation.rememberScrollState())
+            .padding(vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
     ) {
-        ChatbitLogo(height = 96.dp)
-        if (hasPin) PinPad(onDuress) else PinCreate()
+        ChatbitLogo(height = 72.dp)
+        if (setup || !hasPin) PinCreate() else PinPad(onDuress)
     }
 }
 
-/** First PIN: type it, type it again, saved and unlocked. "No lock" turns the app lock off. */
+/**
+ * First start: create the PIN (typed twice), then the duress PIN with an explanation of what it
+ * is for (typed twice, must differ; "Later" skips it). "No lock" turns the app lock off.
+ */
 @Composable
 private fun PinCreate() {
+    var duressStep by remember { mutableStateOf(false) }
     var first by remember { mutableStateOf<String?>(null) }
-    var mismatch by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<Int?>(null) }
+    val colors = MaterialTheme.colorScheme
+
+    if (duressStep) {
+        Text(
+            stringResource(R.string.duress_title),
+            fontFamily = BitchatFontFamily, fontSize = 18.sp, color = colors.primary
+        )
+        Text(
+            stringResource(R.string.duress_onboarding_explain),
+            fontFamily = BitchatFontFamily, fontSize = 13.sp, color = colors.onBackground,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+    }
     Keypad(
-        title = when {
-            mismatch -> stringResource(R.string.pin_mismatch)
-            first == null -> stringResource(R.string.pin_create, SecurityPreferences.PIN_MIN)
+        title = error?.let { stringResource(it) } ?: when {
+            first == null && !duressStep -> stringResource(R.string.pin_create, SecurityPreferences.PIN_MIN)
+            first == null -> stringResource(R.string.duress_create)
             else -> stringResource(R.string.pin_create_confirm)
         },
-        isError = mismatch,
+        isError = error != null,
         enabled = true,
         onSubmit = { pin ->
             val firstPin = first
+            error = null
             when {
-                firstPin == null -> if (SecurityPreferences.isValidPin(pin)) { first = pin; mismatch = false }
-                firstPin == pin -> { SecurityPreferences.setPin(pin); AppLock.unlock() }
-                else -> { first = null; mismatch = true }
+                firstPin == null -> if (SecurityPreferences.isValidPin(pin)) first = pin
+                firstPin != pin -> { first = null; error = R.string.pin_mismatch }
+                !duressStep -> { SecurityPreferences.setPin(pin); first = null; duressStep = true }
+                SecurityPreferences.setDuressPin(pin) -> AppLock.unlock()
+                else -> { first = null; error = R.string.duress_same_as_pin }
             }
         }
     )
-    androidx.compose.material3.TextButton(onClick = { SecurityPreferences.setAppLock(false); AppLock.unlock() }) {
-        Text(stringResource(R.string.pin_skip_lock), fontFamily = BitchatFontFamily, fontSize = 13.sp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+    androidx.compose.material3.TextButton(onClick = {
+        if (!duressStep) SecurityPreferences.setAppLock(false)
+        AppLock.unlock()
+    }) {
+        Text(
+            stringResource(if (duressStep) R.string.duress_later else R.string.pin_skip_lock),
+            fontFamily = BitchatFontFamily, fontSize = 13.sp, color = colors.onBackground.copy(alpha = 0.7f)
+        )
     }
 }
 

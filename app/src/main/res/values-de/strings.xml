@@ -910,4 +910,9 @@
     <string name="blocked_users_title">Blockierte Personen (%1$d)</string>
     <string name="blocked_users_none">Niemand ist blockiert</string>
     <string name="unblock_short">Entsperren</string>
+
+    <!-- chabit -->
+    <string name="duress_onboarding_explain">Ein zweiter Code für den Fall, dass dich jemand zwingt, chatbit zu öffnen (Kontrolle, Diebstahl, aufdringliche Person…). Gib ihn statt deiner PIN ein: alles wird still gelöscht (Nachrichten, Kontakte, Schlüssel, Räume) und die App öffnet sich leer, wie neu. Nichts verrät, dass gelöscht wurde.</string>
+    <string name="duress_create">Wähle deine Notfall-PIN</string>
+    <string name="duress_later">Später (Einstellungen → Sicherheit)</string>
 </resources>
