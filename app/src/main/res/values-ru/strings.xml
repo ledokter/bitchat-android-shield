@@ -890,4 +890,8 @@
     <string name="media_not_saved">Медиа не отправлено: не удалось сохранить беседу</string>
     <string name="media_not_committed">Медиа не отправлено: передача не началась</string>
     <string name="media_not_sent_reason">Медиа не отправлено: %1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">Разблокировать %1$s</string>
+    <string name="action_unblock_subtitle">Сообщения снова появятся в чате</string>
 </resources>

@@ -950,4 +950,8 @@
     <string name="media_not_saved">Media not sent: the conversation could not be saved</string>
     <string name="media_not_committed">Media not sent: the transfer could not start</string>
     <string name="media_not_sent_reason">Media not sent: %1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">Unblock %1$s</string>
+    <string name="action_unblock_subtitle">Their messages show up again in the chat</string>
 </resources>

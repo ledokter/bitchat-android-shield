@@ -149,6 +149,20 @@ fun ChatUserSheet(
                             )
                         }
                         
+                        if (selectedMessage != null && viewModel.isFromBlocked(selectedMessage)) {
+                            // chatbit: already blocked / reported → offer to unblock instead
+                            item {
+                                UserActionRow(
+                                    title = stringResource(R.string.action_unblock_title, targetNickname),
+                                    subtitle = stringResource(R.string.action_unblock_subtitle),
+                                    titleColor = standardGreen,
+                                    onClick = {
+                                        viewModel.unblockSender(selectedMessage, targetNickname)
+                                        onDismiss()
+                                    }
+                                )
+                            }
+                        } else {
                         // Block action
                         item {
                             UserActionRow(
@@ -195,6 +209,7 @@ fun ChatUserSheet(
                                     onDismiss()
                                 }
                             )
+                        }
                         }
                     }
                 }

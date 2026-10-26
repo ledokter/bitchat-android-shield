@@ -920,4 +920,8 @@
     <string name="media_not_saved">Media non inviato: impossibile salvare la conversazione</string>
     <string name="media_not_committed">Media non inviato: il trasferimento non è partito</string>
     <string name="media_not_sent_reason">Media non inviato: %1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">Sblocca %1$s</string>
+    <string name="action_unblock_subtitle">I suoi messaggi riappaiono nella chat</string>
 </resources>

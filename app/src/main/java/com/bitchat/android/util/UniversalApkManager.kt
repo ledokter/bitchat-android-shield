@@ -733,11 +733,17 @@ class UniversalApkManager(
                 return cachedInfo
             }
 
-            // Keep an already cached artifact if it is the same version or
-            // newer. Otherwise prefer the running build so sharing cannot
-            // silently downgrade recipients to an older downloadable release.
-            if (cachedInfo != null &&
-                !AppVersion.isNewer(cachedInfo.version, installedVersion)
+            // chatbit: keep a downloaded release only when it is strictly newer, and a copy of
+            // the running build only when it is this exact install. Every build used to share the
+            // version name, so an older copy kept being shared after an update.
+            if (cachedInfo != null && (
+                    (cachedInfo.source == ApkSource.DOWNLOADED &&
+                        AppVersion.isNewer(installedVersion, cachedInfo.version)) ||
+                    (cachedInfo.source == ApkSource.INSTALLED &&
+                        cachedInfo.version == installedVersion &&
+                        cachedInfo.file.length() == installedApk.length() &&
+                        cachedInfo.file.lastModified() >= installedApk.lastModified())
+                )
             ) {
                 return cachedInfo
             }

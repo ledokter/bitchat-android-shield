@@ -893,4 +893,8 @@
     <string name="media_not_saved">Archivo no enviado: no se pudo guardar la conversación</string>
     <string name="media_not_committed">Archivo no enviado: la transferencia no pudo empezar</string>
     <string name="media_not_sent_reason">Archivo no enviado: %1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">Desbloquear a %1$s</string>
+    <string name="action_unblock_subtitle">Sus mensajes vuelven a aparecer en el chat</string>
 </resources>

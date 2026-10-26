@@ -706,12 +706,11 @@ fun AboutSheet(
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setFloodEnabled(it) }
                                     )
                                     if (advancedMode && onShowFloodSettings != null) {
-                                        TextButton(
+                                        ChatbitButton(
+                                            text = stringResource(R.string.flood_open_settings),
                                             onClick = onShowFloodSettings,
-                                            modifier = Modifier.padding(start = 46.dp)
-                                        ) {
-                                            Text(stringResource(R.string.flood_open_settings), fontSize = 13.sp)
-                                        }
+                                            modifier = Modifier.padding(start = 54.dp, bottom = 8.dp)
+                                        )
                                     }
 
                                     HorizontalDivider(
@@ -1447,12 +1446,11 @@ fun AboutSheet(
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                                         ) {
-                                            OutlinedButton(
+                                            ChatbitButton(
+                                                text = stringResource(R.string.tor_new_route),
                                                 onClick = { torProvider.requestNewRoute() },
                                                 enabled = torStatus.running && torStatus.bootstrapPercent >= 100
-                                            ) {
-                                                Text(stringResource(R.string.tor_new_route), fontFamily = BitchatFontFamily, fontSize = 13.sp)
-                                            }
+                                            )
                                             if (derniereRoute > 0) {
                                                 Text(
                                                     text = stringResource(R.string.tor_route_changed_at, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(derniereRoute))),

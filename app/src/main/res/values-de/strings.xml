@@ -894,4 +894,8 @@
     <string name="media_not_saved">Medium nicht gesendet: die Unterhaltung konnte nicht gespeichert werden</string>
     <string name="media_not_committed">Medium nicht gesendet: die Übertragung konnte nicht starten</string>
     <string name="media_not_sent_reason">Medium nicht gesendet: %1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">%1$s entsperren</string>
+    <string name="action_unblock_subtitle">Die Nachrichten erscheinen wieder im Chat</string>
 </resources>

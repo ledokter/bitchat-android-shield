@@ -914,4 +914,8 @@
     <string name="media_not_saved">Média non envoyé : la conversation n\'a pas pu être enregistrée</string>
     <string name="media_not_committed">Média non envoyé : le transfert n\'a pas pu démarrer</string>
     <string name="media_not_sent_reason">Média non envoyé : %1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">Débloquer %1$s</string>
+    <string name="action_unblock_subtitle">Ses messages réapparaissent dans le chat</string>
 </resources>

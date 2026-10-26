@@ -1688,6 +1688,24 @@ class ChatViewModel(
 
     fun unblockUserInGeohash(targetNickname: String): Boolean = geohashViewModel.unblockUserInGeohash(targetNickname)
 
+    /** Unblocks the author of [message]: Nostr key (block list + spam flag) or mesh peer. */
+    fun unblockSender(message: BitchatMessage, nickname: String) {
+        val key = message.senderNostrPubkey?.lowercase()
+        if (key != null) {
+            geohashViewModel.unblockPubkey(key)
+            if (key in com.bitchat.android.nostr.BitchatShield.flaggedKeys()) com.bitchat.android.nostr.BitchatShield.unflag(key)
+            com.bitchat.android.ui.DataManager.blockVersion.value++
+            messageManager.addMessage(BitchatMessage(
+                sender = "system",
+                content = com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.sys_unblocked_user, nickname),
+                timestamp = java.util.Date(),
+                isRelay = false
+            ))
+        } else {
+            sendMessage("/unblock $nickname")
+        }
+    }
+
     // MARK: - Navigation Management
     
     fun showAppInfo() {

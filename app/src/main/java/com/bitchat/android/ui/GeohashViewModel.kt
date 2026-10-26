@@ -297,6 +297,12 @@ class GeohashViewModel(
         return fresh.size
     }
 
+    fun unblockPubkey(pubkey: String) {
+        dataManager.removeGeohashBlockedUser(pubkey)
+        repo.refreshGeohashPeople()
+        repo.updateReactiveParticipantCounts()
+    }
+
     /** Unblocks a geohash user by nickname; true when someone was unblocked. */
     fun unblockUserInGeohash(targetNickname: String): Boolean {
         val pubkey = repo.findPubkeyByNickname(targetNickname) ?: return false

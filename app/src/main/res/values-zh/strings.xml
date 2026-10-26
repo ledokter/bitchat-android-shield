@@ -914,4 +914,8 @@
     <string name="media_not_saved">媒体未发送：无法保存会话</string>
     <string name="media_not_committed">媒体未发送：传输无法开始</string>
     <string name="media_not_sent_reason">媒体未发送：%1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">取消屏蔽 %1$s</string>
+    <string name="action_unblock_subtitle">其消息将重新显示在聊天中</string>
 </resources>

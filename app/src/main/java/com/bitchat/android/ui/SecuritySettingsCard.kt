@@ -149,7 +149,7 @@ private fun SecLabel(text: String) {
 
 @Composable
 private fun SecHint(text: String) {
-    Text(text, fontFamily = BitchatFontFamily, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    Text(text, fontFamily = BitchatFontFamily, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
 /** chatbit PIN and duress PIN: always visible, they matter more than any tunable. */
@@ -194,11 +194,9 @@ private fun PinRow(title: Int, desc: Int, isSet: Boolean, onSet: () -> Unit, onR
             SecLabel(stringResource(title))
             SecHint(stringResource(desc))
         }
-        androidx.compose.material3.TextButton(onClick = onSet) {
-            Text(stringResource(if (isSet) R.string.pin_change else R.string.pin_set), fontFamily = BitchatFontFamily, fontSize = 12.sp)
-        }
-        if (isSet) androidx.compose.material3.TextButton(onClick = onRemove) {
-            Text(stringResource(R.string.pin_remove), fontFamily = BitchatFontFamily, fontSize = 12.sp, color = MaterialTheme.colorScheme.error)
+        Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            ChatbitButton(text = stringResource(if (isSet) R.string.pin_change else R.string.pin_set), onClick = onSet)
+            if (isSet) ChatbitButton(text = stringResource(R.string.pin_remove), onClick = onRemove, danger = true)
         }
     }
 }

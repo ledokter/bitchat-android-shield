@@ -893,4 +893,8 @@
     <string name="media_not_saved">送信できません：会話を保存できませんでした</string>
     <string name="media_not_committed">送信できません：転送を開始できませんでした</string>
     <string name="media_not_sent_reason">送信できません：%1$s</string>
+
+    <!-- chabit -->
+    <string name="action_unblock_title">%1$s のブロックを解除</string>
+    <string name="action_unblock_subtitle">メッセージが再びチャットに表示されます</string>
 </resources>

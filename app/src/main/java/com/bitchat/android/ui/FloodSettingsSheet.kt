@@ -222,9 +222,10 @@ fun FloodSettingsSheet(
                         RuleSlider(stringResource(R.string.flood_slider_zalgo), rules.zalgoBomb.toFloat(), 20f..500f, 47, "%.0f") {
                             BitchatShield.setFloodRules(rules.copy(zalgoBomb = it.toInt()))
                         }
-                        TextButton(onClick = { BitchatShield.setFloodRules(FloodDetector.Rules(disabled = rules.disabled, keywords = rules.keywords)) }) {
-                            Text(stringResource(R.string.flood_defaults), fontFamily = BitchatFontFamily, fontSize = 12.sp)
-                        }
+                        ChatbitButton(
+                            text = stringResource(R.string.flood_defaults),
+                            onClick = { BitchatShield.setFloodRules(FloodDetector.Rules(disabled = rules.disabled, keywords = rules.keywords)) }
+                        )
                     }
                 }
                 item {
@@ -246,9 +247,9 @@ fun FloodSettingsSheet(
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        TextButton(onClick = {
+                        ChatbitButton(text = stringResource(R.string.flood_keywords_save), onClick = {
                             BitchatShield.setFloodRules(rules.copy(keywords = keywords.split(",").map { it.trim() }.filter { it.isNotEmpty() }))
-                        }) { Text(stringResource(R.string.flood_keywords_save), fontFamily = BitchatFontFamily, fontSize = 12.sp) }
+                        })
                     }
                 }
                 item {
@@ -266,9 +267,10 @@ fun FloodSettingsSheet(
                     FloodCard {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Label(stringResource(R.string.flood_hidden_title, hidden.size), bold = true, modifier = Modifier.weight(1f))
-                            if (hidden.isNotEmpty()) TextButton(onClick = { BitchatShield.clearHidden() }) {
-                                Text(stringResource(R.string.flood_hidden_clear), fontFamily = BitchatFontFamily, fontSize = 12.sp)
-                            }
+                            if (hidden.isNotEmpty()) ChatbitButton(
+                                text = stringResource(R.string.flood_hidden_clear),
+                                onClick = { BitchatShield.clearHidden() }
+                            )
                         }
                         if (hidden.isEmpty()) Hint(stringResource(R.string.flood_hidden_none))
                     }
@@ -280,9 +282,7 @@ fun FloodSettingsSheet(
                                 Label("${h.name} · ${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(h.atMs))}")
                                 Text(h.content, fontFamily = BitchatFontFamily, fontSize = 12.sp, maxLines = 3, overflow = TextOverflow.Ellipsis)
                             }
-                            TextButton(onClick = { BitchatShield.unflag(h.pubkey) }) {
-                                Text(stringResource(R.string.flood_not_spammer), fontFamily = BitchatFontFamily, fontSize = 11.sp)
-                            }
+                            ChatbitButton(text = stringResource(R.string.flood_not_spammer), onClick = { BitchatShield.unflag(h.pubkey) })
                         }
                     }
                 }
@@ -333,7 +333,11 @@ fun FloodSettingsSheet(
 
 @Composable
 private fun FloodCard(content: @Composable () -> Unit) {
-    Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.2f)) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { content() }
     }
 }
@@ -345,14 +349,12 @@ private fun Label(text: String, bold: Boolean = false, modifier: Modifier = Modi
 
 @Composable
 private fun Hint(text: String) {
-    Text(text, fontFamily = BitchatFontFamily, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+    Text(text, fontFamily = BitchatFontFamily, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
 @Composable
 private fun SmallButton(text: String, onClick: () -> Unit) {
-    OutlinedButton(onClick = onClick, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)) {
-        Text(text, fontFamily = BitchatFontFamily, fontSize = 12.sp)
-    }
+    ChatbitButton(text = text, onClick = onClick)
 }
 
 /** Slider that saves only when released (no prefs write per pixel). */
