@@ -192,20 +192,25 @@ fun IntroScreen(onStartHotspot: () -> Unit) {
         }
     }
 
+    // chatbit: the start button stays pinned at the bottom; only the explanations scroll
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+    Column(
+        modifier = Modifier
+            .weight(1f)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
         Icon(
             imageVector = Icons.Default.Wifi,
             contentDescription = null,
-            modifier = Modifier.size(80.dp),
+            modifier = Modifier.size(48.dp),
             tint = MaterialTheme.colorScheme.primary
         )
 
@@ -295,7 +300,7 @@ fun IntroScreen(onStartHotspot: () -> Unit) {
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+    }
 
         Button(
             onClick = {
