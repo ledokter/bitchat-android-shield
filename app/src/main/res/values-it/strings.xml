@@ -881,4 +881,30 @@
   <string name="perm_wifi_aware_desc">Trova e collegati agli utenti chatbit vicini tramite Wi‑Fi</string>
   <string name="verify_tab_my_qr">Il mio QR</string>
   <string name="verify_tab_scan">Scansiona</string>
+
+    <!-- chabit -->
+    <string name="show_blocked_title">Mostra i messaggi dei bloccati</string>
+    <string name="show_blocked_desc">Deselezionato: le persone bloccate o segnalate spariscono dalla chat</string>
+    <string name="tor_rotating_toast">Nuovo percorso Tor… (nuovo IP tra pochi secondi)</string>
+    <string name="pin_title">PIN di chatbit</string>
+    <string name="pin_desc">Codice di sblocco proprio, distinto da quello del telefono</string>
+    <string name="duress_title">PIN di coercizione</string>
+    <string name="duress_desc">Se ti costringono a sbloccare, digita questo: tutto viene cancellato in silenzio e l\'app si apre vuota</string>
+    <string name="duress_same_as_pin">Il PIN di coercizione deve essere diverso dal PIN</string>
+    <string name="pin_set">Imposta</string>
+    <string name="pin_change">Cambia</string>
+    <string name="pin_remove">Rimuovi</string>
+    <string name="pin_rules">Da %1$d a %2$d cifre</string>
+    <string name="pin_new">Nuovo PIN</string>
+    <string name="pin_confirm">Ripeti</string>
+    <string name="pin_save">Salva</string>
+    <string name="pin_enter">Inserisci il PIN</string>
+    <string name="pin_wrong">PIN errato</string>
+    <string name="pin_wait">Troppi tentativi, attendi %1$d s</string>
+    <string name="pin_delete">Cancella cifra</string>
+    <string name="cmd_desc_nick">cambia nickname</string>
+    <string name="cmd_desc_tor">nuovo percorso Tor (nuovo IP)</string>
+    <string name="cmd_desc_help">elenco comandi</string>
+    <string name="sys_usage_nick">uso: /n &lt;nickname&gt;</string>
+    <string name="sys_nick_changed">ora sei %1$s</string>
 </resources>

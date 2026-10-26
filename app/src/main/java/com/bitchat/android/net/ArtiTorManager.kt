@@ -396,13 +396,22 @@ class ArtiTorManager private constructor() {
         return applyMutex.withLock {
             if (desiredMode != TorMode.ON || lifecycleState != LifecycleState.RUNNING) return@withLock false
             Log.i(TAG, "Rotation : nouvelle route Tor")
-            restartArti(app)
-            withTimeoutOrNull(90_000) { waitUntilBootstrapped() }
-            resetNetworkConnections()
-            _lastRouteChange.value = System.currentTimeMillis()
+            _rotating.value = true
+            try {
+                restartArti(app)
+                withTimeoutOrNull(90_000) { waitUntilBootstrapped() }
+                resetNetworkConnections()
+                _lastRouteChange.value = System.currentTimeMillis()
+            } finally {
+                _rotating.value = false
+            }
             true
         }
     }
+
+    private val _rotating = MutableStateFlow(false)
+    /** True while a new Tor route is being built (header button spins, the cat beats). */
+    val rotating: StateFlow<Boolean> = _rotating.asStateFlow()
 
     fun requestNewRoute() {
         appScope.launch { newRoute() }

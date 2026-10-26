@@ -906,6 +906,9 @@ class NostrRelayManager private constructor() {
         }
     }
 
+    /** Subscriptions whose stored history has fully arrived (EOSE), so live events no longer count as loading. */
+    private val historyLoaded = ConcurrentHashMap.newKeySet<String>()
+
     private fun handleMessage(message: String, relayUrl: String) {
         try {
             val jsonElement = JsonParser.parseString(message)
@@ -918,6 +921,8 @@ class NostrRelayManager private constructor() {
             
             when (response) {
                 is NostrResponse.Event -> {
+                    // stored history still loading for this subscription: the header cat beats
+                    if (response.subscriptionId !in historyLoaded) com.bitchat.android.net.NetActivity.pulse()
                     // Update relay stats
                     relaysList.find { it.url == relayUrl }?.let { relay ->
                         relay.messagesReceived += 1
@@ -954,7 +959,7 @@ class NostrRelayManager private constructor() {
                 }
 
                 is NostrResponse.EndOfStoredEvents -> {
-                    // No action needed
+                    historyLoaded.add(response.subscriptionId)
                 }
 
                 is NostrResponse.Ok -> {

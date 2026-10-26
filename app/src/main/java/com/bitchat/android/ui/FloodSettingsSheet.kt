@@ -186,6 +186,22 @@ fun FloodSettingsSheet(
                     }
                 }
                 item {
+                    // like the bot: tick to see what blocked / reported people still write
+                    val showBlocked by com.bitchat.android.security.SecurityPreferences.showBlocked.collectAsState()
+                    FloodCard {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Column(Modifier.weight(1f)) {
+                                Label(stringResource(R.string.show_blocked_title), bold = true)
+                                Hint(stringResource(R.string.show_blocked_desc))
+                            }
+                            androidx.compose.material3.Checkbox(
+                                checked = showBlocked,
+                                onCheckedChange = { com.bitchat.android.security.SecurityPreferences.setShowBlocked(it) }
+                            )
+                        }
+                    }
+                }
+                item {
                     FloodCard {
                         Label(stringResource(R.string.flood_detection), bold = true)
                         RuleSlider(stringResource(R.string.flood_slider_chatty), rules.minChatty.toFloat(), 2f..30f, 27, "%.0f") {

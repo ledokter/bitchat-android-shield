@@ -153,8 +153,8 @@ class MediaSendingManager(
                     fileName = file.name,
                     fileSize = file.length(),
                     mimeType = "audio/mp4",
-                    content = file.readBytes()
-                )
+                    content = com.bitchat.android.security.MediaVault.readBytes(file)
+                ).also { com.bitchat.android.security.MediaVault.seal(filePath) }
             } ?: return
 
             if (toPeerIDOrNull != null) {
@@ -197,8 +197,8 @@ class MediaSendingManager(
                     fileName = file.name,
                     fileSize = file.length(),
                     mimeType = "image/jpeg",
-                    content = file.readBytes()
-                )
+                    content = com.bitchat.android.security.MediaVault.readBytes(file)
+                ).also { com.bitchat.android.security.MediaVault.seal(filePath) }
             } ?: return
 
             if (toPeerIDOrNull != null) {
@@ -267,8 +267,8 @@ class MediaSendingManager(
                     fileName = originalName,
                     fileSize = file.length(),
                     mimeType = mimeType,
-                    content = file.readBytes()
-                )
+                    content = com.bitchat.android.security.MediaVault.readBytes(file)
+                ).also { com.bitchat.android.security.MediaVault.seal(filePath) }
             } ?: return
 
             val messageType = when {

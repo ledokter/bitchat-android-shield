@@ -56,7 +56,7 @@ fun ImageMessageItem(
     val imageShape = androidx.compose.foundation.shape.RoundedCornerShape(10.dp)
 
     val context = LocalContext.current
-    val bmp = remember(path) { try { android.graphics.BitmapFactory.decodeFile(path) } catch (_: Exception) { null } }
+    val bmp = remember(path) { try { com.bitchat.android.security.MediaVault.decodeBitmap(path) } catch (_: Exception) { null } }
 
     // Collect all image paths from messages for swipe navigation
     val imagePaths = remember(messages) {

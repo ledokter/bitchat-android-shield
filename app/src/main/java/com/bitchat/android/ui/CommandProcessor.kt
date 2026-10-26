@@ -21,17 +21,21 @@ class CommandProcessor(
 ) {
     
     // Available commands list
+    // Short forms first: typing must stay fast. Long forms keep working as aliases.
     private val baseCommands = listOf(
-        CommandSuggestion("/block", emptyList(), "[nickname]", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_block)),
-        CommandSuggestion("/channels", emptyList(), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_channels)),
-        CommandSuggestion("/clear", emptyList(), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_clear)),
-        CommandSuggestion("/hug", emptyList(), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_hug)),
+        CommandSuggestion("/b", listOf("/block"), "[nickname]", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_block)),
+        CommandSuggestion("/u", listOf("/unblock"), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_unblock)),
+        CommandSuggestion("/c", listOf("/clear"), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_clear)),
+        CommandSuggestion("/h", listOf("/hug"), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_hug)),
+        CommandSuggestion("/s", listOf("/slap"), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_slap)),
         CommandSuggestion("/j", listOf("/join"), "<channel>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_join)),
         CommandSuggestion("/m", listOf("/msg"), "<nickname> [message]", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_msg)),
+        CommandSuggestion("/w", listOf("/who"), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_who)),
+        CommandSuggestion("/l", listOf("/channels"), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_channels)),
+        CommandSuggestion("/n", listOf("/nick"), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_nick)),
+        CommandSuggestion("/t", listOf("/tor"), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_tor)),
         CommandSuggestion("/pay", emptyList(), "<token> [public]", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_pay)),
-        CommandSuggestion("/slap", emptyList(), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_slap)),
-        CommandSuggestion("/unblock", emptyList(), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_unblock)),
-        CommandSuggestion("/w", emptyList(), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_who))
+        CommandSuggestion("/?", listOf("/help"), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_help))
     )
     
     // MARK: - Command Processing
@@ -39,20 +43,25 @@ class CommandProcessor(
     fun processCommand(command: String, meshService: MeshService, myPeerID: String, onSendMessage: (String, List<String>, String?) -> Unit, viewModel: ChatViewModel? = null): Boolean {
         if (!command.startsWith("/")) return false
         
-        val parts = command.split(" ")
+        val parts = command.trim().split(Regex("\\s+"))
         val cmd = parts.first().lowercase()
         when (cmd) {
             "/j", "/join" -> handleJoinCommand(parts, myPeerID)
             "/m", "/msg" -> handleMessageCommand(parts, meshService, viewModel)
             "/pay" -> handlePayCommand(command, meshService, myPeerID, onSendMessage, viewModel)
-            "/w" -> handleWhoCommand(meshService, viewModel)
-            "/clear" -> handleClearCommand()
+            "/w", "/who" -> handleWhoCommand(meshService, viewModel)
+            "/c", "/clear" -> handleClearCommand()
             "/pass" -> handlePassCommand(parts, myPeerID)
-            "/block" -> handleBlockCommand(parts, meshService)
-            "/unblock" -> handleUnblockCommand(parts, meshService)
-            "/hug" -> handleActionCommand(parts, "gives", "a warm hug 🫂", meshService, myPeerID, onSendMessage, viewModel)
-            "/slap" -> handleActionCommand(parts, "slaps", "around a bit with a large trout 🐟", meshService, myPeerID, onSendMessage, viewModel)
-            "/channels" -> handleChannelsCommand()
+            "/b", "/block" -> handleBlockCommand(parts, meshService, viewModel)
+            "/u", "/unblock" -> handleUnblockCommand(parts, meshService, viewModel)
+            "/h", "/hug" -> handleActionCommand(parts, "gives", "a warm hug 🫂", meshService, myPeerID, onSendMessage, viewModel)
+            "/s", "/slap" -> handleActionCommand(parts, "slaps", "around a bit with a large trout 🐟", meshService, myPeerID, onSendMessage, viewModel)
+            "/l", "/channels" -> handleChannelsCommand()
+            "/n", "/nick" -> handleNickCommand(parts, viewModel)
+            "/t", "/tor" -> handleTorCommand()
+            "/?", "/help" -> addSystemMessage(getAllAvailableCommands().joinToString("\n") { c ->
+                (listOf(c.command) + c.aliases).joinToString(" ") + (c.syntax?.let { " $it" } ?: "") + " — " + c.description
+            })
             else -> handleUnknownCommand(cmd)
         }
         
@@ -66,26 +75,19 @@ class CommandProcessor(
             val password = if (parts.size > 2) parts[2] else null
             val success = channelManager.joinChannel(channel, password, myPeerID)
             if (success) {
-                val systemMessage = BitchatMessage(
-                    sender = "system",
-                    content = com.bitchat.android.util.AppStrings.get(R.string.sys_joined_channel, channel),
-                    timestamp = Date(),
-                    isRelay = false
-                )
-                messageManager.addMessage(systemMessage)
+                addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_joined_channel, channel))
             }
         } else {
-            val systemMessage = BitchatMessage(
-                sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_usage_join),
-                timestamp = Date(),
-                isRelay = false
-            )
-            messageManager.addMessage(systemMessage)
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_usage_join))
         }
     }
     
     private fun handleMessageCommand(parts: List<String>, meshService: MeshService, viewModel: ChatViewModel?) {
+        if (parts.size > 1 && viewModel != null && isInLocationChannel()) {
+            val target = parts[1].removePrefix("@")
+            viewModel.startGeohashDMByNickname(target)
+            return
+        }
         if (parts.size > 1) {
             val targetName = parts[1].removePrefix("@")
             val peerID = getPeerIDForNickname(targetName, meshService)
@@ -107,32 +109,14 @@ class CommandProcessor(
                             viewModel
                         )
                     } else {
-                        val systemMessage = BitchatMessage(
-                            sender = "system",
-                            content = com.bitchat.android.util.AppStrings.get(R.string.sys_private_chat_started, targetName),
-                            timestamp = Date(),
-                            isRelay = false
-                        )
-                        messageManager.addMessage(systemMessage)
+                        addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_private_chat_started, targetName))
                     }
                 }
             } else {
-                val systemMessage = BitchatMessage(
-                    sender = "system",
-                    content = com.bitchat.android.util.AppStrings.get(R.string.sys_user_not_found_offline, targetName),
-                    timestamp = Date(),
-                    isRelay = false
-                )
-                messageManager.addMessage(systemMessage)
+                addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_user_not_found_offline, targetName))
             }
         } else {
-            val systemMessage = BitchatMessage(
-                sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_usage_msg),
-                timestamp = Date(),
-                isRelay = false
-            )
-            messageManager.addMessage(systemMessage)
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_usage_msg))
         }
     }
     
@@ -177,17 +161,11 @@ class CommandProcessor(
             Pair(peerList, com.bitchat.android.util.AppStrings.get(R.string.sys_online_users))
         }
         
-        val systemMessage = BitchatMessage(
-            sender = "system",
-            content = if (peerList.isEmpty()) {
+        addSystemMessage(if (peerList.isEmpty()) {
                 com.bitchat.android.util.AppStrings.get(R.string.sys_nobody_around)
             } else {
                 "$contextDescription: $peerList"
-            },
-            timestamp = Date(),
-            isRelay = false
-        )
-        messageManager.addMessage(systemMessage)
+            })
     }
     
     private fun handleClearCommand() {
@@ -205,6 +183,10 @@ class CommandProcessor(
                 val channel = state.getCurrentChannelValue()!!
                 messageManager.clearChannelMessages(channel)
             }
+            isInLocationChannel() -> {
+                val geo = state.selectedLocationChannel.value as com.bitchat.android.geohash.ChannelID.Location
+                messageManager.clearChannelMessages("geo:${geo.channel.geohash}")
+            }
             else -> {
                 // Clear main messages
                 messageManager.clearMessages()
@@ -216,13 +198,7 @@ class CommandProcessor(
         val currentChannel = state.getCurrentChannelValue()
 
         if (currentChannel == null) {
-            val systemMessage = BitchatMessage(
-                sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_must_be_in_channel),
-                timestamp = Date(),
-                isRelay = false
-            )
-            messageManager.addMessage(systemMessage)
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_must_be_in_channel))
             return
         }
 
@@ -258,35 +234,38 @@ class CommandProcessor(
         }
     }
     
-    private fun handleBlockCommand(parts: List<String>, meshService: MeshService) {
+    private fun isInLocationChannel() =
+        state.getSelectedPrivateChatPeerValue() == null &&
+            state.selectedLocationChannel.value is com.bitchat.android.geohash.ChannelID.Location
+
+    private fun handleBlockCommand(parts: List<String>, meshService: MeshService, viewModel: ChatViewModel?) {
+        if (parts.size > 1 && viewModel != null && isInLocationChannel()) {
+            viewModel.blockUserInGeohash(parts[1].removePrefix("@"))
+            return
+        }
         if (parts.size > 1) {
             val targetName = parts[1].removePrefix("@")
             privateChatManager.blockPeerByNickname(targetName, meshService)
         } else {
             // List blocked users
-            val blockedInfo = privateChatManager.listBlockedUsers()
-            val systemMessage = BitchatMessage(
-                sender = "system",
-                content = blockedInfo,
-                timestamp = Date(),
-                isRelay = false
-            )
-            messageManager.addMessage(systemMessage)
+            addSystemMessage(privateChatManager.listBlockedUsers())
         }
     }
     
-    private fun handleUnblockCommand(parts: List<String>, meshService: MeshService) {
+    private fun handleUnblockCommand(parts: List<String>, meshService: MeshService, viewModel: ChatViewModel?) {
+        if (parts.size > 1 && viewModel != null && isInLocationChannel()) {
+            val target = parts[1].removePrefix("@")
+            addSystemMessage(
+                if (viewModel.unblockUserInGeohash(target)) com.bitchat.android.util.AppStrings.get(R.string.sys_unblocked_user, target)
+                else com.bitchat.android.util.AppStrings.get(R.string.sys_user_not_in_geohash, target)
+            )
+            return
+        }
         if (parts.size > 1) {
             val targetName = parts[1].removePrefix("@")
             privateChatManager.unblockPeerByNickname(targetName, meshService)
         } else {
-            val systemMessage = BitchatMessage(
-                sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_usage_unblock),
-                timestamp = Date(),
-                isRelay = false
-            )
-            messageManager.addMessage(systemMessage)
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_usage_unblock))
         }
     }
     
@@ -341,13 +320,7 @@ class CommandProcessor(
                 }
             }
         } else {
-            val systemMessage = BitchatMessage(
-                sender = "system",
-                content = com.bitchat.android.util.AppStrings.get(R.string.sys_usage_nickname, parts[0].removePrefix("/")),
-                timestamp = Date(),
-                isRelay = false
-            )
-            messageManager.addMessage(systemMessage)
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_usage_nickname, parts[0].removePrefix("/")))
         }
     }
     
@@ -359,13 +332,27 @@ class CommandProcessor(
             com.bitchat.android.util.AppStrings.get(R.string.sys_joined_channels, allChannels.joinToString(", "))
         }
         
-        val systemMessage = BitchatMessage(
-            sender = "system",
-            content = channelList,
-            timestamp = Date(),
-            isRelay = false
-        )
-        messageManager.addMessage(systemMessage)
+        addSystemMessage(channelList)
+    }
+
+    private fun handleNickCommand(parts: List<String>, viewModel: ChatViewModel?) {
+        val name = parts.drop(1).joinToString(" ").trim()
+        if (name.isEmpty() || viewModel == null) {
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_usage_nick))
+            return
+        }
+        viewModel.setNickname(name)
+        addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_nick_changed, name))
+    }
+
+    private fun handleTorCommand() {
+        val tor = com.bitchat.android.net.ArtiTorManager.getInstance()
+        if (tor.statusFlow.value.mode == com.bitchat.android.net.TorMode.OFF) {
+            addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.tor_not_available_in_this_build))
+            return
+        }
+        tor.requestNewRoute()
+        addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.tor_rotating_toast))
     }
 
     private fun handlePayCommand(
@@ -455,13 +442,7 @@ class CommandProcessor(
     }
     
     private fun handleUnknownCommand(cmd: String) {
-        val systemMessage = BitchatMessage(
-            sender = "system",
-            content = com.bitchat.android.util.AppStrings.get(R.string.sys_unknown_command, cmd),
-            timestamp = Date(),
-            isRelay = false
-        )
-        messageManager.addMessage(systemMessage)
+        addSystemMessage(com.bitchat.android.util.AppStrings.get(R.string.sys_unknown_command, cmd))
     }
     
     /**
@@ -504,9 +485,7 @@ class CommandProcessor(
         // Add channel-specific commands if in a channel
         val channelCommands = if (state.getCurrentChannelValue() != null) {
             listOf(
-                CommandSuggestion("/pass", emptyList(), "[password]", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_pass)),
-                CommandSuggestion("/save", emptyList(), null, com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_save)),
-                CommandSuggestion("/transfer", emptyList(), "<nickname>", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_transfer))
+                CommandSuggestion("/pass", emptyList(), "[password]", com.bitchat.android.util.AppStrings.get(R.string.cmd_desc_pass))
             )
         } else {
             emptyList()
@@ -526,7 +505,7 @@ class CommandProcessor(
             command.command.startsWith(input) ||
             // Check aliases
             command.aliases.any { it.startsWith(input) }
-        }.sortedBy { it.command }
+        }.sortedBy { it.command.length }
     }
     
     fun selectCommandSuggestion(suggestion: CommandSuggestion): String {

@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -63,6 +64,7 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
                     fontFamily = BitchatFontFamily, fontSize = 14.sp, fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary
                 )
+                PinSettings()
                 if (!advanced) {
                     SecHint(stringResource(R.string.security_summary_hint))
                     return@Column
@@ -148,4 +150,92 @@ private fun SecLabel(text: String) {
 @Composable
 private fun SecHint(text: String) {
     Text(text, fontFamily = BitchatFontFamily, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+}
+
+/** chatbit PIN and duress PIN: always visible, they matter more than any tunable. */
+@Composable
+private fun PinSettings() {
+    val context = LocalContext.current
+    val hasPin by SecurityPreferences.hasPin.collectAsState()
+    val hasDuress by SecurityPreferences.hasDuress.collectAsState()
+    var editing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<Boolean?>(null) } // true = PIN, false = duress
+
+    PinRow(
+        title = R.string.pin_title, desc = R.string.pin_desc, isSet = hasPin,
+        onSet = { editing = true }, onRemove = { SecurityPreferences.setPin(null) }
+    )
+    if (hasPin) {
+        PinRow(
+            title = R.string.duress_title, desc = R.string.duress_desc, isSet = hasDuress,
+            onSet = { editing = false }, onRemove = { SecurityPreferences.setDuressPin(null) }
+        )
+    }
+    editing?.let { forPin ->
+        PinDialog(
+            title = stringResource(if (forPin) R.string.pin_title else R.string.duress_title),
+            onDismiss = { editing = null },
+            onConfirm = { pin ->
+                if (forPin) {
+                    SecurityPreferences.setPin(pin); editing = null
+                } else if (SecurityPreferences.setDuressPin(pin)) {
+                    editing = null
+                } else {
+                    android.widget.Toast.makeText(context, context.getString(R.string.duress_same_as_pin), android.widget.Toast.LENGTH_LONG).show()
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun PinRow(title: Int, desc: Int, isSet: Boolean, onSet: () -> Unit, onRemove: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
+            SecLabel(stringResource(title))
+            SecHint(stringResource(desc))
+        }
+        androidx.compose.material3.TextButton(onClick = onSet) {
+            Text(stringResource(if (isSet) R.string.pin_change else R.string.pin_set), fontFamily = BitchatFontFamily, fontSize = 12.sp)
+        }
+        if (isSet) androidx.compose.material3.TextButton(onClick = onRemove) {
+            Text(stringResource(R.string.pin_remove), fontFamily = BitchatFontFamily, fontSize = 12.sp, color = MaterialTheme.colorScheme.error)
+        }
+    }
+}
+
+@Composable
+private fun PinDialog(title: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
+    var pin by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+    var again by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
+    val valid = SecurityPreferences.isValidPin(pin) && pin == again
+    val digits = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.NumberPassword)
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title, fontFamily = BitchatFontFamily) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                SecHint(stringResource(R.string.pin_rules, SecurityPreferences.PIN_MIN, SecurityPreferences.PIN_MAX))
+                androidx.compose.material3.OutlinedTextField(
+                    value = pin, onValueChange = { v -> pin = v.filter { it.isDigit() }.take(SecurityPreferences.PIN_MAX) },
+                    label = { Text(stringResource(R.string.pin_new)) }, singleLine = true, keyboardOptions = digits,
+                    visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+                )
+                androidx.compose.material3.OutlinedTextField(
+                    value = again, onValueChange = { v -> again = v.filter { it.isDigit() }.take(SecurityPreferences.PIN_MAX) },
+                    label = { Text(stringResource(R.string.pin_confirm)) }, singleLine = true, keyboardOptions = digits,
+                    visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
+                )
+            }
+        },
+        confirmButton = {
+            androidx.compose.material3.TextButton(onClick = { onConfirm(pin) }, enabled = valid) {
+                Text(stringResource(R.string.pin_save), fontFamily = BitchatFontFamily)
+            }
+        },
+        dismissButton = {
+            androidx.compose.material3.TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel_lower), fontFamily = BitchatFontFamily)
+            }
+        }
+    )
 }

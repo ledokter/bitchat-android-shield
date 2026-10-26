@@ -796,6 +796,9 @@ private fun MainHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
+                    // chatbit: one tap = new Tor route (new exit IP); spins while it is built
+                    TorRotateButton()
+
                     // chatbit private rooms
                     HeaderIconButton(
                         onClick = { com.bitchat.android.rooms.PrivateRooms.openSheet() },
@@ -913,5 +916,42 @@ private fun LocationChannelsButton(
                 modifier = Modifier.widthIn(max = 88.dp)
             )
         }
+    }
+}
+
+/** New Tor route on demand. Hidden when Tor is off; spins and is disabled while rotating. */
+@Composable
+private fun TorRotateButton() {
+    val tor = remember { ArtiTorManager.getInstance() }
+    val status by tor.statusFlow.collectAsStateWithLifecycle()
+    val rotating by tor.rotating.collectAsStateWithLifecycle()
+    if (status.mode == TorMode.OFF) return
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val angle = if (rotating) {
+        val t = androidx.compose.animation.core.rememberInfiniteTransition(label = "torRotate")
+        t.animateFloat(
+            0f, 360f,
+            androidx.compose.animation.core.infiniteRepeatable(
+                androidx.compose.animation.core.tween(1100, easing = androidx.compose.animation.core.LinearEasing)
+            ),
+            label = "torAngle"
+        ).value
+    } else 0f
+    val ready = status.running && status.bootstrapPercent >= 100
+    HeaderIconButton(
+        onClick = {
+            if (rotating) return@HeaderIconButton
+            android.widget.Toast.makeText(context, context.getString(R.string.tor_rotating_toast), android.widget.Toast.LENGTH_SHORT).show()
+            tor.requestNewRoute()
+        },
+        contentDescription = stringResource(R.string.tor_new_route)
+    ) {
+        Icon(
+            imageVector = androidx.compose.material.icons.Icons.Filled.Autorenew,
+            contentDescription = null,
+            modifier = Modifier.size(HeaderIconSize).graphicsLayer { rotationZ = angle },
+            tint = if (ready && !rotating) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+        )
     }
 }

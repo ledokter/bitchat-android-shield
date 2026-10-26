@@ -13,10 +13,12 @@ import kotlin.random.Random
 class DataManager(private val context: Context) {
     
     companion object {
+        /** Bumped whenever a block list changes, so the chat re-filters what it shows. */
+        val blockVersion = kotlinx.coroutines.flow.MutableStateFlow(0)
         private const val TAG = "DataManager"
     }
     
-    private val prefs: SharedPreferences = context.getSharedPreferences("bitchat_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences = com.bitchat.android.security.SecurePrefs.open(context, "bitchat_prefs")
     private val gson = Gson()
     
     // Channel-related maps that need to persist state
@@ -212,11 +214,13 @@ class DataManager(private val context: Context) {
     fun addBlockedUser(fingerprint: String) {
         _blockedUsers.add(fingerprint)
         saveBlockedUsers()
+        blockVersion.value++
     }
     
     fun removeBlockedUser(fingerprint: String) {
         _blockedUsers.remove(fingerprint)
         saveBlockedUsers()
+        blockVersion.value++
     }
     
     @Synchronized
@@ -241,18 +245,20 @@ class DataManager(private val context: Context) {
     }
     
     fun addGeohashBlockedUser(pubkeyHex: String) {
-        _geohashBlockedUsers.add(pubkeyHex)
+        _geohashBlockedUsers.add(pubkeyHex.lowercase())
         saveGeohashBlockedUsers()
+        blockVersion.value++
     }
     
     fun removeGeohashBlockedUser(pubkeyHex: String) {
-        _geohashBlockedUsers.remove(pubkeyHex)
+        _geohashBlockedUsers.remove(pubkeyHex.lowercase())
         saveGeohashBlockedUsers()
+        blockVersion.value++
     }
     
     @Synchronized
     fun isGeohashUserBlocked(pubkeyHex: String): Boolean {
-        return _geohashBlockedUsers.contains(pubkeyHex)
+        return _geohashBlockedUsers.contains(pubkeyHex.lowercase())
     }
     
     // MARK: - Emergency Clear
@@ -263,6 +269,7 @@ class DataManager(private val context: Context) {
         _blockedUsers.clear()
         _geohashBlockedUsers.clear()
         _channelMembers.clear()
+        blockVersion.value++
         prefs.edit().clear().apply()
     }
 }

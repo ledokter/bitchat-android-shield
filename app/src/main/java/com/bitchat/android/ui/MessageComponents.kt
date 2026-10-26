@@ -617,7 +617,7 @@ fun MessageItem(
                         fileName = file.name,
                         fileSize = file.length(),
                         mimeType = com.bitchat.android.features.file.FileUtils.getMimeTypeFromExtension(file.name),
-                        content = file.readBytes()
+                        content = com.bitchat.android.security.MediaVault.readBytes(file)
                     )
                 } else null
             } catch (e: Exception) {

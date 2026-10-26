@@ -831,4 +831,30 @@
   <string name="perm_wifi_aware_desc">通过 Wi‑Fi 发现并连接附近的 chatbit 用户</string>
   <string name="verify_tab_my_qr">我的二维码</string>
   <string name="verify_tab_scan">扫描</string>
+
+    <!-- chabit -->
+    <string name="show_blocked_title">显示已屏蔽用户的消息</string>
+    <string name="show_blocked_desc">未勾选时：已屏蔽或举报的人会从聊天中消失</string>
+    <string name="tor_rotating_toast">正在切换 Tor 线路…（几秒后获得新 IP）</string>
+    <string name="pin_title">chatbit PIN 码</string>
+    <string name="pin_desc">独立于手机的应用专用解锁码</string>
+    <string name="duress_title">胁迫 PIN 码</string>
+    <string name="duress_desc">被迫解锁时输入此码：所有数据将被悄悄清除，应用以空白状态打开</string>
+    <string name="duress_same_as_pin">胁迫 PIN 码必须与 PIN 码不同</string>
+    <string name="pin_set">设置</string>
+    <string name="pin_change">更改</string>
+    <string name="pin_remove">移除</string>
+    <string name="pin_rules">%1$d 至 %2$d 位数字</string>
+    <string name="pin_new">新 PIN 码</string>
+    <string name="pin_confirm">再次输入</string>
+    <string name="pin_save">保存</string>
+    <string name="pin_enter">输入 PIN 码</string>
+    <string name="pin_wrong">PIN 码错误</string>
+    <string name="pin_wait">尝试次数过多，请等待 %1$d 秒</string>
+    <string name="pin_delete">删除一位</string>
+    <string name="cmd_desc_nick">修改昵称</string>
+    <string name="cmd_desc_tor">新的 Tor 线路（新 IP）</string>
+    <string name="cmd_desc_help">命令列表</string>
+    <string name="sys_usage_nick">用法：/n &lt;昵称&gt;</string>
+    <string name="sys_nick_changed">你现在是 %1$s</string>
 </resources>

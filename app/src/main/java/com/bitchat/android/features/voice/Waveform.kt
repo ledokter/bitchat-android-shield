@@ -56,7 +56,7 @@ object AudioWaveformExtractor {
 
     private fun extract(path: String, sampleCount: Int): FloatArray? {
         val extractor = MediaExtractor()
-        extractor.setDataSource(path)
+        com.bitchat.android.security.MediaVault.dataSource(path)?.let { extractor.setDataSource(it) } ?: extractor.setDataSource(path)
         val trackIndex = (0 until extractor.trackCount).firstOrNull { idx ->
             val fmt = extractor.getTrackFormat(idx)
             val mime = fmt.getString(MediaFormat.KEY_MIME) ?: ""

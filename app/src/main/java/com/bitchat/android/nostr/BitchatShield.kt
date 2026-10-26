@@ -108,7 +108,7 @@ object BitchatShield {
 
     fun init(context: Context) {
         if (initialized) return
-        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = com.bitchat.android.security.SecurePrefs.open(context, PREFS_NAME)
         _shieldEnabled.value = prefs.getBoolean(KEY_SHIELD_ENABLED, true)
         _blockZalgo.value = prefs.getBoolean(KEY_BLOCK_ZALGO, true)
         _blockBots.value = prefs.getBoolean(KEY_BLOCK_BOTS, true)

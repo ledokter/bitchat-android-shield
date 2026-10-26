@@ -66,7 +66,7 @@ fun VoiceNotePlayer(
                 isPlaying = false
                 true
             }
-            player.setDataSource(path)
+            com.bitchat.android.security.MediaVault.dataSource(path)?.let { player.setDataSource(it) } ?: player.setDataSource(path)
             player.prepareAsync()
         } catch (_: Exception) {
             isError = true

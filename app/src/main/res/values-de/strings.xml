@@ -855,4 +855,30 @@
   <string name="perm_wifi_aware_desc">chatbit-Nutzer in der Nähe per WLAN finden und verbinden</string>
   <string name="verify_tab_my_qr">Mein QR</string>
   <string name="verify_tab_scan">Scannen</string>
+
+    <!-- chabit -->
+    <string name="show_blocked_title">Nachrichten blockierter Personen anzeigen</string>
+    <string name="show_blocked_desc">Nicht angehakt: blockierte und gemeldete Personen verschwinden aus dem Chat</string>
+    <string name="tor_rotating_toast">Neue Tor-Route… (neue IP in wenigen Sekunden)</string>
+    <string name="pin_title">chatbit-PIN</string>
+    <string name="pin_desc">Eigener Entsperrcode, getrennt vom Telefon</string>
+    <string name="duress_title">Notfall-PIN</string>
+    <string name="duress_desc">Wirst du zum Entsperren gezwungen, gib diese ein: alles wird still gelöscht und die App öffnet sich leer</string>
+    <string name="duress_same_as_pin">Die Notfall-PIN muss sich von der chatbit-PIN unterscheiden</string>
+    <string name="pin_set">Festlegen</string>
+    <string name="pin_change">Ändern</string>
+    <string name="pin_remove">Entfernen</string>
+    <string name="pin_rules">%1$d bis %2$d Ziffern</string>
+    <string name="pin_new">Neue PIN</string>
+    <string name="pin_confirm">Wiederholen</string>
+    <string name="pin_save">Speichern</string>
+    <string name="pin_enter">PIN eingeben</string>
+    <string name="pin_wrong">Falsche PIN</string>
+    <string name="pin_wait">Zu viele Versuche, warte %1$d s</string>
+    <string name="pin_delete">Ziffer löschen</string>
+    <string name="cmd_desc_nick">Spitznamen ändern</string>
+    <string name="cmd_desc_tor">neue Tor-Route (neue IP)</string>
+    <string name="cmd_desc_help">Befehle auflisten</string>
+    <string name="sys_usage_nick">Verwendung: /n &lt;Spitzname&gt;</string>
+    <string name="sys_nick_changed">du bist jetzt %1$s</string>
 </resources>

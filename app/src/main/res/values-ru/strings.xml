@@ -851,4 +851,30 @@
   <string name="perm_wifi_aware_desc">Поиск пользователей chatbit рядом и подключение по Wi‑Fi</string>
   <string name="verify_tab_my_qr">Мой QR</string>
   <string name="verify_tab_scan">Сканировать</string>
+
+    <!-- chabit -->
+    <string name="show_blocked_title">Показывать сообщения заблокированных</string>
+    <string name="show_blocked_desc">Если выключено, заблокированные и отмеченные исчезают из чата</string>
+    <string name="tor_rotating_toast">Новый маршрут Tor… (новый IP через несколько секунд)</string>
+    <string name="pin_title">PIN-код chatbit</string>
+    <string name="pin_desc">Собственный код разблокировки, отдельный от телефона</string>
+    <string name="duress_title">PIN под принуждением</string>
+    <string name="duress_desc">Если вас заставляют разблокировать, введите его: всё тихо стирается, и приложение открывается пустым</string>
+    <string name="duress_same_as_pin">PIN под принуждением должен отличаться от PIN-кода</string>
+    <string name="pin_set">Задать</string>
+    <string name="pin_change">Изменить</string>
+    <string name="pin_remove">Убрать</string>
+    <string name="pin_rules">От %1$d до %2$d цифр</string>
+    <string name="pin_new">Новый PIN</string>
+    <string name="pin_confirm">Повторите</string>
+    <string name="pin_save">Сохранить</string>
+    <string name="pin_enter">Введите PIN</string>
+    <string name="pin_wrong">Неверный PIN</string>
+    <string name="pin_wait">Слишком много попыток, подождите %1$d с</string>
+    <string name="pin_delete">Стереть цифру</string>
+    <string name="cmd_desc_nick">сменить ник</string>
+    <string name="cmd_desc_tor">новый маршрут Tor (новый IP)</string>
+    <string name="cmd_desc_help">список команд</string>
+    <string name="sys_usage_nick">использование: /n &lt;ник&gt;</string>
+    <string name="sys_nick_changed">теперь вы %1$s</string>
 </resources>

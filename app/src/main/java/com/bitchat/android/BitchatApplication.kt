@@ -15,6 +15,9 @@ class BitchatApplication : Application() {
 
         // chatbit security settings first: the Tor kill switch must apply before any network use
         com.bitchat.android.security.SecurityPreferences.init(this)
+        com.bitchat.android.security.MediaVault.init(this)
+        // plain copies left by "open with…" of a received file
+        runCatching { cacheDir.listFiles { f -> f.name.startsWith("bitchat_") }?.forEach { it.delete() } }
         com.bitchat.android.util.AppStrings.init(this)
 
         // Start the single process-wide power policy before transport components are constructed.

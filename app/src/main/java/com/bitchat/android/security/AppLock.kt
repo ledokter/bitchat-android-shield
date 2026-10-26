@@ -27,8 +27,11 @@ object AppLock {
     private var backgroundSince = 0L
     private var prompting = false
 
-    fun canLock(context: Context): Boolean =
+    fun canLock(context: Context): Boolean = SecurityPreferences.hasPin.value ||
         context.getSystemService(KeyguardManager::class.java)?.isDeviceSecure == true
+
+    /** With a chatbit PIN the lock screen shows its own keypad instead of the system prompt. */
+    fun usesPin(): Boolean = SecurityPreferences.hasPin.value
 
     /** Activity.onStart: relock if needed, then ask to unlock. */
     fun onStart(activity: Activity) {
@@ -40,7 +43,7 @@ object AppLock {
             _locked.value = true
         }
         backgroundSince = 0
-        if (_locked.value) authenticate(activity)
+        if (_locked.value && !usesPin()) authenticate(activity)
     }
 
     /** Activity.onStop. */
@@ -53,7 +56,7 @@ object AppLock {
     }
 
     fun authenticate(activity: Activity) {
-        if (prompting) return
+        if (prompting || usesPin()) return
         if (!SecurityPreferences.appLock.value || !canLock(activity)) {
             _locked.value = false
             return

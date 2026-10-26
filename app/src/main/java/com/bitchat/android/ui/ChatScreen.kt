@@ -209,6 +209,15 @@ fun ChatScreen(viewModel: ChatViewModel) {
         }
     }
 
+    // Blocked / reported people disappear from the timeline at once, unless the user ticks
+    // "show blocked messages" (Settings → filters), like on the bot.
+    val blockVersion by com.bitchat.android.ui.DataManager.blockVersion.collectAsStateWithLifecycle()
+    val flaggedCount by com.bitchat.android.nostr.BitchatShield.flaggedCount.collectAsStateWithLifecycle()
+    val showBlocked by com.bitchat.android.security.SecurityPreferences.showBlocked.collectAsStateWithLifecycle()
+    val visibleMessages = remember(displayMessages, blockVersion, flaggedCount, showBlocked) {
+        if (showBlocked) displayMessages else displayMessages.filterNot(viewModel::isFromBlocked)
+    }
+
     // Identity of the timeline on screen, derived exactly like displayMessages above. Drives the
     // per-conversation scroll position and animation state in MessagesList.
     val conversationKey = when {
@@ -248,7 +257,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
         }
     }
     val mentionPeerIdentities = rememberMentionPeerIdentities(
-        displayMessages, knownMentionPeers, conversationKey
+        visibleMessages, knownMentionPeers, conversationKey
     )
 
     // Determine whether to show media buttons (only hide in geohash location chats)
@@ -300,7 +309,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 isMeshTimeline && nearbyNotesRevealed && nearbyNotes.isNotEmpty()
 
             MessagesList(
-                messages = displayMessages,
+                messages = visibleMessages,
                 currentUserNickname = nickname,
                 meshService = viewModel.meshServiceFacade,
                 mentionPeerIdentities = mentionPeerIdentities,

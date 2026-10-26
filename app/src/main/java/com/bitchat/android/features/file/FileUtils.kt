@@ -235,7 +235,7 @@ object FileUtils {
 
         return try {
             val out = java.io.File(dir, safeName)
-            out.outputStream().use { it.write(file.content) }
+            com.bitchat.android.security.MediaVault.write(out, file.content)
             out.absolutePath
         } catch (_: Exception) {
             // Fallback to cache dir with uniqueness

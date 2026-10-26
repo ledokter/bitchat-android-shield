@@ -56,9 +56,14 @@ class GeohashRepository(
 
     @Synchronized
     fun findPubkeyByNickname(targetNickname: String): String? {
-        return geoNicknames.entries.firstOrNull { (_, nickname) ->
-            val base = nickname.split("#").firstOrNull() ?: nickname
-            base == targetNickname
+        // accepts "name" and the displayed "name#abcd" (last 4 hex of the key), case-insensitive
+        val target = targetNickname.trim().removePrefix("@")
+        val wantedBase = target.substringBefore('#')
+        val wantedSuffix = target.substringAfter('#', "").lowercase()
+        return geoNicknames.entries.firstOrNull { (key, nickname) ->
+            val base = nickname.substringBefore('#')
+            base.equals(wantedBase, ignoreCase = true) &&
+                (wantedSuffix.isEmpty() || key.lowercase().endsWith(wantedSuffix))
         }?.key
     }
 

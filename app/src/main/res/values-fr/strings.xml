@@ -875,4 +875,30 @@
   <string name="perm_wifi_aware_desc">Trouver les utilisateurs chatbit proches et s’y connecter par Wi‑Fi</string>
   <string name="verify_tab_my_qr">Mon QR</string>
   <string name="verify_tab_scan">Scanner</string>
+
+    <!-- chabit -->
+    <string name="show_blocked_title">Afficher les messages des bloqués</string>
+    <string name="show_blocked_desc">Décoché : les personnes bloquées ou signalées disparaissent du chat</string>
+    <string name="tor_rotating_toast">Nouvelle route Tor… (nouvelle IP dans quelques secondes)</string>
+    <string name="pin_title">Code PIN chatbit</string>
+    <string name="pin_desc">Code de déverrouillage propre à l\'appli, distinct de celui du téléphone</string>
+    <string name="duress_title">Code de contrainte</string>
+    <string name="duress_desc">Si on te force à déverrouiller, tape celui-ci : tout est effacé en silence et l\'appli s\'ouvre vide</string>
+    <string name="duress_same_as_pin">Le code de contrainte doit être différent du code PIN</string>
+    <string name="pin_set">Définir</string>
+    <string name="pin_change">Changer</string>
+    <string name="pin_remove">Retirer</string>
+    <string name="pin_rules">%1$d à %2$d chiffres</string>
+    <string name="pin_new">Nouveau code</string>
+    <string name="pin_confirm">Confirmer</string>
+    <string name="pin_save">Enregistrer</string>
+    <string name="pin_enter">Entre ton code</string>
+    <string name="pin_wrong">Code incorrect</string>
+    <string name="pin_wait">Trop d\'essais, attends %1$d s</string>
+    <string name="pin_delete">Effacer un chiffre</string>
+    <string name="cmd_desc_nick">changer de pseudo</string>
+    <string name="cmd_desc_tor">nouvelle route Tor (nouvelle IP)</string>
+    <string name="cmd_desc_help">liste des commandes</string>
+    <string name="sys_usage_nick">usage : /n &lt;pseudo&gt;</string>
+    <string name="sys_nick_changed">tu es maintenant %1$s</string>
 </resources>

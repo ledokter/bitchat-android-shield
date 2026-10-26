@@ -911,4 +911,30 @@
   <string name="perm_wifi_aware_desc">Discover and connect to nearby chatbit users over Wi‑Fi</string>
   <string name="verify_tab_my_qr">My QR</string>
   <string name="verify_tab_scan">Scan</string>
+
+    <!-- chabit -->
+    <string name="show_blocked_title">Show messages from blocked people</string>
+    <string name="show_blocked_desc">Unticked: blocked and reported people disappear from the chat</string>
+    <string name="tor_rotating_toast">New Tor route… (new IP in a few seconds)</string>
+    <string name="pin_title">chatbit PIN</string>
+    <string name="pin_desc">Own unlock code, separate from the phone\'s</string>
+    <string name="duress_title">Duress PIN</string>
+    <string name="duress_desc">If forced to unlock, type this one: everything is silently wiped and the app opens empty</string>
+    <string name="duress_same_as_pin">The duress PIN must differ from the chatbit PIN</string>
+    <string name="pin_set">Set</string>
+    <string name="pin_change">Change</string>
+    <string name="pin_remove">Remove</string>
+    <string name="pin_rules">%1$d to %2$d digits</string>
+    <string name="pin_new">New PIN</string>
+    <string name="pin_confirm">Repeat</string>
+    <string name="pin_save">Save</string>
+    <string name="pin_enter">Enter your PIN</string>
+    <string name="pin_wrong">Wrong PIN</string>
+    <string name="pin_wait">Too many tries, wait %1$d s</string>
+    <string name="pin_delete">Delete digit</string>
+    <string name="cmd_desc_nick">change your nickname</string>
+    <string name="cmd_desc_tor">new Tor route (new IP)</string>
+    <string name="cmd_desc_help">list commands</string>
+    <string name="sys_usage_nick">usage: /n &lt;nickname&gt;</string>
+    <string name="sys_nick_changed">you are now %1$s</string>
 </resources>

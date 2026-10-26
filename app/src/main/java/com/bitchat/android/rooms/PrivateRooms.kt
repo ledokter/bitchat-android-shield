@@ -62,7 +62,7 @@ object PrivateRooms {
     fun init(context: Context) {
         if (::prefs.isInitialized) return
         appContext = context.applicationContext
-        prefs = appContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        prefs = com.bitchat.android.security.SecurePrefs.open(appContext, PREFS)
         _rooms.value = load()
         resubscribe()
     }

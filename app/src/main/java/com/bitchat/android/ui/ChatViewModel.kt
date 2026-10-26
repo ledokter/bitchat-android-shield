@@ -1494,6 +1494,7 @@ class ChatViewModel(
 
         // Clear all media files
         com.bitchat.android.features.file.FileUtils.clearAllMedia(getApplication())
+        com.bitchat.android.security.MediaVault.destroyKey()
         
         // Clear Nostr/geohash state, keys, connections, bookmarks, and reinitialize from scratch
         try {
@@ -1671,9 +1672,21 @@ class ChatViewModel(
     /**
      * Block a user in geohash channels by their nickname
      */
+    /** True when [message] comes from someone blocked or reported (mesh fingerprint or Nostr key). */
+    fun isFromBlocked(message: BitchatMessage): Boolean {
+        if (message.sender == "system") return false
+        message.senderNostrPubkey?.lowercase()?.let { key ->
+            if (dataManager.isGeohashUserBlocked(key) || key in com.bitchat.android.nostr.BitchatShield.flaggedKeys()) return true
+        }
+        val peerID = message.senderPeerID ?: return false
+        return !peerID.startsWith("nostr") && privateChatManager.isPeerBlocked(peerID)
+    }
+
     fun blockUserInGeohash(targetNickname: String) {
         geohashViewModel.blockUserInGeohash(targetNickname)
     }
+
+    fun unblockUserInGeohash(targetNickname: String): Boolean = geohashViewModel.unblockUserInGeohash(targetNickname)
 
     // MARK: - Navigation Management
     

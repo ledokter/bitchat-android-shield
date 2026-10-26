@@ -4,7 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -77,12 +79,42 @@ fun BitChatBrandButton(
             },
         contentAlignment = Alignment.Center
     ) {
-        // chatbit cat; its bow follows the accent colour
+        // chatbit cat; its bow follows the accent colour. It beats like a heart while something
+        // loads (messages arriving, Tor starting or changing route).
+        val tor = remember { com.bitchat.android.net.ArtiTorManager.getInstance() }
+        val torStatus by tor.statusFlow.collectAsState()
+        val rotating by tor.rotating.collectAsState()
+        val receiving by com.bitchat.android.net.NetActivity.receiving.collectAsState()
+        val torLoading = torStatus.mode != com.bitchat.android.net.TorMode.OFF &&
+            !(torStatus.running && torStatus.bootstrapPercent >= 100)
+        val beat = heartbeatScale(active = receiving || rotating || torLoading)
         ChatbitLogo(
             height = iconSize,
             modifier = Modifier
-                .scale(pressScale)
+                .scale(pressScale * beat)
                 .semantics { this.contentDescription = contentDescription },
         )
     }
+}
+
+/** Double "lub-dub" beat, 1 s period; 1f when idle. */
+@Composable
+private fun heartbeatScale(active: Boolean): Float {
+    if (!active) return 1f
+    val t = androidx.compose.animation.core.rememberInfiniteTransition(label = "heartbeat")
+    return t.animateFloat(
+        initialValue = 1f,
+        targetValue = 1f,
+        animationSpec = androidx.compose.animation.core.infiniteRepeatable(
+            androidx.compose.animation.core.keyframes {
+                durationMillis = 1000
+                1f at 0
+                1.18f at 120
+                1f at 240
+                1.12f at 360
+                1f at 520
+            }
+        ),
+        label = "beat"
+    ).value
 }

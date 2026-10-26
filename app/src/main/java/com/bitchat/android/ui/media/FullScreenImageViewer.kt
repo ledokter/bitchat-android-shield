@@ -73,7 +73,7 @@ fun FullScreenImageViewer(imagePaths: List<String>, initialIndex: Int = 0, onClo
                     modifier = Modifier.fillMaxSize()
                 ) { page ->
                     val currentPath = imagePaths[page]
-                    val bmp = remember(currentPath) { try { android.graphics.BitmapFactory.decodeFile(currentPath) } catch (_: Exception) { null } }
+                    val bmp = remember(currentPath) { try { com.bitchat.android.security.MediaVault.decodeBitmap(currentPath) } catch (_: Exception) { null } }
 
                     bmp?.let {
                         androidx.compose.foundation.Image(
@@ -157,7 +157,7 @@ private fun saveToDownloads(context: android.content.Context, path: String) {
         val uri = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
         if (uri != null) {
             context.contentResolver.openOutputStream(uri)?.use { out ->
-                File(path).inputStream().use { it.copyTo(out) }
+                out.write(com.bitchat.android.security.MediaVault.readBytes(path))
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val v2 = ContentValues().apply { put(MediaStore.Downloads.IS_PENDING, 0) }

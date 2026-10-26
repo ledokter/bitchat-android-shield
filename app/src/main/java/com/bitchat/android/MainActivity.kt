@@ -169,7 +169,9 @@ class MainActivity : OrientationAwareActivity() {
                 val locked by com.bitchat.android.security.AppLock.locked.collectAsState()
                 if (locked) {
                     com.bitchat.android.ui.AppLockScreen(
-                        onUnlock = { com.bitchat.android.security.AppLock.authenticate(this@MainActivity) }
+                        onUnlock = { com.bitchat.android.security.AppLock.authenticate(this@MainActivity) },
+                        // duress PIN: silent full wipe, then the app opens as if it were new
+                        onDuress = { chatViewModel.panicClearAllData() }
                     )
                 }
             }

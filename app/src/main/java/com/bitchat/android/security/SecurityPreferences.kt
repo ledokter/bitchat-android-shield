@@ -22,6 +22,14 @@ object SecurityPreferences {
     private const val KEY_CLIPBOARD_CLEAR = "clipboard_clear"
     private const val KEY_AUTO_WIPE_DAYS = "auto_wipe_days"
     private const val KEY_LAST_OPEN = "last_open_ms"
+    private const val KEY_SHOW_BLOCKED = "show_blocked"
+    private const val KEY_PIN = "pin_hash"
+    private const val KEY_DURESS = "duress_hash"
+    private const val KEY_PIN_FAILS = "pin_fails"
+    private const val KEY_PIN_LOCKOUT = "pin_lockout_until"
+    private const val PIN_ITERATIONS = 20_000
+    const val PIN_MIN = 4
+    const val PIN_MAX = 8
 
     const val DEFAULT_EPHEMERAL_HOURS = 24
     const val DEFAULT_AUTO_WIPE_DAYS = 30
@@ -55,9 +63,13 @@ object SecurityPreferences {
     private val _autoWipeDays = MutableStateFlow(DEFAULT_AUTO_WIPE_DAYS)
     val autoWipeDays: StateFlow<Int> = _autoWipeDays.asStateFlow()
 
+    private val _showBlocked = MutableStateFlow(false)
+    /** Show messages of blocked / reported people in the chat (hidden by default). */
+    val showBlocked: StateFlow<Boolean> = _showBlocked.asStateFlow()
+
     fun init(context: Context) {
         if (::prefs.isInitialized) return
-        prefs = context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = SecurePrefs.open(context, PREFS_NAME)
         _advanced.value = prefs.getBoolean(KEY_ADVANCED, false)
         _killSwitch.value = prefs.getBoolean(KEY_KILL_SWITCH, true)
         _presence.value = prefs.getBoolean(KEY_PRESENCE, false)
@@ -66,6 +78,8 @@ object SecurityPreferences {
         _appLock.value = prefs.getBoolean(KEY_APP_LOCK, true)
         _clipboardClear.value = prefs.getBoolean(KEY_CLIPBOARD_CLEAR, true)
         _autoWipeDays.value = prefs.getInt(KEY_AUTO_WIPE_DAYS, DEFAULT_AUTO_WIPE_DAYS)
+        _showBlocked.value = prefs.getBoolean(KEY_SHOW_BLOCKED, false)
+        loadPins()
     }
 
     private fun put(block: SharedPreferences.Editor.() -> Unit) {
@@ -88,6 +102,90 @@ object SecurityPreferences {
     fun setBlockScreenshots(v: Boolean) { _blockScreenshots.value = v; put { putBoolean(KEY_BLOCK_SCREENSHOTS, v) } }
     fun setAppLock(v: Boolean) { _appLock.value = v; put { putBoolean(KEY_APP_LOCK, v) } }
     fun setClipboardClear(v: Boolean) { _clipboardClear.value = v; put { putBoolean(KEY_CLIPBOARD_CLEAR, v) } }
+    // MARK: chatbit PIN and duress PIN
+
+    enum class PinResult { OK, DURESS, WRONG, LOCKED_OUT }
+
+    private val _hasPin = MutableStateFlow(false)
+    /** A chatbit PIN replaces the system unlock (fingerprint / screen code) when set. */
+    val hasPin: StateFlow<Boolean> = _hasPin.asStateFlow()
+
+    private val _hasDuress = MutableStateFlow(false)
+    /** Typing the duress PIN at the lock screen silently wipes everything and opens an empty app. */
+    val hasDuress: StateFlow<Boolean> = _hasDuress.asStateFlow()
+
+    private fun loadPins() {
+        _hasPin.value = prefs.getString(KEY_PIN, null) != null
+        _hasDuress.value = prefs.getString(KEY_DURESS, null) != null
+    }
+
+    private fun hash(pin: String, salt: ByteArray): ByteArray {
+        val spec = javax.crypto.spec.PBEKeySpec(pin.toCharArray(), salt, PIN_ITERATIONS, 256)
+        return javax.crypto.SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).encoded
+    }
+
+    private fun encode(pin: String): String {
+        val salt = ByteArray(16).also { java.security.SecureRandom().nextBytes(it) }
+        val b64 = { b: ByteArray -> android.util.Base64.encodeToString(b, android.util.Base64.NO_WRAP) }
+        return b64(salt) + ":" + b64(hash(pin, salt))
+    }
+
+    private fun matches(pin: String, stored: String?): Boolean {
+        val parts = stored?.split(':')?.takeIf { it.size == 2 } ?: return false
+        val salt = android.util.Base64.decode(parts[0], android.util.Base64.NO_WRAP)
+        val expected = android.util.Base64.decode(parts[1], android.util.Base64.NO_WRAP)
+        return java.security.MessageDigest.isEqual(expected, hash(pin, salt))
+    }
+
+    fun isValidPin(pin: String) = pin.length in PIN_MIN..PIN_MAX && pin.all { it.isDigit() }
+
+    /** Sets (or removes with null) the chatbit PIN; removing it also removes the duress PIN. */
+    fun setPin(pin: String?) {
+        put {
+            if (pin == null) { remove(KEY_PIN); remove(KEY_DURESS) } else putString(KEY_PIN, encode(pin))
+            putInt(KEY_PIN_FAILS, 0)
+        }
+        if (pin != null) setAppLock(true)
+        _hasPin.value = pin != null
+        if (pin == null) _hasDuress.value = false
+    }
+
+    /** False when the duress PIN would equal the normal PIN. */
+    fun setDuressPin(pin: String?): Boolean {
+        if (pin != null && matches(pin, prefs.getString(KEY_PIN, null))) return false
+        put { if (pin == null) remove(KEY_DURESS) else putString(KEY_DURESS, encode(pin)) }
+        _hasDuress.value = pin != null
+        return true
+    }
+
+    /** Milliseconds to wait before the next try (after 5 wrong PINs: 30 s, doubling). */
+    fun pinLockoutRemainingMs(nowMs: Long = System.currentTimeMillis()): Long =
+        (prefs.getLong(KEY_PIN_LOCKOUT, 0L) - nowMs).coerceAtLeast(0L)
+
+    fun checkPin(pin: String): PinResult {
+        if (pinLockoutRemainingMs() > 0) return PinResult.LOCKED_OUT
+        return when {
+            matches(pin, prefs.getString(KEY_DURESS, null)) -> {
+                // same visible outcome as the real PIN: no hint that a wipe happened
+                put { putInt(KEY_PIN_FAILS, 0) }
+                PinResult.DURESS
+            }
+            matches(pin, prefs.getString(KEY_PIN, null)) -> {
+                put { putInt(KEY_PIN_FAILS, 0) }
+                PinResult.OK
+            }
+            else -> {
+                val fails = prefs.getInt(KEY_PIN_FAILS, 0) + 1
+                put {
+                    putInt(KEY_PIN_FAILS, fails)
+                    if (fails >= 5) putLong(KEY_PIN_LOCKOUT, System.currentTimeMillis() + (30_000L shl (fails - 5).coerceAtMost(8)))
+                }
+                PinResult.WRONG
+            }
+        }
+    }
+
+    fun setShowBlocked(v: Boolean) { _showBlocked.value = v; put { putBoolean(KEY_SHOW_BLOCKED, v) } }
     fun setAutoWipeDays(v: Int) { _autoWipeDays.value = v; put { putInt(KEY_AUTO_WIPE_DAYS, v) } }
 
     /**

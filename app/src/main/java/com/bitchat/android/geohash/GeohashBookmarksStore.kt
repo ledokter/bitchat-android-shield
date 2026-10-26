@@ -43,7 +43,7 @@ class GeohashBookmarksStore private constructor(private val context: Context) {
     }
 
     private val gson = Gson()
-    private val prefs = context.getSharedPreferences("geohash_prefs", Context.MODE_PRIVATE)
+    private val prefs = com.bitchat.android.security.SecurePrefs.open(context, "geohash_prefs")
 
     private val membership = mutableSetOf<String>()
 
