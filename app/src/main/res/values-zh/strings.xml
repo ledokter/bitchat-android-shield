@@ -948,4 +948,6 @@
     <string name="web_help_1">下载没有开始：关闭移动数据，并保持连接此 Wi-Fi。</string>
     <string name="web_help_2">“未安装应用”：删除旧版 chatbit 或清理存储空间后重试。</string>
     <string name="web_help_3">iPhone：chatbit 仅支持 Android。</string>
+    <string name="web_guide_1">点这里，我等你！</string>
+    <string name="web_guide_3">别担心，这很正常 👍</string>
 </resources>

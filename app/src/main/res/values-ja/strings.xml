@@ -927,4 +927,6 @@
     <string name="web_help_1">ダウンロードが始まらない：モバイルデータをオフにして、この Wi-Fi に接続したままにしてください。</string>
     <string name="web_help_2">「アプリはインストールされていません」：古い chatbit を削除するか空き容量を増やして、もう一度試してください。</string>
     <string name="web_help_3">iPhone：chatbit は Android 専用です。</string>
+    <string name="web_guide_1">ここをタップしてね！</string>
+    <string name="web_guide_3">大丈夫、これは普通だよ 👍</string>
 </resources>

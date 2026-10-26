@@ -984,4 +984,6 @@
     <string name="web_help_1">The download does not start: turn off mobile data and stay on this Wi-Fi.</string>
     <string name="web_help_2">“App not installed”: delete an older chatbit or free some space, then try again.</string>
     <string name="web_help_3">iPhone: chatbit only exists on Android.</string>
+    <string name="web_guide_1">Tap here, I\'m waiting for you!</string>
+    <string name="web_guide_3">Don\'t worry, this is normal 👍</string>
 </resources>

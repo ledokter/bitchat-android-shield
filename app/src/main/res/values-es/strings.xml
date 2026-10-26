@@ -927,4 +927,6 @@
     <string name="web_help_1">La descarga no empieza: desactiva los datos móviles y quédate en este Wi-Fi.</string>
     <string name="web_help_2">«App no instalada»: borra una versión antigua de chatbit o libera espacio y vuelve a intentarlo.</string>
     <string name="web_help_3">iPhone: chatbit solo existe en Android.</string>
+    <string name="web_guide_1">¡Toca aquí, te espero!</string>
+    <string name="web_guide_3">Tranquilo, es normal 👍</string>
 </resources>

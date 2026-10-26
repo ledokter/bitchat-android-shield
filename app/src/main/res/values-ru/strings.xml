@@ -924,4 +924,6 @@
     <string name="web_help_1">Загрузка не начинается: выключите мобильный интернет и оставайтесь в этой сети Wi-Fi.</string>
     <string name="web_help_2">«Приложение не установлено»: удалите старую версию chatbit или освободите место и попробуйте снова.</string>
     <string name="web_help_3">iPhone: chatbit есть только для Android.</string>
+    <string name="web_guide_1">Нажми сюда, я жду!</string>
+    <string name="web_guide_3">Не волнуйся, это нормально 👍</string>
 </resources>

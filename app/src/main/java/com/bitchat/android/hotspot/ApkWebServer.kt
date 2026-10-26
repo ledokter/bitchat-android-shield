@@ -145,6 +145,14 @@ summary{cursor:pointer;font-weight:600;color:#c2185b;font-size:15px}
 .lists a{display:block;text-align:center;border:2px solid #c2185b;color:#c2185b;text-decoration:none;padding:10px 6px;border-radius:12px;font-size:14px}
 p.note{font-size:13px;color:#555;margin-top:10px;line-height:1.5}
 footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
+.guide{display:flex;align-items:center;gap:8px;margin-top:10px}
+.guide svg{flex:none;width:46px;height:auto;animation:wig 2.4s ease-in-out infinite}
+.bubble{position:relative;background:#c2185b;color:#fff;font-size:13px;font-weight:600;padding:7px 11px;border-radius:12px}
+.bubble:before{content:"";position:absolute;left:-6px;top:50%;margin-top:-6px;border:6px solid transparent;border-left:0;border-right-color:#c2185b}
+.point{display:block;text-align:center;font-size:30px;line-height:1;margin-top:4px;animation:bob .9s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(7px)}}
+@keyframes wig{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-8deg)}90%{transform:rotate(8deg)}}
+@media (prefers-reduced-motion:reduce){.point,.guide svg{animation:none}}
 </style>
 </head>
 <body><main>
@@ -153,12 +161,15 @@ footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
 <p class="sub">${t(R.string.about_tagline)}<br>${t(R.string.web_intro)}</p>
 <div class="step"><span class="num">1</span><div><b>${t(R.string.web_s1_title)}</b>
 <p>${t(R.string.web_s1_desc)}</p>
+<div class="guide">$LOGO_SVG<span class="bubble">${t(R.string.web_guide_1)}</span></div>
+<span class="point" aria-hidden="true">👇</span>
 <a class="btn" href="/chatbit.apk">⬇ ${t(R.string.web_download)}</a>
 <p class="meta">${t(R.string.web_version_size, esc(appVersion), sizeMb)}</p></div></div>
 <div class="step"><span class="num">2</span><div><b>${t(R.string.web_s2_title)}</b>
 <p>${t(R.string.web_s2_desc)}</p></div></div>
 <div class="step"><span class="num">3</span><div><b>${t(R.string.web_s3_title)}</b>
 <p>${t(R.string.web_s3_desc)}</p>
+<div class="guide">$LOGO_SVG<span class="bubble">${t(R.string.web_guide_3)}</span></div>
 <p class="tip">🛡️ ${t(R.string.web_s3_play)}</p>
 <p class="ok">✓ ${t(R.string.web_s3_undo)}</p></div></div>
 <div class="step"><span class="num">4</span><div><b>${t(R.string.web_s4_title)}</b>

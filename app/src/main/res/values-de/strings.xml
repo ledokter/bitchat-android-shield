@@ -928,4 +928,6 @@
     <string name="web_help_1">Der Download startet nicht: Schalte mobile Daten aus und bleib in diesem WLAN.</string>
     <string name="web_help_2">„App nicht installiert“: Lösche eine ältere chatbit-Version oder schaffe Platz und versuche es erneut.</string>
     <string name="web_help_3">iPhone: chatbit gibt es nur für Android.</string>
+    <string name="web_guide_1">Tippe hier, ich warte auf dich!</string>
+    <string name="web_guide_3">Keine Sorge, das ist normal 👍</string>
 </resources>
