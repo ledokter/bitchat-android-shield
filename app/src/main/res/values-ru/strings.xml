@@ -877,4 +877,7 @@
     <string name="cmd_desc_help">список команд</string>
     <string name="sys_usage_nick">использование: /n &lt;ник&gt;</string>
     <string name="sys_nick_changed">теперь вы %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 заблокирован</string>
 </resources>

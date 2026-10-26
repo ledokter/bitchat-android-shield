@@ -937,4 +937,7 @@
     <string name="cmd_desc_help">list commands</string>
     <string name="sys_usage_nick">usage: /n &lt;nickname&gt;</string>
     <string name="sys_nick_changed">you are now %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 blocked</string>
 </resources>

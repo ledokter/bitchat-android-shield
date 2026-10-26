@@ -881,4 +881,7 @@
     <string name="cmd_desc_help">Befehle auflisten</string>
     <string name="sys_usage_nick">Verwendung: /n &lt;Spitzname&gt;</string>
     <string name="sys_nick_changed">du bist jetzt %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 blockiert</string>
 </resources>

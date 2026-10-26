@@ -901,4 +901,7 @@
     <string name="cmd_desc_help">liste des commandes</string>
     <string name="sys_usage_nick">usage : /n &lt;pseudo&gt;</string>
     <string name="sys_nick_changed">tu es maintenant %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 bloqué</string>
 </resources>

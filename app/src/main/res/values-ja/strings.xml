@@ -880,4 +880,7 @@
     <string name="cmd_desc_help">コマンド一覧</string>
     <string name="sys_usage_nick">使い方: /n &lt;ニックネーム&gt;</string>
     <string name="sys_nick_changed">ニックネームを %1$s に変更しました</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 ブロック中</string>
 </resources>

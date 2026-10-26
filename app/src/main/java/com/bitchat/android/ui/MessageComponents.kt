@@ -245,7 +245,9 @@ fun MessagesList(
     onNicknameClick: ((String) -> Unit)? = null,
     onMessageLongPress: ((BitchatMessage) -> Unit)? = null,
     onCancelTransfer: ((BitchatMessage) -> Unit)? = null,
-    onImageClick: ((String, List<String>, Int) -> Unit)? = null
+    onImageClick: ((String, List<String>, Int) -> Unit)? = null,
+    /** Messages from blocked / reported people shown on request: drawn faded with a tag, like on the bot. */
+    blockedIds: Set<String> = emptySet()
 ) {
     val resolvedMentionPeerIdentities = mentionPeerIdentities
         ?: rememberMentionPeerIdentities(messages, conversationKey = conversationKey)
@@ -376,6 +378,29 @@ fun MessagesList(
                 Modifier
             }
 
+            val isBlocked = message.id in blockedIds
+            Column(
+                modifier = Modifier
+                    // Animates the shift when a neighbour is inserted or removed: this is what
+                    // makes the conversation glide up instead of jumping.
+                    .animateItem(
+                        // Entry fade is handled by entryModifier, together with the slide, so the
+                        // two cannot drift out of step.
+                        fadeInSpec = null,
+                        placementSpec = if (placementArmed) MessagePlacementSpec else null,
+                        fadeOutSpec = MessageFadeOutSpec
+                    )
+                    .then(entryModifier)
+            ) {
+            if (isBlocked && !isGrouped) {
+                Text(
+                    text = androidx.compose.ui.res.stringResource(R.string.blocked_tag),
+                    fontFamily = BitchatFontFamily,
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
             MessageItem(
                 message = message,
                 messages = messages,
@@ -392,18 +417,9 @@ fun MessagesList(
                 onMessageLongPress = onMessageLongPress,
                 onCancelTransfer = onCancelTransfer,
                 onImageClick = onImageClick,
-                modifier = Modifier
-                    // Animates the shift when a neighbour is inserted or removed: this is what
-                    // makes the conversation glide up instead of jumping.
-                    .animateItem(
-                        // Entry fade is handled by entryModifier, together with the slide, so the
-                        // two cannot drift out of step.
-                        fadeInSpec = null,
-                        placementSpec = if (placementArmed) MessagePlacementSpec else null,
-                        fadeOutSpec = MessageFadeOutSpec
-                    )
-                    .then(entryModifier)
+                modifier = if (isBlocked) Modifier.graphicsLayer { alpha = 0.35f } else Modifier
             )
+            }
         }
     }
 }

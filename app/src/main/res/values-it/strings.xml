@@ -907,4 +907,7 @@
     <string name="cmd_desc_help">elenco comandi</string>
     <string name="sys_usage_nick">uso: /n &lt;nickname&gt;</string>
     <string name="sys_nick_changed">ora sei %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 bloccato</string>
 </resources>

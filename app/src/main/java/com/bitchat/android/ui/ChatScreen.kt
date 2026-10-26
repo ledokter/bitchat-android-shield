@@ -214,8 +214,9 @@ fun ChatScreen(viewModel: ChatViewModel) {
     val blockVersion by com.bitchat.android.ui.DataManager.blockVersion.collectAsStateWithLifecycle()
     val flaggedCount by com.bitchat.android.nostr.BitchatShield.flaggedCount.collectAsStateWithLifecycle()
     val showBlocked by com.bitchat.android.security.SecurityPreferences.showBlocked.collectAsStateWithLifecycle()
-    val visibleMessages = remember(displayMessages, blockVersion, flaggedCount, showBlocked) {
-        if (showBlocked) displayMessages else displayMessages.filterNot(viewModel::isFromBlocked)
+    val (visibleMessages, blockedIds) = remember(displayMessages, blockVersion, flaggedCount, showBlocked) {
+        val (blocked, others) = displayMessages.partition(viewModel::isFromBlocked)
+        if (showBlocked) displayMessages to blocked.mapTo(HashSet()) { it.id } else others to emptySet<String>()
     }
 
     // Identity of the timeline on screen, derived exactly like displayMessages above. Drives the
@@ -310,6 +311,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
 
             MessagesList(
                 messages = visibleMessages,
+                blockedIds = blockedIds,
                 currentUserNickname = nickname,
                 meshService = viewModel.meshServiceFacade,
                 mentionPeerIdentities = mentionPeerIdentities,

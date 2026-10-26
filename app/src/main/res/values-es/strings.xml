@@ -880,4 +880,7 @@
     <string name="cmd_desc_help">lista de comandos</string>
     <string name="sys_usage_nick">uso: /n &lt;apodo&gt;</string>
     <string name="sys_nick_changed">ahora eres %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 bloqueado</string>
 </resources>

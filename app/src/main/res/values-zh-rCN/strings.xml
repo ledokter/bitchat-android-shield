@@ -857,4 +857,7 @@
     <string name="cmd_desc_help">命令列表</string>
     <string name="sys_usage_nick">用法：/n &lt;昵称&gt;</string>
     <string name="sys_nick_changed">你现在是 %1$s</string>
+
+    <!-- chabit -->
+    <string name="blocked_tag">🚫 已屏蔽</string>
 </resources>
