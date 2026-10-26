@@ -327,7 +327,7 @@ class MediaSendingManager(
         if (!reserveAutomaticPending(pending)) {
             addPrivateMediaSystemMessage(
                 recipient.conversationID,
-                com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_pending)
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_pending, "Private media was not sent because another secure media send is still pending.")
             )
             return
         }
@@ -360,7 +360,7 @@ class MediaSendingManager(
         if (!reserveAutomaticPending(automatic)) {
             addPrivateMediaSystemMessage(
                 pending.conversationID,
-                com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_pending)
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_pending, "Private media was not sent because another secure media send is still pending.")
             )
             return
         }
@@ -468,7 +468,7 @@ class MediaSendingManager(
                     Log.w(TAG, "Legacy consent was consumed but policy still requested consent; send aborted")
                     addPrivateMediaSystemMessage(
                         pending.conversationID,
-                        com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_policy_changed)
+                        com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_policy_changed, "Private media was not sent because its security policy changed.")
                     )
                     return
                 }
@@ -521,7 +521,7 @@ class MediaSendingManager(
                 Log.w(TAG, "Private media not sent: ${preparation.reason}")
                 addPrivateMediaSystemMessage(
                     pending.conversationID,
-                    com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_not_sent_reason, preparation.reason)
+                    com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_not_sent_reason, "Private media was not sent: %1\$s", preparation.reason)
                 )
             }
         }
@@ -561,7 +561,7 @@ class MediaSendingManager(
             if (expired) {
                 addPrivateMediaSystemMessage(
                     pending.conversationID,
-                    com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_timeout)
+                    com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_timeout, "Private media was not sent because secure session setup timed out.")
                 )
             }
         }
@@ -599,15 +599,13 @@ class MediaSendingManager(
             } else null
         }
         if (packet == null) {
-            addPrivateMediaSystemMessage(toPeerID, com.bitchat.android.util.AppStrings.get(
-                com.bitchat.android.R.string.media_too_big_internet, MAX_NOSTR_MEDIA_BYTES / 1000))
+            addPrivateMediaSystemMessage(toPeerID, com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_too_big_internet, "Too heavy to send over the Internet (%1\$d KB max)", MAX_NOSTR_MEDIA_BYTES / 1000))
             return
         }
         val tlv = withContext(mediaWorkDispatcher) { packet.encode() }
         val router = com.bitchat.android.services.MessageRouter.tryGetInstance()
         if (tlv == null || router == null || !router.sendPrivateFileViaNostr(tlv, toPeerID)) {
-            addPrivateMediaSystemMessage(toPeerID, com.bitchat.android.util.AppStrings.get(
-                com.bitchat.android.R.string.media_no_route))
+            addPrivateMediaSystemMessage(toPeerID, com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_no_route, "Private media was not sent: no Bluetooth or Internet route to this contact."))
             return
         }
         val conversationID = com.bitchat.android.services.ContactDirectory.canonicalConversationId(toPeerID)
@@ -701,7 +699,7 @@ class MediaSendingManager(
             Log.e(TAG, "Prepared private-media message could not be persisted; send aborted")
             addPrivateMediaSystemMessage(
                 conversationID,
-                com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_not_saved)
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_not_saved, "Private media was not sent because the conversation could not be saved.")
             )
             return
         }
@@ -728,7 +726,7 @@ class MediaSendingManager(
             Log.w(TAG, "Prepared private-media commit failed; local echo marked failed")
             addPrivateMediaSystemMessage(
                 conversationID,
-                com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.media_not_committed)
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_not_committed, "Private media was not sent because the prepared transfer could not be committed.")
             )
             return
         }

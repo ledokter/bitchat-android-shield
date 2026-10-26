@@ -17,4 +17,8 @@ object AppStrings {
 
     fun get(@StringRes id: Int, vararg args: Any): String =
         app?.resources?.getString(id, *args) ?: id.toString()
+
+    /** Like [get], with the English text used before init (unit tests, early startup). */
+    fun getOr(@StringRes id: Int, fallback: String, vararg args: Any): String =
+        app?.resources?.getString(id, *args) ?: String.format(fallback, *args)
 }
