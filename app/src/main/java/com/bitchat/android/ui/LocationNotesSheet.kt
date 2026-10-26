@@ -68,6 +68,12 @@ fun LocationNotesSheet(
     
     // SIMPLIFIED: Get count directly from notes list (no separate counter needed)
     val count = notes.size
+
+    // chatbit game: reading someone else's note here stamps this place in the kitty collection
+    LaunchedEffect(notes) {
+        val gh = notesManager.geohash.value
+        if (gh != null && notesManager.hasNoteFromOthers()) com.bitchat.android.game.KittyGame.onCacheFound(gh)
+    }
     
     // Get location name (building or block) - matches iOS locationNames lookup
     val locationNames by locationManager.locationNames.collectAsStateWithLifecycle()
@@ -133,6 +139,8 @@ fun LocationNotesSheet(
                         accentGreen = accentGreen,
                     )
                 }
+
+                item { com.bitchat.android.ui.kitty.KittyTip("notes", stringResource(R.string.tip_notes), Modifier.padding(horizontal = 16.dp)) }
 
                 // Notes content (matches iOS notesContent)
                 when {

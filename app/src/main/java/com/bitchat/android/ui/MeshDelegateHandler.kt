@@ -132,6 +132,11 @@ class MeshDelegateHandler(
 
     private suspend fun processPeerUpdate(mergedPeers: List<String>) {
         state.setConnectedPeers(mergedPeers)
+        mergedPeers.forEach { pid ->
+            getMeshService().getPeerInfo(pid)?.noisePublicKey?.let { key ->
+                com.bitchat.android.game.KittyGame.onPeerMet(key.joinToString("") { "%02x".format(it) })
+            }
+        }
         state.setIsConnected(mergedPeers.isNotEmpty())
         
         // Flush router outbox for any peers that just connected (and their noiseHex aliases)

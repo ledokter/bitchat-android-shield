@@ -49,7 +49,7 @@ class ApkWebServer(
         val uri = session.uri ?: "/"
         Log.d(TAG, "Request: ${session.method} $uri")
         return when {
-            uri == "/chatbit.apk" || uri == "/bitchat.apk" -> serveApk()
+            uri == "/chatbit.apk" || uri == "/bitchat.apk" -> serveApk(session)
             uri in LISTS -> serveList(uri)
             uri == "/favicon.ico" -> newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "")
             else -> newFixedLengthResponse(
@@ -60,7 +60,7 @@ class ApkWebServer(
         }
     }
 
-    private fun serveApk(): Response {
+    private fun serveApk(session: IHTTPSession): Response {
         return try {
             if (!apkFile.exists()) {
                 Log.e(TAG, "APK file not found")
@@ -74,6 +74,8 @@ class ApkWebServer(
             )
             response.addHeader("Content-Disposition", "attachment; filename=\"chatbit-$appVersion.apk\"")
             response.addHeader("Accept-Ranges", "bytes")
+            // a full download (not a resumed range) counts as one app shared
+            if (session.headers["range"] == null) com.bitchat.android.game.KittyGame.onAppShared()
             response
         } catch (e: Exception) {
             Log.e(TAG, "Error serving APK", e)

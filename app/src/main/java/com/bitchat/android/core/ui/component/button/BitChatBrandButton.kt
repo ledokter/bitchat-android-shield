@@ -90,6 +90,7 @@ fun BitChatBrandButton(
         val beat = heartbeatScale(active = receiving || rotating || torLoading)
         ChatbitLogo(
             height = iconSize,
+            dressed = true,
             modifier = Modifier
                 .scale(pressScale * beat)
                 .semantics { this.contentDescription = contentDescription },

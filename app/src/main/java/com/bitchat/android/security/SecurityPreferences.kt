@@ -181,6 +181,7 @@ private const val KEY_DURESS_LEN = "duress_len"
             else { putString(KEY_DURESS, encode(pin)); putInt(KEY_DURESS_LEN, pin.length) }
         }
         _hasDuress.value = pin != null
+        if (pin != null) com.bitchat.android.game.KittyGame.onDuressSet()
         return DuressResult.OK
     }
 

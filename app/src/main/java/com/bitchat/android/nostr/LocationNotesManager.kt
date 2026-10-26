@@ -93,6 +93,13 @@ class LocationNotesManager private constructor() {
     private var unsubscribeFunc: ((String) -> Unit)? = null
     private var sendEventFunc: ((NostrEvent, List<String>?, Long) -> Unit)? = null
     private var deriveIdentityFunc: ((String) -> NostrIdentity)? = null
+
+    /** chatbit game: true when a note here was written by someone else (a "geocache" found). */
+    fun hasNoteFromOthers(): Boolean {
+        val gh = _geohash.value ?: return false
+        val mine = runCatching { deriveIdentityFunc?.invoke(gh)?.publicKeyHex }.getOrNull()
+        return _notes.value.any { it.pubkey != mine }
+    }
     
     // Coroutine scope for background operations
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())

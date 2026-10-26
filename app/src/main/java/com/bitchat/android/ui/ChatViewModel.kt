@@ -1032,6 +1032,7 @@ class ChatViewModel(
                 geohashViewModel.sendGeohashMessage(content, selectedLocationChannel.channel, mesh.myPeerID, state.getNicknameValue())
             } else {
                 // Send public/channel message via mesh
+                com.bitchat.android.game.KittyGame.onMeshMessageSent()
                 val message = BitchatMessage(
                     sender = state.getNicknameValue() ?: mesh.myPeerID,
                     content = content,
@@ -1495,6 +1496,7 @@ class ChatViewModel(
         // Clear all media files
         com.bitchat.android.features.file.FileUtils.clearAllMedia(getApplication())
         com.bitchat.android.security.MediaVault.destroyKey()
+        com.bitchat.android.game.KittyGame.reset()
         
         // Clear Nostr/geohash state, keys, connections, bookmarks, and reinitialize from scratch
         try {

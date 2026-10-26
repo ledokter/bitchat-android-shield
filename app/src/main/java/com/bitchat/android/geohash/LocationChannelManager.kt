@@ -326,7 +326,10 @@ class LocationChannelManager private constructor(private val context: Context) {
             is ChannelID.Location -> teleported
         }
         _selectedChannel.value = channel
-        if (channel is ChannelID.Location) rememberRecent(channel.channel.geohash)
+        if (channel is ChannelID.Location) {
+            rememberRecent(channel.channel.geohash)
+            com.bitchat.android.game.KittyGame.onPlaceVisited(channel.channel.geohash)
+        }
         saveChannelSelection(channel, source)
     }
 

@@ -1,6 +1,8 @@
 package com.bitchat.android.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -72,6 +74,27 @@ fun ChatUserSheet(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
                 
+                // chatbit: animated kitty reactions, sent as a short message "😻 @nick"
+                if (selectedMessage?.sender != viewModel.nickname.value) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        com.bitchat.android.ui.kitty.KITTY_REACTIONS.forEach { emoji ->
+                            Text(
+                                emoji, fontSize = 30.sp,
+                                modifier = Modifier
+                                    .clip(androidx.compose.foundation.shape.CircleShape)
+                                    .clickable {
+                                        viewModel.sendMessage("$emoji @$targetNickname")
+                                        onDismiss()
+                                    }
+                                    .padding(6.dp)
+                            )
+                        }
+                    }
+                }
+
                 // Action list (iOS-style plain list)
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()

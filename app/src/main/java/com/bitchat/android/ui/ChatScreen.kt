@@ -514,6 +514,10 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 }
             }
         }
+
+        // chatbit kitty: badge celebrations and the first-launch tour
+        Box(Modifier.fillMaxSize().zIndex(5f)) { com.bitchat.android.ui.kitty.KittyBadgePopup() }
+        Box(Modifier.fillMaxSize().zIndex(6f)) { com.bitchat.android.ui.kitty.KittyTour() }
     }
 
     // Full-screen image viewer - separate from other sheets to allow image browsing without navigation

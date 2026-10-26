@@ -340,6 +340,8 @@ fun AboutSheet(
     val colorScheme = MaterialTheme.colorScheme
     val palette = LocalBitchatPalette.current
     var selectedTab by remember { mutableStateOf(AboutTab.Info) }
+    var showKitty by remember { mutableStateOf(false) }
+    if (showKitty) com.bitchat.android.ui.kitty.KittyCollectionSheet(onDismiss = { showKitty = false })
     val supportedLanguages = remember(context) {
         LanguagePreferenceManager.supportedLanguages(context)
     }
@@ -363,6 +365,17 @@ fun AboutSheet(
                     // Header Section - App Identity
                     item(key = "hero") {
                         AboutHero(versionName = versionName ?: "")
+                    }
+
+                    // chatbit: kitty collection (badges, rank, outfits)
+                    item(key = "kitty") {
+                        val badgeCount by com.bitchat.android.game.KittyGame.badges.collectAsState()
+                        Box(Modifier.fillMaxWidth().padding(top = 14.dp), contentAlignment = Alignment.Center) {
+                            ChatbitButton(
+                                text = "🐱 " + stringResource(R.string.kitty_collection, badgeCount.size, com.bitchat.android.game.Badge.entries.size),
+                                onClick = { showKitty = true }
+                            )
+                        }
                     }
 
                     item(key = "tabs") {

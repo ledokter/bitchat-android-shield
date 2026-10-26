@@ -414,6 +414,7 @@ class ArtiTorManager private constructor() {
     val rotating: StateFlow<Boolean> = _rotating.asStateFlow()
 
     fun requestNewRoute() {
+        com.bitchat.android.game.KittyGame.onTorRotated()
         appScope.launch { newRoute() }
     }
 

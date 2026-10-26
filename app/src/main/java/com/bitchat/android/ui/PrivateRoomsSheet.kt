@@ -130,6 +130,7 @@ private fun RoomList(rooms: List<PrivateRoom>, pending: PrivateRoom.Invite?, onO
         contentPadding = PaddingValues(bottom = 24.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        item { com.bitchat.android.ui.kitty.KittyTip("rooms", stringResource(R.string.tip_rooms)) }
         if (pending != null) item {
             Card {
                 RoomLabel(stringResource(R.string.rooms_pending_title, pending.name.ifBlank { "?" }), bold = true)

@@ -230,6 +230,9 @@ fun LocationChannelsSheet(
                     contentPadding = PaddingValues(top = 72.dp, bottom = 32.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
+                    item(key = "kitty_tip") {
+                        com.bitchat.android.ui.kitty.KittyTip("channels", stringResource(R.string.tip_channels), Modifier.padding(horizontal = 16.dp))
+                    }
                     // Mesh section: icon + title header, offline subtitle, then selection card
                     item(key = "mesh_card") {
                         Column {

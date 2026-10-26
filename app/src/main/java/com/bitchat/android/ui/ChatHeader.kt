@@ -17,6 +17,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import com.bitchat.android.ui.kitty.KittyAnchors
+import com.bitchat.android.ui.kitty.kittyAnchor
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -745,7 +747,7 @@ private fun MainHeader(
                 onClick = onTitleClick,
                 onTripleClick = onTripleTitleClick,
                 contentDescription = stringResource(R.string.cd_open_about),
-                modifier = Modifier.size(HeaderTapTarget),
+                modifier = Modifier.size(HeaderTapTarget).kittyAnchor(KittyAnchors.LOGO),
             )
 
             // Nudge toward the brand glyph: the 44.dp tap target leaves more optical gap than the
@@ -808,7 +810,8 @@ private fun MainHeader(
                     // chatbit private rooms
                     HeaderIconButton(
                         onClick = { com.bitchat.android.rooms.PrivateRooms.openSheet() },
-                        contentDescription = stringResource(R.string.rooms_title)
+                        contentDescription = stringResource(R.string.rooms_title),
+                        modifier = Modifier.kittyAnchor(KittyAnchors.ROOMS)
                     ) {
                         Icon(
                             imageVector = androidx.compose.material.icons.Icons.Filled.Lock,
@@ -838,6 +841,7 @@ private fun MainHeader(
                     selectedLocationChannel = selectedLocationChannel,
                     geohashPeople = geohashPeople,
                     onClick = onSidebarClick,
+                    modifier = Modifier.kittyAnchor(KittyAnchors.PEOPLE),
                     showJoinedChannelCount = crowdingMode == HeaderCrowdingMode.Full
                 )
             }
@@ -894,6 +898,7 @@ private fun LocationChannelsButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = if (showLabel) Arrangement.spacedBy(6.dp) else Arrangement.Center,
         modifier = Modifier
+            .kittyAnchor(KittyAnchors.CHANNEL)
             .clip(HeaderClusterShape)
             .pressScaleClickable(
                 onClick = onClick,
@@ -949,6 +954,7 @@ private fun MeshGlobeButton() {
         Box(
             modifier = Modifier
                 .size(HeaderTapTarget)
+                .kittyAnchor(KittyAnchors.GLOBE)
                 .clip(CircleShape)
                 .combinedClickable(
                     onClickLabel = label,

@@ -459,6 +459,14 @@ fun MessageItem(
                 // Provide a small end padding for own private messages so overlay doesn't cover text.
                 // Bubble mode draws the status beneath the bubble instead, so no inset is needed.
                 val endPad = if (!bubbles && message.isPrivate && message.sender == currentUserNickname) 16.dp else 0.dp
+                // chatbit: a message made only of cat emojis (+ optional @target) is a kitty reaction
+                val reaction = if (message.type == BitchatMessageType.Message) com.bitchat.android.ui.kitty.parseKittyReaction(message.content) else null
+                if (reaction != null) {
+                    com.bitchat.android.ui.kitty.KittyReaction(
+                        sender = message.sender, emojis = reaction.first, target = reaction.second,
+                        onLongPress = onMessageLongPress?.let { { it(message) } }
+                    )
+                } else
                 // Create a custom layout that combines selectable text with clickable nickname areas
                 MessageTextWithClickableNicknames(
                     message = message,

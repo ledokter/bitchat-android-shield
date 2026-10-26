@@ -183,6 +183,7 @@ fun FloodSettingsSheet(
                 contentPadding = PaddingValues(top = 80.dp, bottom = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                item { com.bitchat.android.ui.kitty.KittyTip("flood", stringResource(R.string.tip_flood)) }
                 item {
                     FloodCard {
                         Row(verticalAlignment = Alignment.CenterVertically) {

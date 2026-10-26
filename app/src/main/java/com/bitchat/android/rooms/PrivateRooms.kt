@@ -88,6 +88,7 @@ object PrivateRooms {
     fun create(name: String): PrivateRoom {
         val room = PrivateRoom.create(name, NostrIdentity.generate().privateKeyHex)
         save(_rooms.value + room)
+        com.bitchat.android.game.KittyGame.onPrivateRoom()
         return room
     }
 
@@ -96,6 +97,7 @@ object PrivateRooms {
         _rooms.value.firstOrNull { it.id.contentEquals(invite.id) }?.let { return it }
         val room = PrivateRoom(invite.id, invite.key, invite.name, NostrIdentity.generate().privateKeyHex, System.currentTimeMillis())
         save(_rooms.value + room)
+        com.bitchat.android.game.KittyGame.onPrivateRoom()
         return room
     }
 
