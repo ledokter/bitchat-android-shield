@@ -215,7 +215,7 @@ class GeohashPickerActivity : OrientationAwareActivity() {
                                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                             ) {
                                 Text(
-                                    text = if (globeState.selectedGeohash.isNotEmpty()) "#${globeState.selectedGeohash}" else "select location",
+                                    text = if (globeState.selectedGeohash.isNotEmpty()) "#${globeState.selectedGeohash}" else stringResource(R.string.geohash_select_location),
                                     fontSize = BASE_FONT_SIZE.sp,
                                     fontFamily = BitchatFontFamily,
                                     fontWeight = FontWeight.Medium,
@@ -223,7 +223,7 @@ class GeohashPickerActivity : OrientationAwareActivity() {
                                 )
                                 if (globeState.selectedGeohash.isNotEmpty()) {
                                     Text(
-                                        text = "${levelForLength(globeState.precision).displayName} • ${coverageString(globeState.precision)}",
+                                        text = "${levelLabel(levelForLength(globeState.precision))} • ${coverageString(globeState.precision)}",
                                         fontSize = (BASE_FONT_SIZE - 4).sp,
                                         fontFamily = BitchatFontFamily,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant

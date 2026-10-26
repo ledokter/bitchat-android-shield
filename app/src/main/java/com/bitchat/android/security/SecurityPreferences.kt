@@ -76,6 +76,15 @@ object SecurityPreferences {
     fun setKillSwitch(v: Boolean) { _killSwitch.value = v; put { putBoolean(KEY_KILL_SWITCH, v) } }
     fun setSendPresence(v: Boolean) { _presence.value = v; put { putBoolean(KEY_PRESENCE, v) } }
     fun setEphemeralHours(v: Int) { _ephemeralHours.value = v; put { putInt(KEY_EPHEMERAL_HOURS, v) } }
+    /**
+     * Debug builds running on Firebase Test Lab keep screenshots so the automated crawl can check
+     * every screen and translation; real users always get the protection.
+     */
+    fun isTestLab(context: Context): Boolean = com.bitchat.android.BuildConfig.DEBUG &&
+        runCatching {
+            android.provider.Settings.System.getString(context.contentResolver, "firebase.test.lab") == "true"
+        }.getOrDefault(false)
+
     fun setBlockScreenshots(v: Boolean) { _blockScreenshots.value = v; put { putBoolean(KEY_BLOCK_SCREENSHOTS, v) } }
     fun setAppLock(v: Boolean) { _appLock.value = v; put { putBoolean(KEY_APP_LOCK, v) } }
     fun setClipboardClear(v: Boolean) { _clipboardClear.value = v; put { putBoolean(KEY_CLIPBOARD_CLEAR, v) } }

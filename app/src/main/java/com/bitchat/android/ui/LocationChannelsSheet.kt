@@ -1138,15 +1138,18 @@ private fun geohashTitleWithCount(channel: GeohashChannel, participantCount: Int
     } else {
         ctx.resources.getQuantityString(R.plurals.people_count, participantCount, participantCount)
     }
-    val levelName = when (channel.level) {
-        GeohashChannelLevel.BUILDING -> "Building"
-        GeohashChannelLevel.BLOCK -> stringResource(R.string.location_level_block)
-        GeohashChannelLevel.NEIGHBORHOOD -> stringResource(R.string.location_level_neighborhood)
-        GeohashChannelLevel.CITY -> stringResource(R.string.location_level_city)
-        GeohashChannelLevel.PROVINCE -> stringResource(R.string.location_level_province)
-        GeohashChannelLevel.REGION -> stringResource(R.string.location_level_region)
-    }
+    val levelName = levelLabel(channel.level)
     return "$levelName$TITLE_COUNT_SEP$peopleText"
+}
+
+@Composable
+internal fun levelLabel(level: GeohashChannelLevel): String = when (level) {
+    GeohashChannelLevel.BUILDING -> stringResource(R.string.location_level_building)
+    GeohashChannelLevel.BLOCK -> stringResource(R.string.location_level_block)
+    GeohashChannelLevel.NEIGHBORHOOD -> stringResource(R.string.location_level_neighborhood)
+    GeohashChannelLevel.CITY -> stringResource(R.string.location_level_city)
+    GeohashChannelLevel.PROVINCE -> stringResource(R.string.location_level_province)
+    GeohashChannelLevel.REGION -> stringResource(R.string.location_level_region)
 }
 
 @Composable

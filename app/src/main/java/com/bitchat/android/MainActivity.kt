@@ -185,7 +185,7 @@ class MainActivity : OrientationAwareActivity() {
                 // no screenshots or screen recording of the app
                 launch {
                     com.bitchat.android.security.SecurityPreferences.blockScreenshots.collect { block ->
-                        if (block) window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+                        if (block && !com.bitchat.android.security.SecurityPreferences.isTestLab(this@MainActivity)) window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
                         else window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
                     }
                 }
@@ -255,7 +255,7 @@ class MainActivity : OrientationAwareActivity() {
             onDispose {
                 try {
                     context.unregisterReceiver(receiver)
-                } catch (e: IllegalStateException) {
+                } catch (e: IllegalArgumentException) {
                     Log.w("BluetoothStatusUI", "Receiver was not registered")
                 }
             }
@@ -777,7 +777,12 @@ class MainActivity : OrientationAwareActivity() {
             startMeshForegroundServiceBestEffort()
         }
     }
-    
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) com.bitchat.android.security.SecureClipboard.onWindowFocused(this)
+    }
+
     override fun onResume() {
         super.onResume()
         // Revoke stale live-location work before any resumed UI can use cached channels.
