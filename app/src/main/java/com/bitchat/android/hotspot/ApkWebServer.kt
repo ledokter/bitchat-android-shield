@@ -127,10 +127,21 @@ main{background:#fff;border-radius:20px;padding:28px 20px;max-width:480px;width:
 h1{text-align:center;font-size:30px;color:#c2185b}
 .sub{text-align:center;color:#555;margin:4px 0 22px}
 a.btn{display:block;text-align:center;background:#c2185b;color:#fff;text-decoration:none;font-weight:600;font-size:18px;padding:16px;border-radius:14px}
-.meta{text-align:center;color:#666;font-size:13px;margin:8px 0 22px}
+.meta{text-align:center;color:#666;font-size:13px;margin:8px 0 0}
 h2{font-size:17px;color:#c2185b;margin:22px 0 10px}
-ol{padding-left:22px;line-height:1.6;font-size:15px}
-.lists{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.step{display:flex;gap:12px;align-items:flex-start;background:#fff6fa;border:1px solid #f6c6da;border-radius:14px;padding:14px;margin:10px 0}
+.num{flex:none;width:30px;height:30px;border-radius:50%;background:#c2185b;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step b{display:block;font-size:16px;margin-bottom:4px}
+.step p{font-size:14px;line-height:1.5;color:#333}
+.step .btn{margin-top:10px}
+.tip{margin-top:8px;font-size:13px;line-height:1.5;background:#fff3cd;border-radius:10px;padding:8px 10px;color:#5c4400}
+.ok{margin-top:6px;font-size:13px;color:#2e7d32}
+.help{background:#f3f3f3;border-radius:14px;padding:12px 14px;margin-top:18px}
+.help b{color:#c2185b}
+.help ul{padding-left:18px;margin-top:6px;font-size:14px;line-height:1.55}
+details{margin-top:18px}
+summary{cursor:pointer;font-weight:600;color:#c2185b;font-size:15px}
+.lists{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .lists a{display:block;text-align:center;border:2px solid #c2185b;color:#c2185b;text-decoration:none;padding:10px 6px;border-radius:12px;font-size:14px}
 p.note{font-size:13px;color:#555;margin-top:10px;line-height:1.5}
 footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
@@ -139,17 +150,25 @@ footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
 <body><main>
 <div class="logo">$LOGO_SVG</div>
 <h1>chatbit</h1>
-<p class="sub">${t(R.string.about_tagline)}</p>
-<a class="btn" href="/chatbit.apk">${t(R.string.web_download)}</a>
-<p class="meta">${t(R.string.web_version_size, esc(appVersion), sizeMb)}</p>
-<h2>${t(R.string.web_install_title)}</h2>
-<ol>
-<li>${t(R.string.web_install_step1)}</li>
-<li>${t(R.string.web_install_step2)}</li>
-<li>${t(R.string.web_install_step3)}</li>
-<li>${t(R.string.web_install_step4)}</li>
-</ol>
-<h2>${t(R.string.web_lists_title)}</h2>
+<p class="sub">${t(R.string.about_tagline)}<br>${t(R.string.web_intro)}</p>
+<div class="step"><span class="num">1</span><div><b>${t(R.string.web_s1_title)}</b>
+<p>${t(R.string.web_s1_desc)}</p>
+<a class="btn" href="/chatbit.apk">⬇ ${t(R.string.web_download)}</a>
+<p class="meta">${t(R.string.web_version_size, esc(appVersion), sizeMb)}</p></div></div>
+<div class="step"><span class="num">2</span><div><b>${t(R.string.web_s2_title)}</b>
+<p>${t(R.string.web_s2_desc)}</p></div></div>
+<div class="step"><span class="num">3</span><div><b>${t(R.string.web_s3_title)}</b>
+<p>${t(R.string.web_s3_desc)}</p>
+<p class="tip">🛡️ ${t(R.string.web_s3_play)}</p>
+<p class="ok">✓ ${t(R.string.web_s3_undo)}</p></div></div>
+<div class="step"><span class="num">4</span><div><b>${t(R.string.web_s4_title)}</b>
+<p>${t(R.string.web_s4_desc)}</p></div></div>
+<div class="help"><b>${t(R.string.web_help_title)}</b><ul>
+<li>${t(R.string.web_help_1)}</li>
+<li>${t(R.string.web_help_2)}</li>
+<li>${t(R.string.web_help_3)}</li>
+</ul></div>
+<details><summary>${t(R.string.web_lists_title)}</summary>
 <div class="lists">
 <a href="/lists/blocked.txt">${t(R.string.flood_blocked_file, "txt")}</a>
 <a href="/lists/blocked.json">${t(R.string.flood_blocked_file, "json")}</a>
@@ -157,6 +176,7 @@ footer{text-align:center;font-size:12px;color:#888;margin-top:24px}
 <a href="/lists/flagged.json">${t(R.string.flood_flagged_file, "json")}</a>
 </div>
 <p class="note">${t(R.string.web_lists_import)}</p>
+</details>
 <footer>${t(R.string.web_footer)}</footer>
 </main></body>
 </html>"""

@@ -789,11 +789,6 @@
     <string name="hs_url">Адрес сайта</string>
     <string name="web_download">Скачать chatbit</string>
     <string name="web_version_size">версия %1$s · %2$d МБ · Android 8 и новее</string>
-    <string name="web_install_title">Установка за 4 шага</string>
-    <string name="web_install_step1">Нажмите кнопку выше и дождитесь окончания загрузки.</string>
-    <string name="web_install_step2">Откройте скачанный файл из уведомления или папки «Загрузки».</string>
-    <string name="web_install_step3">Если Android спросит, разрешите браузеру устанавливать неизвестные приложения.</string>
-    <string name="web_install_step4">Нажмите «Установить» и откройте chatbit.</string>
     <string name="web_lists_title">Общие списки блокировки</string>
     <string name="web_lists_import">Чтобы использовать список: в chatbit откройте Настройки → расширенный режим → Антифлуд → Списки → Импорт файла.</string>
     <string name="web_footer">Раздаётся без интернета с телефона поблизости · без слежки</string>
@@ -914,4 +909,19 @@
     <string name="recent_channels">Недавние каналы</string>
     <string name="recent_channels_empty">Вы ещё не посещали каналы</string>
     <string name="rooms_compat_notice">Работает только в приложении chatbit: приглашённым нужно его установить. bitchat и другие приложения не откроют эту комнату.</string>
+    <string name="web_intro">Установите chatbit за 3 минуты без интернета и Play Маркета.</string>
+    <string name="web_s1_title">Скачайте</string>
+    <string name="web_s1_desc">Нажмите кнопку. Оставайтесь в этой сети Wi-Fi до конца загрузки, даже если телефон пишет «нет интернета».</string>
+    <string name="web_s2_title">Откройте файл</string>
+    <string name="web_s2_desc">Нажмите уведомление «chatbit….apk» или откройте приложение «Файлы» → «Загрузки».</string>
+    <string name="web_s3_title">Разрешите установку (один раз)</string>
+    <string name="web_s3_desc">chatbit не из Play Маркета, поэтому Android сообщает, что установка неизвестных приложений заблокирована. Нажмите «Настройки», включите «Разрешить из этого источника» и вернитесь назад.</string>
+    <string name="web_s3_play">Если Play Защита покажет предупреждение, нажмите «Подробнее», затем «Всё равно установить». Это нормально для приложений не из Play Маркета.</string>
+    <string name="web_s3_undo">Сразу после установки это разрешение можно снова выключить.</string>
+    <string name="web_s4_title">Установите и откройте</string>
+    <string name="web_s4_desc">Нажмите «Установить», затем «Открыть». Добро пожаловать в chatbit!</string>
+    <string name="web_help_title">Не получается?</string>
+    <string name="web_help_1">Загрузка не начинается: выключите мобильный интернет и оставайтесь в этой сети Wi-Fi.</string>
+    <string name="web_help_2">«Приложение не установлено»: удалите старую версию chatbit или освободите место и попробуйте снова.</string>
+    <string name="web_help_3">iPhone: chatbit есть только для Android.</string>
 </resources>

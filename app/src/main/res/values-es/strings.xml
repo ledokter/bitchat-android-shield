@@ -792,11 +792,6 @@
     <string name="hs_url">Dirección web</string>
     <string name="web_download">Descargar chatbit</string>
     <string name="web_version_size">versión %1$s · %2$d MB · Android 8 o posterior</string>
-    <string name="web_install_title">Instalar en 4 pasos</string>
-    <string name="web_install_step1">Toca el botón de arriba y espera a que termine la descarga.</string>
-    <string name="web_install_step2">Abre el archivo descargado desde la notificación o la carpeta Descargas.</string>
-    <string name="web_install_step3">Si Android lo pide, permite que tu navegador instale apps desconocidas.</string>
-    <string name="web_install_step4">Toca Instalar y abre chatbit.</string>
     <string name="web_lists_title">Listas de bloqueo compartidas</string>
     <string name="web_lists_import">Para usar una lista: en chatbit abre Ajustes → modo avanzado → Anti-flood → Listas → Importar un archivo.</string>
     <string name="web_footer">Servido sin conexión por un teléfono cercano · sin internet, sin rastreo</string>
@@ -917,4 +912,19 @@
     <string name="recent_channels">Canales recientes</string>
     <string name="recent_channels_empty">Aún no has visitado ningún canal</string>
     <string name="rooms_compat_notice">Solo funciona con la app chatbit: las personas invitadas deben instalarla. bitchat y otras apps no pueden abrir esta sala.</string>
+    <string name="web_intro">Instala chatbit en 3 minutos, sin Internet ni Play Store.</string>
+    <string name="web_s1_title">Descarga</string>
+    <string name="web_s1_desc">Toca el botón. Quédate en este Wi-Fi hasta que termine la descarga, aunque el teléfono diga «sin Internet».</string>
+    <string name="web_s2_title">Abre el archivo</string>
+    <string name="web_s2_desc">Toca la notificación «chatbit….apk» o abre la app Archivos → Descargas.</string>
+    <string name="web_s3_title">Permite la instalación (solo una vez)</string>
+    <string name="web_s3_desc">chatbit no viene de Play Store, así que Android dice que las apps desconocidas están bloqueadas. Toca Ajustes, activa «Permitir de esta fuente» y vuelve atrás.</string>
+    <string name="web_s3_play">Si Play Protect muestra un aviso, toca «Más detalles» y luego «Instalar de todos modos». Es normal para una app instalada fuera de Play Store.</string>
+    <string name="web_s3_undo">Puedes desactivar este permiso justo después de instalar.</string>
+    <string name="web_s4_title">Instala y abre</string>
+    <string name="web_s4_desc">Toca Instalar y luego Abrir. ¡Bienvenido a chatbit!</string>
+    <string name="web_help_title">¿No funciona?</string>
+    <string name="web_help_1">La descarga no empieza: desactiva los datos móviles y quédate en este Wi-Fi.</string>
+    <string name="web_help_2">«App no instalada»: borra una versión antigua de chatbit o libera espacio y vuelve a intentarlo.</string>
+    <string name="web_help_3">iPhone: chatbit solo existe en Android.</string>
 </resources>

@@ -813,11 +813,6 @@
     <string name="hs_url">网址</string>
     <string name="web_download">下载 chatbit</string>
     <string name="web_version_size">版本 %1$s · %2$d MB · Android 8 及以上</string>
-    <string name="web_install_title">4 步完成安装</string>
-    <string name="web_install_step1">点击上方按钮，等待下载完成。</string>
-    <string name="web_install_step2">从通知栏或“下载”文件夹打开下载的文件。</string>
-    <string name="web_install_step3">如果 Android 提示，请允许浏览器安装未知应用。</string>
-    <string name="web_install_step4">点击“安装”，然后打开 chatbit。</string>
     <string name="web_lists_title">共享屏蔽名单</string>
     <string name="web_lists_import">使用名单：在 chatbit 中打开 设置 → 高级模式 → 防刷屏 → 名单 → 导入文件。</string>
     <string name="web_footer">由附近手机离线提供 · 无需联网，无追踪</string>
@@ -938,4 +933,19 @@
     <string name="recent_channels">最近的频道</string>
     <string name="recent_channels_empty">还没有访问过频道</string>
     <string name="rooms_compat_notice">仅适用于 chatbit 应用：受邀者必须安装 chatbit。bitchat 和其他应用无法打开此房间。</string>
+    <string name="web_intro">3 分钟安装 chatbit，无需联网，无需 Play 商店。</string>
+    <string name="web_s1_title">下载</string>
+    <string name="web_s1_desc">点击按钮。下载完成前请保持连接此 Wi-Fi，即使手机提示“无法访问互联网”。</string>
+    <string name="web_s2_title">打开文件</string>
+    <string name="web_s2_desc">点击“chatbit….apk”通知，或打开“文件”应用 → 下载。</string>
+    <string name="web_s3_title">允许安装（仅需一次）</string>
+    <string name="web_s3_desc">chatbit 不是来自 Play 商店，所以 Android 会提示已阻止安装未知应用。点击“设置”，开启“允许来自此来源”，然后返回。</string>
+    <string name="web_s3_play">如果 Play 保护机制显示警告，点击“更多详情”再点“仍然安装”。在 Play 商店之外安装应用时这很正常。</string>
+    <string name="web_s3_undo">安装完成后可以立即关闭此权限。</string>
+    <string name="web_s4_title">安装并打开</string>
+    <string name="web_s4_desc">点击“安装”，然后“打开”。欢迎使用 chatbit！</string>
+    <string name="web_help_title">无法安装？</string>
+    <string name="web_help_1">下载没有开始：关闭移动数据，并保持连接此 Wi-Fi。</string>
+    <string name="web_help_2">“未安装应用”：删除旧版 chatbit 或清理存储空间后重试。</string>
+    <string name="web_help_3">iPhone：chatbit 仅支持 Android。</string>
 </resources>

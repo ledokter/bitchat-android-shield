@@ -792,11 +792,6 @@
     <string name="hs_url">サイトのアドレス</string>
     <string name="web_download">chatbit をダウンロード</string>
     <string name="web_version_size">バージョン %1$s · %2$d MB · Android 8 以降</string>
-    <string name="web_install_title">4 ステップでインストール</string>
-    <string name="web_install_step1">上のボタンをタップし、ダウンロードが終わるまで待ちます。</string>
-    <string name="web_install_step2">通知またはダウンロードフォルダからファイルを開きます。</string>
-    <string name="web_install_step3">確認が出たら、ブラウザに「不明なアプリのインストール」を許可します。</string>
-    <string name="web_install_step4">「インストール」をタップし、chatbit を開きます。</string>
     <string name="web_lists_title">共有ブロックリスト</string>
     <string name="web_lists_import">リストを使うには: chatbit で 設定 → 詳細モード → フラッド対策 → リスト → ファイルを読み込む。</string>
     <string name="web_footer">近くの端末からオフラインで配信 · インターネット不要・トラッキングなし</string>
@@ -917,4 +912,19 @@
     <string name="recent_channels">最近のチャンネル</string>
     <string name="recent_channels_empty">まだ訪れたチャンネルはありません</string>
     <string name="rooms_compat_notice">chatbit アプリ専用です。招待する人は chatbit をインストールする必要があります。bitchat など他のアプリではこのルームを開けません。</string>
+    <string name="web_intro">インターネットも Play ストアも使わず、3 分で chatbit をインストール。</string>
+    <string name="web_s1_title">ダウンロード</string>
+    <string name="web_s1_desc">ボタンをタップ。「インターネットなし」と表示されても、ダウンロードが終わるまでこの Wi-Fi に接続したままにしてください。</string>
+    <string name="web_s2_title">ファイルを開く</string>
+    <string name="web_s2_desc">「chatbit….apk」の通知をタップするか、ファイルアプリ → ダウンロードを開きます。</string>
+    <string name="web_s3_title">インストールを許可（最初の一度だけ）</string>
+    <string name="web_s3_desc">chatbit は Play ストア以外から入手するため、Android が提供元不明のアプリをブロックしたと表示します。「設定」をタップし、「この提供元を許可」をオンにして戻ります。</string>
+    <string name="web_s3_play">Play プロテクトの警告が出たら、「詳細」→「インストールする」をタップ。Play ストア外のアプリでは普通のことです。</string>
+    <string name="web_s3_undo">インストール後すぐにこの許可をオフに戻せます。</string>
+    <string name="web_s4_title">インストールして開く</string>
+    <string name="web_s4_desc">「インストール」→「開く」をタップ。chatbit へようこそ！</string>
+    <string name="web_help_title">うまくいかない？</string>
+    <string name="web_help_1">ダウンロードが始まらない：モバイルデータをオフにして、この Wi-Fi に接続したままにしてください。</string>
+    <string name="web_help_2">「アプリはインストールされていません」：古い chatbit を削除するか空き容量を増やして、もう一度試してください。</string>
+    <string name="web_help_3">iPhone：chatbit は Android 専用です。</string>
 </resources>
