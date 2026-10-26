@@ -121,6 +121,7 @@ object KittyAnchors {
     const val CHANNEL = "channel"
     const val GLOBE = "globe"
     const val ROOMS = "rooms"
+    const val DMS = "dms"
     const val PEOPLE = "people"
 }
 
@@ -135,6 +136,7 @@ private val TOUR = listOf(
     TourStep(KittyAnchors.LOGO, R.string.tour_logo),
     TourStep(KittyAnchors.CHANNEL, R.string.tour_channel),
     TourStep(KittyAnchors.GLOBE, R.string.tour_globe),
+    TourStep(KittyAnchors.DMS, R.string.tour_dms),
     TourStep(KittyAnchors.ROOMS, R.string.tour_rooms),
     TourStep(KittyAnchors.PEOPLE, R.string.tour_people),
     TourStep(null, R.string.tour_badges)

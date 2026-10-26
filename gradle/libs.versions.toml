@@ -64,9 +64,8 @@ zxing-core = "3.5.4"
 # EXIF
 exifinterface = "1.4.2"
 
-# CameraX / ML Kit
+# CameraX
 camerax = "1.6.1"
-mlkit-barcode = "17.3.0"
 
 # Testing
 junit = "4.13.2"
@@ -147,11 +146,10 @@ zxing-core = { module = "com.google.zxing:core", version.ref = "zxing-core" }
 # EXIF
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
 
-# CameraX / ML Kit
+# CameraX
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax" }
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax" }
 androidx-camera-compose = { module = "androidx.camera:camera-compose", version.ref = "camerax" }
-mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "mlkit-barcode" }
 
 # Testing
 junit = { module = "junit:junit", version.ref = "junit" }

@@ -8,7 +8,6 @@ import android.os.Looper
 import android.util.Log
 import androidx.camera.compose.CameraXViewfinder
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
@@ -77,11 +76,12 @@ import com.bitchat.android.services.VerificationService
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.common.InputImage
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.DecodeHintType
+import com.google.zxing.PlanarYUVLuminanceSource
+import com.google.zxing.common.HybridBinarizer
+import com.google.zxing.qrcode.QRCodeReader
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -512,27 +512,34 @@ private fun bitmapFromMatrix(matrix: BitMatrix): Bitmap {
     return bitmap
 }
 
+/** QR decoding with ZXing on the camera's luminance plane (no Google ML Kit, ~4.5 MB lighter). */
 private class QRCodeAnalyzer(
     private val onCode: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
-    private val scanner = BarcodeScanning.getClient(
-        BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-            .build()
-    )
+    private val reader = QRCodeReader()
+    private val hints = mapOf(DecodeHintType.TRY_HARDER to true)
 
-    @ExperimentalGetImage
     override fun analyze(imageProxy: ImageProxy) {
-        val mediaImage = imageProxy.image ?: run {
-            imageProxy.close()
-            return
-        }
-        val input = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-        scanner.process(input)
-            .addOnSuccessListener { barcodes ->
-                val text = barcodes.firstOrNull()?.rawValue
-                if (!text.isNullOrBlank()) onCode(text)
+        try {
+            val plane = imageProxy.planes[0]
+            val buffer = plane.buffer
+            val bytes = ByteArray(buffer.remaining()).also { buffer.get(it) }
+            val rowStride = plane.rowStride
+            val height = imageProxy.height
+            val source = PlanarYUVLuminanceSource(
+                bytes, rowStride, bytes.size / rowStride,
+                0, 0, imageProxy.width, minOf(height, bytes.size / rowStride), false
+            )
+            val text = try {
+                reader.decode(BinaryBitmap(HybridBinarizer(source)), hints).text
+            } catch (_: Exception) {
+                null
+            } finally {
+                reader.reset()
             }
-            .addOnCompleteListener { imageProxy.close() }
+            if (!text.isNullOrBlank()) onCode(text)
+        } finally {
+            imageProxy.close()
+        }
     }
 }

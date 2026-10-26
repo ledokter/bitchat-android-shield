@@ -781,16 +781,24 @@ private fun MainHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                if (hasUnreadPrivateMessages.isNotEmpty()) {
-                    HeaderIconButton(
-                        onClick = { viewModel.openLatestUnreadPrivateChat() },
-                        contentDescription = stringResource(R.string.cd_unread_private_messages)
-                    ) {
+                // chatbit: private conversations always one tap away; orange + dot when unread
+                val hasUnreadDm = hasUnreadPrivateMessages.isNotEmpty()
+                HeaderIconButton(
+                    onClick = {
+                        if (hasUnreadDm) viewModel.openLatestUnreadPrivateChat() else viewModel.showMeshPeerList()
+                    },
+                    contentDescription = stringResource(if (hasUnreadDm) R.string.cd_unread_private_messages else R.string.conversations),
+                    modifier = Modifier.kittyAnchor(KittyAnchors.DMS)
+                ) {
+                    Box {
                         Icon(
                             painter = painterResource(R.drawable.ic_spec_envelope),
-                            contentDescription = stringResource(R.string.cd_unread_private_messages),
+                            contentDescription = null,
                             modifier = Modifier.size(HeaderIconSize),
-                            tint = palette.accentOrange
+                            tint = if (hasUnreadDm) palette.accentOrange else colorScheme.primary
+                        )
+                        if (hasUnreadDm) Box(
+                            Modifier.align(Alignment.TopEnd).size(7.dp).clip(CircleShape).background(palette.accentOrange)
                         )
                     }
                 }

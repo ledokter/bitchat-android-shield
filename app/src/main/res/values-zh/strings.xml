@@ -988,10 +988,10 @@
     <string name="kitty_badges">徽章</string>
     <string name="kitty_outfits">装扮</string>
     <string name="kitty_private_note">你的进度只保存在这台手机上：不会发送任何内容，紧急清除会删除它。</string>
-    <string name="kitty_replay_tour">重看 kitty 导览</string>
+    <string name="kitty_replay_tour">重看 chatbit 导览</string>
     <string name="kitty_got_it">知道了</string>
-    <string name="kitty_collection">我的 kitty 收藏（%1$d/%2$d）</string>
-    <string name="tour_logo">你好，我是 kitty！点我打开设置和信息。快速点我 3 次可在紧急情况下清除一切。</string>
+    <string name="kitty_collection">我的 chatbit 收藏（%1$d/%2$d）</string>
+    <string name="tour_logo">你好，我是 chatbit！点我打开设置和信息。快速点我 3 次可在紧急情况下清除一切。</string>
     <string name="tour_channel">在这里选择聊天的地方：mesh（蓝牙，无需网络）或位置频道。</string>
     <string name="tour_globe">世界地图！长按可查看最近的频道。</string>
     <string name="tour_rooms">你的私密房间：加密，仅限邀请。</string>
@@ -1004,4 +1004,8 @@
     <string name="tip_flood">垃圾消息太多？在这里屏蔽、隐藏或限制话痨。</string>
     <string name="tip_rooms">创建房间并通过链接或二维码邀请。只有 chatbit 能打开。</string>
     <string name="tip_notes">位置笔记会留在原地。找到别人的笔记来收集印章！</string>
+    <string name="outfit_thug_life">暴徒人生</string>
+    <string name="badge_thug_life">暴徒人生</string>
+    <string name="badge_thug_life_desc">解锁其他所有徽章。</string>
+    <string name="tour_dms">你的私聊。有新消息时会变成橙色。</string>
 </resources>

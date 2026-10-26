@@ -964,10 +964,10 @@
     <string name="kitty_badges">Значки</string>
     <string name="kitty_outfits">Наряды</string>
     <string name="kitty_private_note">Ваш прогресс хранится только на этом телефоне: ничего не отправляется, а экстренное удаление стирает его.</string>
-    <string name="kitty_replay_tour">Повторить тур kitty</string>
+    <string name="kitty_replay_tour">Повторить тур chatbit</string>
     <string name="kitty_got_it">Понятно</string>
-    <string name="kitty_collection">Моя коллекция kitty (%1$d/%2$d)</string>
-    <string name="tour_logo">Привет, я kitty! Нажми на меня для настроек и информации. Нажми 3 раза быстро, чтобы в экстренном случае всё стереть.</string>
+    <string name="kitty_collection">Моя коллекция chatbit (%1$d/%2$d)</string>
+    <string name="tour_logo">Привет, я chatbit! Нажми на меня для настроек и информации. Нажми 3 раза быстро, чтобы в экстренном случае всё стереть.</string>
     <string name="tour_channel">Здесь вы выбираете, где общаться: mesh (Bluetooth, без интернета) или геоканалы.</string>
     <string name="tour_globe">Карта мира! Долгое нажатие — последние каналы.</string>
     <string name="tour_rooms">Ваши приватные комнаты: зашифрованы, только по приглашению.</string>
@@ -980,4 +980,8 @@
     <string name="tip_flood">Слишком много спама? Блокируйте, скрывайте или замедляйте болтунов здесь.</string>
     <string name="tip_rooms">Создайте комнату и пригласите по ссылке или QR-коду. Открыть её может только chatbit.</string>
     <string name="tip_notes">Заметки места остаются на месте. Находите чужие заметки и собирайте штампы!</string>
+    <string name="outfit_thug_life">Thug life</string>
+    <string name="badge_thug_life">Thug life</string>
+    <string name="badge_thug_life_desc">Получите все остальные значки.</string>
+    <string name="tour_dms">Ваши личные переписки. Значок становится оранжевым, когда есть новое сообщение.</string>
 </resources>

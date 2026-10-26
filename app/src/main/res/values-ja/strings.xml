@@ -967,10 +967,10 @@
     <string name="kitty_badges">バッジ</string>
     <string name="kitty_outfits">衣装</string>
     <string name="kitty_private_note">進行状況はこの端末だけに保存されます。何も送信されず、緊急消去で削除されます。</string>
-    <string name="kitty_replay_tour">kitty のツアーをもう一度</string>
+    <string name="kitty_replay_tour">chatbit のツアーをもう一度</string>
     <string name="kitty_got_it">わかった</string>
-    <string name="kitty_collection">kitty コレクション（%1$d/%2$d）</string>
-    <string name="tour_logo">こんにちは、kitty だよ！タップで設定と情報。すばやく 3 回タップすると緊急時にすべて消去します。</string>
+    <string name="kitty_collection">chatbit コレクション（%1$d/%2$d）</string>
+    <string name="tour_logo">こんにちは、chatbit だよ！タップで設定と情報。すばやく 3 回タップすると緊急時にすべて消去します。</string>
     <string name="tour_channel">ここでチャットする場所を選びます：メッシュ（Bluetooth、インターネット不要）か位置チャンネル。</string>
     <string name="tour_globe">世界地図！長押しで最近のチャンネルを表示。</string>
     <string name="tour_rooms">プライベートルーム：暗号化され、招待制です。</string>
@@ -983,4 +983,8 @@
     <string name="tip_flood">スパムが多い？ここでおしゃべりな人をブロック・非表示・制限できます。</string>
     <string name="tip_rooms">ルームを作り、リンクか QR コードで招待。chatbit でしか開けません。</string>
     <string name="tip_notes">場所メモはその場所に残ります。他の人のメモを見つけてスタンプを集めよう！</string>
+    <string name="outfit_thug_life">サグライフ</string>
+    <string name="badge_thug_life">サグライフ</string>
+    <string name="badge_thug_life_desc">ほかのバッジをすべて集める。</string>
+    <string name="tour_dms">プライベートな会話。メッセージが届くとオレンジ色になります。</string>
 </resources>

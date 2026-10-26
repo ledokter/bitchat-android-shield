@@ -988,10 +988,10 @@
     <string name="kitty_badges">Badges</string>
     <string name="kitty_outfits">Tenues</string>
     <string name="kitty_private_note">Ta progression reste uniquement sur ce téléphone : rien n\'est envoyé, et l\'effacement d\'urgence la supprime.</string>
-    <string name="kitty_replay_tour">Revoir la visite de kitty</string>
+    <string name="kitty_replay_tour">Revoir la visite de chatbit</string>
     <string name="kitty_got_it">Compris</string>
-    <string name="kitty_collection">Ma collection kitty (%1$d/%2$d)</string>
-    <string name="tour_logo">Coucou, c\'est kitty ! Touche-moi pour les réglages et les infos. Touche-moi 3 fois très vite pour tout effacer en urgence.</string>
+    <string name="kitty_collection">Ma collection chatbit (%1$d/%2$d)</string>
+    <string name="tour_logo">Coucou, c\'est chatbit ! Touche-moi pour les réglages et les infos. Touche-moi 3 fois très vite pour tout effacer en urgence.</string>
     <string name="tour_channel">Ici tu choisis où discuter : le mesh (Bluetooth, sans Internet) ou les salons géographiques.</string>
     <string name="tour_globe">La carte du monde ! Appui long pour retrouver tes derniers salons.</string>
     <string name="tour_rooms">Tes salons privés : chiffrés, sur invitation seulement.</string>
@@ -1004,4 +1004,8 @@
     <string name="tip_flood">Trop de spam ? Bloque, masque ou ralentis les bavards ici.</string>
     <string name="tip_rooms">Crée un salon et invite avec un lien ou un QR code. Seul chatbit peut l\'ouvrir.</string>
     <string name="tip_notes">Les notes de lieu restent à un endroit. Trouve celles des autres pour gagner des tampons !</string>
+    <string name="outfit_thug_life">Thug life</string>
+    <string name="badge_thug_life">Thug life</string>
+    <string name="badge_thug_life_desc">Débloque tous les autres badges.</string>
+    <string name="tour_dms">Tes conversations privées. Elle devient orange quand un message t\'attend.</string>
 </resources>

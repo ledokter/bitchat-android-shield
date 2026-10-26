@@ -20,7 +20,8 @@ enum class KittyOutfit(val title: Int) {
     EXPLORER(R.string.outfit_explorer),
     SUNGLASSES(R.string.outfit_sunglasses),
     TOR_HOOD(R.string.outfit_tor_hood),
-    PIRATE(R.string.outfit_pirate)
+    PIRATE(R.string.outfit_pirate),
+    THUG_LIFE(R.string.outfit_thug_life)
 }
 
 enum class Badge(val emoji: String, val title: Int, val desc: Int, val outfit: KittyOutfit) {
@@ -30,7 +31,8 @@ enum class Badge(val emoji: String, val title: Int, val desc: Int, val outfit: K
     GLOBETROTTER("🌍", R.string.badge_globetrotter, R.string.badge_globetrotter_desc, KittyOutfit.EXPLORER),
     SECRET_AGENT("🕶️", R.string.badge_secret_agent, R.string.badge_secret_agent_desc, KittyOutfit.SUNGLASSES),
     TOR_GHOST("🧅", R.string.badge_tor_ghost, R.string.badge_tor_ghost_desc, KittyOutfit.TOR_HOOD),
-    GEOCACHER("🗺️", R.string.badge_geocacher, R.string.badge_geocacher_desc, KittyOutfit.PIRATE)
+    GEOCACHER("🗺️", R.string.badge_geocacher, R.string.badge_geocacher_desc, KittyOutfit.PIRATE),
+    THUG_LIFE("😎", R.string.badge_thug_life, R.string.badge_thug_life_desc, KittyOutfit.THUG_LIFE)
 }
 
 /** Network rank from the score (phones met on the mesh + 3 per app shared). */
@@ -129,6 +131,8 @@ object KittyGame {
         _badges.value = next
         p.edit().putStringSet("badges", next.map { it.name }.toSet()).apply()
         _unlocked.tryEmit(badge)
+        // the last badge: collecting all the others
+        if (badge != Badge.THUG_LIFE && Badge.entries.all { it == Badge.THUG_LIFE || it in next }) award(Badge.THUG_LIFE)
     }
 
     fun hasOutfit(outfit: KittyOutfit) = _badges.value.any { it.outfit == outfit }

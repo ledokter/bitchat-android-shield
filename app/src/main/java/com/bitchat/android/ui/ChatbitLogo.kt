@@ -87,6 +87,18 @@ private fun DrawScope.drawOutfit(outfit: KittyOutfit) {
             px(3, 7, 18, 1, dark)
             px(11, 4, 2, 2, Color(0xFFF5F5F5)); px(11, 4, 2, 1, Color(0xFFCDB6DB))
         }
+        KittyOutfit.THUG_LIFE -> {
+            // "deal with it" pixel shades
+            px(4, 10, 16, 1, INK)
+            px(5, 11, 5, 1, INK); px(14, 11, 5, 1, INK)
+            px(6, 12, 4, 1, INK); px(15, 12, 4, 1, INK)
+            px(6, 11, 1, 1, Color.White); px(7, 12, 1, 1, Color.White)
+            px(15, 11, 1, 1, Color.White); px(16, 12, 1, 1, Color.White)
+            // joint, glowing tip and a puff of smoke
+            px(12, 15, 5, 1, Color(0xFFF5F0E1)); px(12, 16, 1, 1, Color(0xFFD7CCB0))
+            px(17, 15, 1, 1, Color(0xFFFF6D00)); px(18, 15, 1, 1, Color(0xFFFFC828))
+            px(19, 13, 1, 1, Color(0xFFBDBDBD)); px(20, 12, 1, 1, Color(0xFF9E9E9E)); px(20, 10, 2, 1, Color(0xFFBDBDBD).copy(alpha = 0.7f))
+        }
         KittyOutfit.PIRATE -> {
             px(5, 11, 4, 3, INK); px(9, 10, 12, 1, INK); px(3, 10, 2, 1, INK)
             val bandana = Color(0xFFD32F2F)

@@ -1024,10 +1024,10 @@
     <string name="kitty_badges">Badges</string>
     <string name="kitty_outfits">Outfits</string>
     <string name="kitty_private_note">Your progress stays on this phone only: nothing is sent, and an emergency wipe erases it.</string>
-    <string name="kitty_replay_tour">Replay kitty\'s tour</string>
+    <string name="kitty_replay_tour">Replay chatbit\'s tour</string>
     <string name="kitty_got_it">Got it</string>
-    <string name="kitty_collection">My kitty collection (%1$d/%2$d)</string>
-    <string name="tour_logo">Hi, I\'m kitty! Tap me for settings and info. Tap me 3 times quickly to wipe everything in an emergency.</string>
+    <string name="kitty_collection">My chatbit collection (%1$d/%2$d)</string>
+    <string name="tour_logo">Hi, I\'m chatbit! Tap me for settings and info. Tap me 3 times quickly to wipe everything in an emergency.</string>
     <string name="tour_channel">Here you choose where to chat: the mesh (Bluetooth, no Internet) or location channels.</string>
     <string name="tour_globe">The world map! Long press it to find your recent channels.</string>
     <string name="tour_rooms">Your private rooms: encrypted, by invitation only.</string>
@@ -1040,4 +1040,8 @@
     <string name="tip_flood">Too much spam? Block, hide or slow down chatty users here.</string>
     <string name="tip_rooms">Create a room and invite people with a link or QR code. Only chatbit can open it.</string>
     <string name="tip_notes">Location notes stay at a place. Find notes left by others to win stamps!</string>
+    <string name="outfit_thug_life">Thug life</string>
+    <string name="badge_thug_life">Thug life</string>
+    <string name="badge_thug_life_desc">Unlock all the other badges.</string>
+    <string name="tour_dms">Your private conversations. It turns orange when a message is waiting.</string>
 </resources>
