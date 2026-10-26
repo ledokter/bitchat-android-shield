@@ -943,4 +943,5 @@
     <string name="duress_later">Più tardi (Impostazioni → Sicurezza)</string>
     <string name="recent_channels">Canali recenti</string>
     <string name="recent_channels_empty">Nessun canale visitato finora</string>
+    <string name="rooms_compat_notice">Funziona solo con l\'app chatbit: chi inviti deve installarla. bitchat e le altre app non possono aprire questa stanza.</string>
 </resources>

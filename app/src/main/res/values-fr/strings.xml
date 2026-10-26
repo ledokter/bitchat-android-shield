@@ -937,4 +937,5 @@
     <string name="duress_later">Plus tard (Réglages → Sécurité)</string>
     <string name="recent_channels">Salons récents</string>
     <string name="recent_channels_empty">Aucun salon visité pour l\'instant</string>
+    <string name="rooms_compat_notice">Fonctionne uniquement avec l\'appli chatbit : les personnes invitées doivent l\'installer. bitchat et les autres applis ne peuvent pas ouvrir ce salon.</string>
 </resources>

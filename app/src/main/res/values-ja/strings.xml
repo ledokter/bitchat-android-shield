@@ -916,4 +916,5 @@
     <string name="duress_later">後で（設定 → セキュリティ）</string>
     <string name="recent_channels">最近のチャンネル</string>
     <string name="recent_channels_empty">まだ訪れたチャンネルはありません</string>
+    <string name="rooms_compat_notice">chatbit アプリ専用です。招待する人は chatbit をインストールする必要があります。bitchat など他のアプリではこのルームを開けません。</string>
 </resources>

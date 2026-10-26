@@ -973,4 +973,5 @@
     <string name="duress_later">Later (Settings → Security)</string>
     <string name="recent_channels">Recent channels</string>
     <string name="recent_channels_empty">No channel visited yet</string>
+    <string name="rooms_compat_notice">Only works with the chatbit app: the people you invite must install it. bitchat and other apps cannot open this room.</string>
 </resources>

@@ -917,4 +917,5 @@
     <string name="duress_later">Später (Einstellungen → Sicherheit)</string>
     <string name="recent_channels">Letzte Kanäle</string>
     <string name="recent_channels_empty">Noch kein Kanal besucht</string>
+    <string name="rooms_compat_notice">Funktioniert nur mit der chatbit-App: Eingeladene müssen sie installieren. bitchat und andere Apps können diesen Raum nicht öffnen.</string>
 </resources>

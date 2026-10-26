@@ -274,12 +274,17 @@ private fun RoomChat(room: PrivateRoom, nickname: String, onBack: () -> Unit) {
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     QRCodeImage(data = link, size = 220.dp)
+                    Text(
+                        "⚠️ " + stringResource(R.string.rooms_compat_notice),
+                        fontFamily = BitchatFontFamily, fontSize = 13.sp, fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.error
+                    )
                     RoomHint(stringResource(R.string.rooms_invite_warning))
                 }
             },
             confirmButton = {
                 TextButton(onClick = {
-                    val send = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, link) }
+                    val send = Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, "⚠️ " + context.getString(R.string.rooms_compat_notice) + "\n\n" + link) }
                     context.startActivity(Intent.createChooser(send, context.getString(R.string.rooms_share_link)))
                 }) { Text(stringResource(R.string.rooms_share_link), fontFamily = BitchatFontFamily) }
             },

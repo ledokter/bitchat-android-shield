@@ -913,4 +913,5 @@
     <string name="duress_later">Позже (Настройки → Безопасность)</string>
     <string name="recent_channels">Недавние каналы</string>
     <string name="recent_channels_empty">Вы ещё не посещали каналы</string>
+    <string name="rooms_compat_notice">Работает только в приложении chatbit: приглашённым нужно его установить. bitchat и другие приложения не откроют эту комнату.</string>
 </resources>

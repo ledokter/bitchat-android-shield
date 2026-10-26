@@ -937,4 +937,5 @@
     <string name="duress_later">稍后（设置 → 安全）</string>
     <string name="recent_channels">最近的频道</string>
     <string name="recent_channels_empty">还没有访问过频道</string>
+    <string name="rooms_compat_notice">仅适用于 chatbit 应用：受邀者必须安装 chatbit。bitchat 和其他应用无法打开此房间。</string>
 </resources>
