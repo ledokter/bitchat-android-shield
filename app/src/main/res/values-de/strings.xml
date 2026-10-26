@@ -915,4 +915,6 @@
     <string name="duress_onboarding_explain">Ein zweiter Code für den Fall, dass dich jemand zwingt, chatbit zu öffnen (Kontrolle, Diebstahl, aufdringliche Person…). Gib ihn statt deiner PIN ein: alles wird still gelöscht (Nachrichten, Kontakte, Schlüssel, Räume) und die App öffnet sich leer, wie neu. Nichts verrät, dass gelöscht wurde.</string>
     <string name="duress_create">Wähle deine Notfall-PIN</string>
     <string name="duress_later">Später (Einstellungen → Sicherheit)</string>
+    <string name="recent_channels">Letzte Kanäle</string>
+    <string name="recent_channels_empty">Noch kein Kanal besucht</string>
 </resources>

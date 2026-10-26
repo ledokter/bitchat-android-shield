@@ -935,4 +935,6 @@
     <string name="duress_onboarding_explain">Un second code pour le jour où quelqu\'un te force à ouvrir chatbit (contrôle, vol, proche insistant…). Tape-le à la place de ton code PIN : tout est effacé en silence (messages, contacts, clés, salons) et l\'appli s\'ouvre vide, comme neuve. Rien n\'indique qu\'un effacement a eu lieu.</string>
     <string name="duress_create">Choisis ton code de contrainte</string>
     <string name="duress_later">Plus tard (Réglages → Sécurité)</string>
+    <string name="recent_channels">Salons récents</string>
+    <string name="recent_channels_empty">Aucun salon visité pour l\'instant</string>
 </resources>

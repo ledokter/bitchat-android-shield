@@ -914,4 +914,6 @@
     <string name="duress_onboarding_explain">誰かに chatbit を開くよう強要されたとき（検問、盗難、しつこい人など）のための第 2 のコードです。PIN の代わりに入力すると、メッセージ・連絡先・鍵・ルームがすべて静かに消去され、新品のように空のアプリが開きます。消去されたことは分かりません。</string>
     <string name="duress_create">強要時の PIN を決めてください</string>
     <string name="duress_later">後で（設定 → セキュリティ）</string>
+    <string name="recent_channels">最近のチャンネル</string>
+    <string name="recent_channels_empty">まだ訪れたチャンネルはありません</string>
 </resources>

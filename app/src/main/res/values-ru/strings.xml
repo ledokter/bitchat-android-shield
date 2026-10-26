@@ -911,4 +911,6 @@
     <string name="duress_onboarding_explain">Второй код на случай, если вас заставят открыть chatbit (проверка, кража, давление близких…). Введите его вместо PIN: всё тихо стирается (сообщения, контакты, ключи, комнаты), и приложение открывается пустым, как новое. Ничто не выдаёт, что было удаление.</string>
     <string name="duress_create">Придумайте PIN под принуждением</string>
     <string name="duress_later">Позже (Настройки → Безопасность)</string>
+    <string name="recent_channels">Недавние каналы</string>
+    <string name="recent_channels_empty">Вы ещё не посещали каналы</string>
 </resources>

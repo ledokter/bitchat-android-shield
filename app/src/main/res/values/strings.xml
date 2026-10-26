@@ -971,4 +971,6 @@
     <string name="duress_onboarding_explain">A second code for when someone forces you to open chatbit (police, thief, partner…). Type it instead of your PIN: everything is erased in silence (messages, contacts, keys, rooms) and the app opens empty, as if new. Nothing shows that a wipe happened.</string>
     <string name="duress_create">Choose your duress PIN</string>
     <string name="duress_later">Later (Settings → Security)</string>
+    <string name="recent_channels">Recent channels</string>
+    <string name="recent_channels_empty">No channel visited yet</string>
 </resources>

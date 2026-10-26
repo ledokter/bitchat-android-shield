@@ -93,6 +93,19 @@ class LocationChannelManager private constructor(private val context: Context) {
     private val _selectedChannel = MutableStateFlow<ChannelID>(ChannelID.Mesh)
     val selectedChannel: StateFlow<ChannelID> = _selectedChannel
 
+    // chatbit: last location channels visited, newest first (encrypted prefs, wiped by panic)
+    private val recentPrefs by lazy { com.bitchat.android.security.SecurePrefs.open(context, "chatbit_recent_channels") }
+    private val _recentGeohashes = MutableStateFlow(
+        runCatching { recentPrefs.getString("list", "")!!.split(',').filter { it.isNotBlank() } }.getOrDefault(emptyList())
+    )
+    val recentGeohashes: StateFlow<List<String>> = _recentGeohashes
+
+    private fun rememberRecent(geohash: String) {
+        val list = (listOf(geohash) + _recentGeohashes.value.filter { it != geohash }).take(10)
+        _recentGeohashes.value = list
+        runCatching { recentPrefs.edit().putString("list", list.joinToString(",")).apply() }
+    }
+
     private val _teleported = MutableStateFlow(false)
     val teleported: StateFlow<Boolean> = _teleported
 
@@ -313,6 +326,7 @@ class LocationChannelManager private constructor(private val context: Context) {
             is ChannelID.Location -> teleported
         }
         _selectedChannel.value = channel
+        if (channel is ChannelID.Location) rememberRecent(channel.channel.geohash)
         saveChannelSelection(channel, source)
     }
 
@@ -647,6 +661,8 @@ class LocationChannelManager private constructor(private val context: Context) {
      */
     fun clearPersistedChannel() {
         dataManager?.clearLastGeohashChannel()
+        _recentGeohashes.value = emptyList()
+        runCatching { recentPrefs.edit().clear().commit() }
         _selectedChannel.value = ChannelID.Mesh
         selectedLocationSource = null
         _teleported.value = false

@@ -891,4 +891,6 @@
     <string name="duress_onboarding_explain">第二个密码，用于有人强迫你打开 chatbit 时（检查、被盗、他人逼迫…）。用它代替 PIN 码输入：所有内容（消息、联系人、密钥、房间）会被悄悄清除，应用以全新的空白状态打开，不会显示发生过清除。</string>
     <string name="duress_create">设置胁迫 PIN 码</string>
     <string name="duress_later">稍后（设置 → 安全）</string>
+    <string name="recent_channels">最近的频道</string>
+    <string name="recent_channels_empty">还没有访问过频道</string>
 </resources>

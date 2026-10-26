@@ -16,6 +16,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -796,6 +797,11 @@ private fun MainHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
+                    // chatbit: on the mesh, globe = world map; long press = recent channels
+                    if (selectedLocationChannel !is com.bitchat.android.geohash.ChannelID.Location) {
+                        MeshGlobeButton()
+                    }
+
                     // chatbit: one tap = new Tor route (new exit IP); spins while it is built
                     TorRotateButton()
 
@@ -914,6 +920,77 @@ private fun LocationChannelsButton(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.widthIn(max = 88.dp)
+            )
+        }
+    }
+}
+
+/** Opens the world map; a long press lists the location channels visited lately. */
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+private fun MeshGlobeButton() {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val manager = remember { com.bitchat.android.geohash.LocationChannelManager.getInstance(context) }
+    val recents by manager.recentGeohashes.collectAsStateWithLifecycle()
+    val names by remember { com.bitchat.android.geohash.GeohashBookmarksStore.getInstance(context) }
+        .bookmarkNames.collectAsStateWithLifecycle()
+    var menu by remember { mutableStateOf(false) }
+    val open: (String) -> Unit = { gh -> channelForManualGeohash(gh)?.let { manager.selectManual(it) } }
+    val mapLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            result.data?.getStringExtra(GeohashPickerActivity.EXTRA_RESULT_GEOHASH)
+                ?.takeIf { it.isNotBlank() }?.let(open)
+        }
+    }
+    val label = stringResource(R.string.map_open)
+    Box {
+        Box(
+            modifier = Modifier
+                .size(HeaderTapTarget)
+                .clip(CircleShape)
+                .combinedClickable(
+                    onClickLabel = label,
+                    onClick = { mapLauncher.launch(android.content.Intent(context, WorldMapActivity::class.java)) },
+                    onLongClick = { menu = true }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_spec_globe),
+                contentDescription = label,
+                modifier = Modifier.size(HeaderIconSize),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        androidx.compose.material3.DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+            Text(
+                text = stringResource(R.string.recent_channels),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+            )
+            if (recents.isEmpty()) {
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(stringResource(R.string.recent_channels_empty)) },
+                    onClick = { menu = false },
+                    enabled = false
+                )
+            }
+            recents.forEach { gh ->
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(names[gh]?.let { "#$gh · $it" } ?: "#$gh", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    leadingIcon = {
+                        Icon(painterResource(R.drawable.ic_spec_globe), null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
+                    },
+                    onClick = { menu = false; open(gh) }
+                )
+            }
+            androidx.compose.material3.HorizontalDivider()
+            androidx.compose.material3.DropdownMenuItem(
+                text = { Text(label) },
+                onClick = { menu = false; mapLauncher.launch(android.content.Intent(context, WorldMapActivity::class.java)) }
             )
         }
     }
