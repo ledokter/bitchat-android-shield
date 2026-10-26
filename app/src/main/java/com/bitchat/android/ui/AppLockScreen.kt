@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Backspace
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,13 +41,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Opaque cover shown while chatbit is locked; it swallows every touch underneath. With a chatbit
- * PIN it shows a keypad; the duress PIN unlocks exactly like the real one after [onDuress] wiped
- * everything, so whoever forces the unlock sees a fresh, empty app.
+ * Opaque cover shown while chatbit is locked; it swallows every touch underneath. Only chatbit's
+ * PIN unlocks it (no fingerprint / face: they can be forced). The duress PIN unlocks exactly like
+ * the real one after [onDuress] wiped everything, so whoever forces the unlock sees an empty app.
+ * Without a PIN yet, the user creates one here.
  */
 @Composable
-fun AppLockScreen(onUnlock: () -> Unit, onDuress: () -> Unit = {}) {
-    val usesPin by SecurityPreferences.hasPin.collectAsState()
+fun AppLockScreen(onDuress: () -> Unit = {}) {
+    val hasPin by SecurityPreferences.hasPin.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,57 +58,79 @@ fun AppLockScreen(onUnlock: () -> Unit, onDuress: () -> Unit = {}) {
         verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterVertically)
     ) {
         ChatbitLogo(height = 96.dp)
-        if (usesPin) {
-            PinPad(onDuress)
-        } else {
-            Text(stringResource(R.string.app_lock_locked), fontFamily = BitchatFontFamily, color = MaterialTheme.colorScheme.onBackground)
-            Button(onClick = onUnlock) {
-                Text(stringResource(R.string.app_lock_unlock), fontFamily = BitchatFontFamily)
+        if (hasPin) PinPad(onDuress) else PinCreate()
+    }
+}
+
+/** First PIN: type it, type it again, saved and unlocked. "No lock" turns the app lock off. */
+@Composable
+private fun PinCreate() {
+    var first by remember { mutableStateOf<String?>(null) }
+    var mismatch by remember { mutableStateOf(false) }
+    Keypad(
+        title = when {
+            mismatch -> stringResource(R.string.pin_mismatch)
+            first == null -> stringResource(R.string.pin_create, SecurityPreferences.PIN_MIN)
+            else -> stringResource(R.string.pin_create_confirm)
+        },
+        isError = mismatch,
+        enabled = true,
+        onSubmit = { pin ->
+            val firstPin = first
+            when {
+                firstPin == null -> if (SecurityPreferences.isValidPin(pin)) { first = pin; mismatch = false }
+                firstPin == pin -> { SecurityPreferences.setPin(pin); AppLock.unlock() }
+                else -> { first = null; mismatch = true }
             }
         }
+    )
+    androidx.compose.material3.TextButton(onClick = { SecurityPreferences.setAppLock(false); AppLock.unlock() }) {
+        Text(stringResource(R.string.pin_skip_lock), fontFamily = BitchatFontFamily, fontSize = 13.sp,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
     }
 }
 
 @Composable
 private fun PinPad(onDuress: () -> Unit) {
     val scope = rememberCoroutineScope()
-    var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
     var checking by remember { mutableStateOf(false) }
     var waitMs by remember { mutableLongStateOf(SecurityPreferences.pinLockoutRemainingMs()) }
     LaunchedEffect(waitMs > 0) {
         while (waitMs > 0) { delay(1000); waitMs = SecurityPreferences.pinLockoutRemainingMs() }
     }
-    val colors = MaterialTheme.colorScheme
-
-    fun submit() {
-        if (checking || pin.length < SecurityPreferences.PIN_MIN) return
-        checking = true
-        val typed = pin
-        scope.launch {
-            val result = withContext(Dispatchers.Default) { SecurityPreferences.checkPin(typed) }
-            pin = ""
-            checking = false
-            when (result) {
-                PinResult.OK -> AppLock.unlock()
-                PinResult.DURESS -> { onDuress(); AppLock.unlock() }
-                PinResult.WRONG, PinResult.LOCKED_OUT -> {
-                    error = true
-                    waitMs = SecurityPreferences.pinLockoutRemainingMs()
-                }
-            }
-        }
-    }
-
-    Text(
-        when {
+    Keypad(
+        title = when {
             waitMs > 0 -> stringResource(R.string.pin_wait, ((waitMs + 999) / 1000).toInt())
             error -> stringResource(R.string.pin_wrong)
             else -> stringResource(R.string.pin_enter)
         },
-        fontFamily = BitchatFontFamily,
-        color = if (error || waitMs > 0) colors.error else colors.onBackground
+        isError = error || waitMs > 0,
+        enabled = waitMs <= 0 && !checking,
+        onSubmit = { typed ->
+            checking = true
+            scope.launch {
+                val result = withContext(Dispatchers.Default) { SecurityPreferences.checkPin(typed) }
+                checking = false
+                when (result) {
+                    PinResult.OK -> AppLock.unlock()
+                    PinResult.DURESS -> { onDuress(); AppLock.unlock() }
+                    PinResult.WRONG, PinResult.LOCKED_OUT -> {
+                        error = true
+                        waitMs = SecurityPreferences.pinLockoutRemainingMs()
+                    }
+                }
+            }
+        }
     )
+}
+
+/** Dots + 3×4 keypad; [onSubmit] gets the typed digits when OK is pressed. */
+@Composable
+private fun Keypad(title: String, isError: Boolean, enabled: Boolean, onSubmit: (String) -> Unit) {
+    var pin by remember { mutableStateOf("") }
+    val colors = MaterialTheme.colorScheme
+    Text(title, fontFamily = BitchatFontFamily, color = if (isError) colors.error else colors.onBackground)
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         repeat(maxOf(SecurityPreferences.PIN_MIN, pin.length)) { i ->
             Box(
@@ -125,11 +147,10 @@ private fun PinPad(onDuress: () -> Unit) {
                     Box(
                         Modifier.size(68.dp).clip(CircleShape)
                             .background(colors.surfaceVariant)
-                            .clickable(enabled = waitMs <= 0 && !checking) {
-                                error = false
+                            .clickable(enabled = enabled) {
                                 when (k) {
                                     "⌫" -> pin = pin.dropLast(1)
-                                    "OK" -> submit()
+                                    "OK" -> if (pin.length >= SecurityPreferences.PIN_MIN) { onSubmit(pin); pin = "" }
                                     else -> if (pin.length < SecurityPreferences.PIN_MAX) pin += k
                                 }
                             },

@@ -20,6 +20,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -179,10 +181,11 @@ class WorldMapActivity : ComponentActivity() {
                     // top bar: back, title, layers and toggles
                     Column(Modifier.fillMaxWidth().statusBarsPadding().padding(8.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
+                            // the globe is always on a dark sky: light text whatever the app theme
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.rooms_back))
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.rooms_back), tint = androidx.compose.ui.graphics.Color.White)
                             }
-                            Text(stringResource(R.string.map_title), fontFamily = BitchatFontFamily, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.map_title), fontFamily = BitchatFontFamily, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.White)
                         }
                         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Chip(stringResource(R.string.map_layer_activity), layer == Layer.ACTIVITY) { layer = Layer.ACTIVITY; selected = null }
@@ -223,7 +226,26 @@ class WorldMapActivity : ComponentActivity() {
 
     @Composable
     private fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
-        FilterChip(selected = selected, onClick = onClick, label = { Text(label, fontFamily = BitchatFontFamily, fontSize = 12.sp) })
+        val white = androidx.compose.ui.graphics.Color.White
+        FilterChip(
+            selected = selected,
+            onClick = onClick,
+            label = { Text(label, fontFamily = BitchatFontFamily, fontSize = 13.sp, fontWeight = FontWeight.Medium) },
+            leadingIcon = if (selected) {
+                { Icon(Icons.Filled.Check, contentDescription = null, modifier = Modifier.size(16.dp)) }
+            } else null,
+            colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
+                containerColor = androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.55f),
+                labelColor = white,
+                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            border = androidx.compose.material3.FilterChipDefaults.filterChipBorder(
+                enabled = true, selected = selected,
+                borderColor = white.copy(alpha = 0.6f), selectedBorderColor = MaterialTheme.colorScheme.primary
+            )
+        )
     }
 
     private fun subscribe() {

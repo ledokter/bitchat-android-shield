@@ -38,7 +38,7 @@ internal val DarkBitchatColorScheme = darkColorScheme(
     onSurface = Color(0xFFF5F5F5),
     surfaceVariant = Color(0xFF182118),
     onSurfaceVariant = Color(0xFF9AA69A),
-    outline = Color(0xFF2A3A2A),
+    outline = Color(0xFF6B786B),
     outlineVariant = Color(0xFF1C271C),
     error = Color(0xFFFF453A),
     onError = Color.Black
@@ -61,7 +61,7 @@ internal val LightBitchatColorScheme = lightColorScheme(
     onSurface = Color(0xFF131A13),
     surfaceVariant = Color(0xFFE7EDE7),
     onSurfaceVariant = Color(0xFF4C574C),
-    outline = Color(0xFFCBD6CB),
+    outline = Color(0xFF7D897D),
     outlineVariant = Color(0xFFDEE6DE),
     error = Color(0xFFD70015),
     onError = Color.White
@@ -80,12 +80,17 @@ internal fun ColorScheme.withAccent(accent: AccentColor, dark: Boolean): ColorSc
         primary = primary,
         onPrimary = Color.Black,
         primaryContainer = mix(primary, Color.Black, 0.75f),
-        onPrimaryContainer = mix(primary, Color.White, 0.7f)
+        onPrimaryContainer = mix(primary, Color.White, 0.7f),
+        // selected chips / toggles use the accent itself, not a dim navy (hard to see)
+        secondaryContainer = primary,
+        onSecondaryContainer = Color.Black
     ) else copy(
         primary = primary,
         onPrimary = Color.White,
         primaryContainer = mix(primary, Color.White, 0.85f),
-        onPrimaryContainer = mix(primary, Color.Black, 0.6f)
+        onPrimaryContainer = mix(primary, Color.Black, 0.6f),
+        secondaryContainer = primary,
+        onSecondaryContainer = Color.White
     )
 }
 

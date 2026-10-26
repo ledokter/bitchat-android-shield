@@ -918,4 +918,16 @@
     <!-- chabit -->
     <string name="action_unblock_title">取消屏蔽 %1$s</string>
     <string name="action_unblock_subtitle">其消息将重新显示在聊天中</string>
+
+    <!-- chabit -->
+    <string name="sec_lock_pin_desc">打开应用及后台 5 分钟后需输入 chatbit PIN 码（不用指纹或人脸：它们可能被强迫使用）</string>
+    <string name="pin_create">设置 chatbit PIN 码（至少 %1$d 位）</string>
+    <string name="pin_create_confirm">再输入一次</string>
+    <string name="pin_mismatch">两次 PIN 码不一致，请重新开始</string>
+    <string name="pin_skip_lock">不锁定 chatbit</string>
+
+    <!-- chabit -->
+    <string name="blocked_users_title">已屏蔽用户（%1$d）</string>
+    <string name="blocked_users_none">没有屏蔽任何人</string>
+    <string name="unblock_short">取消屏蔽</string>
 </resources>

@@ -1268,6 +1268,7 @@ fun AboutSheet(
                                         ) {
                                             Text(
                                                 text = stringResource(R.string.pow_receive_header),
+                                                modifier = Modifier.weight(1f).padding(end = 8.dp),
                                                 fontFamily = BitchatFontFamily,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
@@ -1338,6 +1339,7 @@ fun AboutSheet(
                                         ) {
                                             Text(
                                                 text = stringResource(R.string.pow_send_header),
+                                                modifier = Modifier.weight(1f).padding(end = 8.dp),
                                                 fontFamily = BitchatFontFamily,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
@@ -1467,7 +1469,8 @@ fun AboutSheet(
                                             fontSize = 12.sp,
                                             color = colorScheme.onSurface
                                         )
-                                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                        // wraps instead of cutting the last choice off-screen
+                                        androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                             TorPreferenceManager.ROTATION_CHOICES.forEach { m ->
                                                 FilterChip(
                                                     selected = rotation == m,

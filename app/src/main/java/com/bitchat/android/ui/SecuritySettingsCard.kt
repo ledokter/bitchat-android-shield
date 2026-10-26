@@ -45,11 +45,10 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
     val ephemeral by SecurityPreferences.ephemeralHours.collectAsState()
     val wipe by SecurityPreferences.autoWipeDays.collectAsState()
     val rotation by TorPreferenceManager.rotationFlow.collectAsState()
-    val canLock = AppLock.canLock(context)
 
     // link previews, photo metadata and lock-screen notifications are always protected
     val active = listOf(rotation > 0, killSwitch, !presence, true, true, ephemeral > 0, true,
-        screenshots, lock && canLock, clipboard, wipe > 0).count { it }
+        screenshots, lock, clipboard, wipe > 0).count { it }
 
     Column {
         AboutSectionLabel(text = stringResource(R.string.security_section))
@@ -69,8 +68,7 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
                     SecHint(stringResource(R.string.security_summary_hint))
                     return@Column
                 }
-                SecSwitch(R.string.sec_lock_title, if (canLock) R.string.sec_lock_desc else R.string.sec_lock_unavailable,
-                    lock, enabled = canLock) { SecurityPreferences.setAppLock(it) }
+                SecSwitch(R.string.sec_lock_title, R.string.sec_lock_pin_desc, lock) { SecurityPreferences.setAppLock(it) }
                 SecSwitch(R.string.sec_screenshots_title, R.string.sec_screenshots_desc, screenshots) { SecurityPreferences.setBlockScreenshots(it) }
                 SecSwitch(R.string.sec_killswitch_title, R.string.sec_killswitch_desc, killSwitch) { SecurityPreferences.setKillSwitch(it) }
                 SecSwitch(R.string.sec_presence_title, R.string.sec_presence_desc, presence) { SecurityPreferences.setSendPresence(it) }

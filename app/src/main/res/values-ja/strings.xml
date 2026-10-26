@@ -897,4 +897,16 @@
     <!-- chabit -->
     <string name="action_unblock_title">%1$s のブロックを解除</string>
     <string name="action_unblock_subtitle">メッセージが再びチャットに表示されます</string>
+
+    <!-- chabit -->
+    <string name="sec_lock_pin_desc">起動時とバックグラウンド 5 分後に chatbit の PIN（指紋・顔は強要されうるため使いません）</string>
+    <string name="pin_create">chatbit の PIN を決めてください（%1$d 桁以上）</string>
+    <string name="pin_create_confirm">もう一度入力</string>
+    <string name="pin_mismatch">PIN が一致しません。最初からやり直してください</string>
+    <string name="pin_skip_lock">chatbit をロックしない</string>
+
+    <!-- chabit -->
+    <string name="blocked_users_title">ブロック中のユーザー（%1$d）</string>
+    <string name="blocked_users_none">ブロック中のユーザーはいません</string>
+    <string name="unblock_short">解除</string>
 </resources>

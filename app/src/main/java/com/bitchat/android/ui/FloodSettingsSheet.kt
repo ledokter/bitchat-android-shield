@@ -26,6 +26,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -92,6 +95,12 @@ fun FloodSettingsSheet(
     val rules by BitchatShield.floodRules.collectAsState()
     val flaggedCount by BitchatShield.flaggedCount.collectAsState()
     val hidden by BitchatShield.hidden.collectAsState()
+    // long lists fold into accordions, closed by default
+    var blockedOpen by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    var hiddenOpen by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    var chattyOpen by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    val blockVersion by DataManager.blockVersion.collectAsState()
+    val blocked = remember(blockVersion) { geohashViewModel.blockedPubkeys().sorted() }
     var chatty by remember { mutableStateOf(emptyList<FloodDetector.Chatty>()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -254,9 +263,9 @@ fun FloodSettingsSheet(
                 }
                 item {
                     FloodCard {
-                        Label(stringResource(R.string.flood_chatty_title), bold = true)
-                        if (chatty.isEmpty()) Hint(stringResource(R.string.flood_chatty_none))
-                        for (c in chatty) {
+                        AccordionHeader(stringResource(R.string.flood_chatty_title) + " (${chatty.size})", chattyOpen) { chattyOpen = !chattyOpen }
+                        if (chattyOpen && chatty.isEmpty()) Hint(stringResource(R.string.flood_chatty_none))
+                        if (chattyOpen) for (c in chatty) {
                             val v = c.verdict
                             Label(c.name + (if (c.keys > 1) " " + stringResource(R.string.flood_chatty_linked, c.keys - 1) else "") + (if (c.flagged) "  ⚠ " + stringResource(R.string.flood_chatty_flagged) else ""))
                             Hint(stringResource(R.string.flood_chatty_stats, v.messages, "%.2f".format(v.diversity), "%.2f".format(v.empty), stringResource(if (v.spam) R.string.flood_verdict_spam else R.string.flood_verdict_human)) + " — « ${c.example} »")
@@ -265,17 +274,14 @@ fun FloodSettingsSheet(
                 }
                 item {
                     FloodCard {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Label(stringResource(R.string.flood_hidden_title, hidden.size), bold = true, modifier = Modifier.weight(1f))
-                            if (hidden.isNotEmpty()) ChatbitButton(
-                                text = stringResource(R.string.flood_hidden_clear),
-                                onClick = { BitchatShield.clearHidden() }
-                            )
+                        AccordionHeader(stringResource(R.string.flood_hidden_title, hidden.size), hiddenOpen) { hiddenOpen = !hiddenOpen }
+                        if (hiddenOpen) {
+                            if (hidden.isEmpty()) Hint(stringResource(R.string.flood_hidden_none))
+                            else ChatbitButton(text = stringResource(R.string.flood_hidden_clear), onClick = { BitchatShield.clearHidden() })
                         }
-                        if (hidden.isEmpty()) Hint(stringResource(R.string.flood_hidden_none))
                     }
                 }
-                items(hidden.take(50), key = { "${it.pubkey}-${it.atMs}-${it.content.hashCode()}" }) { h ->
+                if (hiddenOpen) items(hidden.take(50), key = { "${it.pubkey}-${it.atMs}-${it.content.hashCode()}" }) { h ->
                     Surface(shape = RoundedCornerShape(10.dp), color = colorScheme.surfaceVariant.copy(alpha = 0.15f)) {
                         Row(Modifier.fillMaxWidth().padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
                             Column(Modifier.weight(1f)) {
@@ -283,6 +289,23 @@ fun FloodSettingsSheet(
                                 Text(h.content, fontFamily = BitchatFontFamily, fontSize = 12.sp, maxLines = 3, overflow = TextOverflow.Ellipsis)
                             }
                             ChatbitButton(text = stringResource(R.string.flood_not_spammer), onClick = { BitchatShield.unflag(h.pubkey) })
+                        }
+                    }
+                }
+                item {
+                    FloodCard {
+                        AccordionHeader(stringResource(R.string.blocked_users_title, blocked.size), blockedOpen) { blockedOpen = !blockedOpen }
+                        if (blockedOpen && blocked.isEmpty()) Hint(stringResource(R.string.blocked_users_none))
+                    }
+                }
+                if (blockedOpen) items(blocked, key = { "blocked-$it" }) { pk ->
+                    Surface(shape = RoundedCornerShape(10.dp), color = colorScheme.surfaceVariant.copy(alpha = 0.3f)) {
+                        Row(Modifier.fillMaxWidth().padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Column(Modifier.weight(1f)) {
+                                Label((geohashViewModel.knownNickname(pk) ?: "anon") + "#" + pk.takeLast(4))
+                                Hint(pk.take(16) + "…")
+                            }
+                            ChatbitButton(text = stringResource(R.string.unblock_short), onClick = { geohashViewModel.unblockPubkey(pk) })
                         }
                     }
                 }
@@ -375,5 +398,21 @@ private fun RuleSlider(
             Text(format.format(current), fontFamily = BitchatFontFamily, fontSize = 12.sp, fontWeight = FontWeight.Medium)
         }
         Slider(value = current, onValueChange = { current = it }, valueRange = range, steps = steps, onValueChangeFinished = { onSave(current) })
+    }
+}
+
+/** Tappable card title with a chevron; folds a long list. */
+@Composable
+private fun AccordionHeader(title: String, open: Boolean, onToggle: () -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().clickable(onClick = onToggle).padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Label(title, bold = true, modifier = Modifier.weight(1f))
+        androidx.compose.material3.Icon(
+            if (open) androidx.compose.material.icons.Icons.Filled.ExpandLess else androidx.compose.material.icons.Icons.Filled.ExpandMore,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }

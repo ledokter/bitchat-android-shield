@@ -898,4 +898,16 @@
     <!-- chabit -->
     <string name="action_unblock_title">%1$s entsperren</string>
     <string name="action_unblock_subtitle">Die Nachrichten erscheinen wieder im Chat</string>
+
+    <!-- chabit -->
+    <string name="sec_lock_pin_desc">chatbit-PIN beim Öffnen und nach 5 Min. im Hintergrund (kein Fingerabdruck oder Gesicht: sie können erzwungen werden)</string>
+    <string name="pin_create">Wähle eine chatbit-PIN (mind. %1$d Ziffern)</string>
+    <string name="pin_create_confirm">Noch einmal eingeben</string>
+    <string name="pin_mismatch">Die PINs stimmen nicht überein, neu beginnen</string>
+    <string name="pin_skip_lock">chatbit nicht sperren</string>
+
+    <!-- chabit -->
+    <string name="blocked_users_title">Blockierte Personen (%1$d)</string>
+    <string name="blocked_users_none">Niemand ist blockiert</string>
+    <string name="unblock_short">Entsperren</string>
 </resources>

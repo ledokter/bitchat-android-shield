@@ -894,4 +894,16 @@
     <!-- chabit -->
     <string name="action_unblock_title">Разблокировать %1$s</string>
     <string name="action_unblock_subtitle">Сообщения снова появятся в чате</string>
+
+    <!-- chabit -->
+    <string name="sec_lock_pin_desc">PIN chatbit при открытии и после 5 мин в фоне (без отпечатка и лица: их можно получить силой)</string>
+    <string name="pin_create">Придумайте PIN chatbit (не менее %1$d цифр)</string>
+    <string name="pin_create_confirm">Введите ещё раз</string>
+    <string name="pin_mismatch">PIN-коды не совпадают, начните заново</string>
+    <string name="pin_skip_lock">Не блокировать chatbit</string>
+
+    <!-- chabit -->
+    <string name="blocked_users_title">Заблокированные (%1$d)</string>
+    <string name="blocked_users_none">Никто не заблокирован</string>
+    <string name="unblock_short">Разблокировать</string>
 </resources>

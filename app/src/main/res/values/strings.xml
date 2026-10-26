@@ -954,4 +954,16 @@
     <!-- chabit -->
     <string name="action_unblock_title">Unblock %1$s</string>
     <string name="action_unblock_subtitle">Their messages show up again in the chat</string>
+
+    <!-- chabit -->
+    <string name="sec_lock_pin_desc">chatbit PIN when opening the app and after 5 min in the background (no fingerprint or face: they can be forced)</string>
+    <string name="pin_create">Choose a chatbit PIN (%1$d digits min)</string>
+    <string name="pin_create_confirm">Type it again</string>
+    <string name="pin_mismatch">The two PINs differ, start again</string>
+    <string name="pin_skip_lock">Don\'t lock chatbit</string>
+
+    <!-- chabit -->
+    <string name="blocked_users_title">Blocked people (%1$d)</string>
+    <string name="blocked_users_none">Nobody is blocked</string>
+    <string name="unblock_short">Unblock</string>
 </resources>

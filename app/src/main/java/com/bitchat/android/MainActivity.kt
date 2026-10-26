@@ -169,7 +169,6 @@ class MainActivity : OrientationAwareActivity() {
                 val locked by com.bitchat.android.security.AppLock.locked.collectAsState()
                 if (locked) {
                     com.bitchat.android.ui.AppLockScreen(
-                        onUnlock = { com.bitchat.android.security.AppLock.authenticate(this@MainActivity) },
                         // duress PIN: silent full wipe, then the app opens as if it were new
                         onDuress = { chatViewModel.panicClearAllData() }
                     )
@@ -823,15 +822,6 @@ class MainActivity : OrientationAwareActivity() {
     override fun onStop() {
         super.onStop()
         com.bitchat.android.security.AppLock.onStop()
-    }
-
-    @Deprecated("Android 8-9 screen-lock confirmation for the app lock")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
-        @Suppress("DEPRECATION")
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == com.bitchat.android.security.AppLock.REQUEST_DEVICE_CREDENTIAL) {
-            com.bitchat.android.security.AppLock.onCredentialResult(resultCode == RESULT_OK)
-        }
     }
 
     override fun onPause() {

@@ -897,4 +897,16 @@
     <!-- chabit -->
     <string name="action_unblock_title">Desbloquear a %1$s</string>
     <string name="action_unblock_subtitle">Sus mensajes vuelven a aparecer en el chat</string>
+
+    <!-- chabit -->
+    <string name="sec_lock_pin_desc">PIN de chatbit al abrir y tras 5 min en segundo plano (sin huella ni rostro: se pueden forzar)</string>
+    <string name="pin_create">Elige un PIN de chatbit (mín. %1$d dígitos)</string>
+    <string name="pin_create_confirm">Escríbelo otra vez</string>
+    <string name="pin_mismatch">Los PIN no coinciden, empieza de nuevo</string>
+    <string name="pin_skip_lock">No bloquear chatbit</string>
+
+    <!-- chabit -->
+    <string name="blocked_users_title">Personas bloqueadas (%1$d)</string>
+    <string name="blocked_users_none">No hay nadie bloqueado</string>
+    <string name="unblock_short">Desbloquear</string>
 </resources>
