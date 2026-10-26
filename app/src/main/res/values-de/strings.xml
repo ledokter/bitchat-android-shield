@@ -930,4 +930,5 @@
     <string name="web_help_3">iPhone: chatbit gibt es nur für Android.</string>
     <string name="web_guide_1">Tippe hier, ich warte auf dich!</string>
     <string name="web_guide_3">Keine Sorge, das ist normal 👍</string>
+    <string name="duress_wrong_length">Die Notfall-PIN muss genauso viele Ziffern haben wie deine PIN.</string>
 </resources>

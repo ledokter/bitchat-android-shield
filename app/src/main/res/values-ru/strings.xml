@@ -926,4 +926,5 @@
     <string name="web_help_3">iPhone: chatbit есть только для Android.</string>
     <string name="web_guide_1">Нажми сюда, я жду!</string>
     <string name="web_guide_3">Не волнуйся, это нормально 👍</string>
+    <string name="duress_wrong_length">Код под принуждением должен содержать столько же цифр, сколько ваш PIN.</string>
 </resources>

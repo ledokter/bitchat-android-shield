@@ -106,8 +106,11 @@ private fun PinCreate() {
                 firstPin == null -> if (SecurityPreferences.isValidPin(pin)) first = pin
                 firstPin != pin -> { first = null; error = R.string.pin_mismatch }
                 !duressStep -> { SecurityPreferences.setPin(pin); first = null; duressStep = true }
-                SecurityPreferences.setDuressPin(pin) -> AppLock.unlock()
-                else -> { first = null; error = R.string.duress_same_as_pin }
+                else -> when (SecurityPreferences.setDuressPin(pin)) {
+                    SecurityPreferences.DuressResult.OK -> AppLock.unlock()
+                    SecurityPreferences.DuressResult.SAME_AS_PIN -> { first = null; error = R.string.duress_same_as_pin }
+                    SecurityPreferences.DuressResult.WRONG_LENGTH -> { first = null; error = R.string.duress_wrong_length }
+                }
             }
         }
     )
@@ -139,6 +142,7 @@ private fun PinPad(onDuress: () -> Unit) {
         },
         isError = error || waitMs > 0,
         enabled = waitMs <= 0 && !checking,
+        autoLength = remember { SecurityPreferences.autoSubmitLength() },
         onSubmit = { typed ->
             checking = true
             scope.launch {
@@ -159,7 +163,7 @@ private fun PinPad(onDuress: () -> Unit) {
 
 /** Dots + 3×4 keypad; [onSubmit] gets the typed digits when OK is pressed. */
 @Composable
-private fun Keypad(title: String, isError: Boolean, enabled: Boolean, onSubmit: (String) -> Unit) {
+private fun Keypad(title: String, isError: Boolean, enabled: Boolean, autoLength: Int = 0, onSubmit: (String) -> Unit) {
     var pin by remember { mutableStateOf("") }
     val colors = MaterialTheme.colorScheme
     Text(title, fontFamily = BitchatFontFamily, color = if (isError) colors.error else colors.onBackground)
@@ -183,7 +187,10 @@ private fun Keypad(title: String, isError: Boolean, enabled: Boolean, onSubmit: 
                                 when (k) {
                                     "⌫" -> pin = pin.dropLast(1)
                                     "OK" -> if (pin.length >= SecurityPreferences.PIN_MIN) { onSubmit(pin); pin = "" }
-                                    else -> if (pin.length < SecurityPreferences.PIN_MAX) pin += k
+                                    else -> if (pin.length < SecurityPreferences.PIN_MAX) {
+                                        pin += k
+                                        if (pin.length == autoLength) { onSubmit(pin); pin = "" }
+                                    }
                                 }
                             },
                         contentAlignment = Alignment.Center

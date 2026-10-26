@@ -956,4 +956,5 @@
     <string name="web_help_3">iPhone: chatbit esiste solo su Android.</string>
     <string name="web_guide_1">Tocca qui, ti aspetto!</string>
     <string name="web_guide_3">Niente panico, è normale 👍</string>
+    <string name="duress_wrong_length">Il PIN di coercizione deve avere tante cifre quanto il tuo PIN.</string>
 </resources>

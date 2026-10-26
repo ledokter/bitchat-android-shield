@@ -950,4 +950,5 @@
     <string name="web_help_3">iPhone : chatbit n\'existe que sur Android.</string>
     <string name="web_guide_1">Touche ici, je t\'attends !</string>
     <string name="web_guide_3">Pas de panique, c\'est normal 👍</string>
+    <string name="duress_wrong_length">Le code de contrainte doit avoir autant de chiffres que ton code PIN.</string>
 </resources>

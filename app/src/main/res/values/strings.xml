@@ -986,4 +986,5 @@
     <string name="web_help_3">iPhone: chatbit only exists on Android.</string>
     <string name="web_guide_1">Tap here, I\'m waiting for you!</string>
     <string name="web_guide_3">Don\'t worry, this is normal 👍</string>
+    <string name="duress_wrong_length">The duress PIN must have as many digits as your PIN.</string>
 </resources>

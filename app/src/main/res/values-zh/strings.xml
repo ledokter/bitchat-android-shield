@@ -950,4 +950,5 @@
     <string name="web_help_3">iPhone：chatbit 仅支持 Android。</string>
     <string name="web_guide_1">点这里，我等你！</string>
     <string name="web_guide_3">别担心，这很正常 👍</string>
+    <string name="duress_wrong_length">胁迫 PIN 的位数必须与你的 PIN 相同。</string>
 </resources>

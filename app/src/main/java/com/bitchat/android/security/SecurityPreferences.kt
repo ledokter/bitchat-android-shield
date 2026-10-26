@@ -26,6 +26,8 @@ object SecurityPreferences {
     private const val KEY_PIN = "pin_hash"
     private const val KEY_DURESS = "duress_hash"
     private const val KEY_PIN_FAILS = "pin_fails"
+private const val KEY_PIN_LEN = "pin_len"
+private const val KEY_DURESS_LEN = "duress_len"
     private const val KEY_PIN_LOCKOUT = "pin_lockout_until"
     private const val PIN_ITERATIONS = 20_000
     const val PIN_MIN = 4
@@ -142,7 +144,8 @@ object SecurityPreferences {
     /** Sets (or removes with null) the chatbit PIN; removing it also removes the duress PIN. */
     fun setPin(pin: String?) {
         put {
-            if (pin == null) { remove(KEY_PIN); remove(KEY_DURESS) } else putString(KEY_PIN, encode(pin))
+            if (pin == null) { remove(KEY_PIN); remove(KEY_DURESS); remove(KEY_PIN_LEN); remove(KEY_DURESS_LEN) }
+            else { putString(KEY_PIN, encode(pin)); putInt(KEY_PIN_LEN, pin.length) }
             putInt(KEY_PIN_FAILS, 0)
         }
         if (pin != null) setAppLock(true)
@@ -150,12 +153,35 @@ object SecurityPreferences {
         if (pin == null) _hasDuress.value = false
     }
 
-    /** False when the duress PIN would equal the normal PIN. */
-    fun setDuressPin(pin: String?): Boolean {
-        if (pin != null && matches(pin, prefs.getString(KEY_PIN, null))) return false
-        put { if (pin == null) remove(KEY_DURESS) else putString(KEY_DURESS, encode(pin)) }
+    enum class DuressResult { OK, SAME_AS_PIN, WRONG_LENGTH }
+
+    /** Digits of the PIN, or 0 when unknown (PIN set by an older version). */
+    fun pinLength(): Int = prefs.getInt(KEY_PIN_LEN, 0)
+
+    /**
+     * The PIN is accepted as soon as its last digit is typed (no OK) when its length is known and
+     * the duress PIN, if any, has the same length: neither code can then be the start of the other.
+     */
+    fun autoSubmitLength(): Int {
+        val len = pinLength()
+        if (len == 0) return 0
+        val duressLen = prefs.getInt(KEY_DURESS_LEN, 0)
+        return if (prefs.getString(KEY_DURESS, null) == null || duressLen == len) len else 0
+    }
+
+    /** The duress PIN must differ from the PIN and have as many digits (same dots on screen). */
+    fun setDuressPin(pin: String?): DuressResult {
+        if (pin != null) {
+            if (matches(pin, prefs.getString(KEY_PIN, null))) return DuressResult.SAME_AS_PIN
+            val len = pinLength()
+            if (len != 0 && pin.length != len) return DuressResult.WRONG_LENGTH
+        }
+        put {
+            if (pin == null) { remove(KEY_DURESS); remove(KEY_DURESS_LEN) }
+            else { putString(KEY_DURESS, encode(pin)); putInt(KEY_DURESS_LEN, pin.length) }
+        }
         _hasDuress.value = pin != null
-        return true
+        return DuressResult.OK
     }
 
     /** Milliseconds to wait before the next try (after 5 wrong PINs: 30 s, doubling). */
@@ -171,7 +197,7 @@ object SecurityPreferences {
                 PinResult.DURESS
             }
             matches(pin, prefs.getString(KEY_PIN, null)) -> {
-                put { putInt(KEY_PIN_FAILS, 0) }
+                put { putInt(KEY_PIN_FAILS, 0); putInt(KEY_PIN_LEN, pin.length) }
                 PinResult.OK
             }
             else -> {

@@ -929,4 +929,5 @@
     <string name="web_help_3">iPhone: chatbit solo existe en Android.</string>
     <string name="web_guide_1">¡Toca aquí, te espero!</string>
     <string name="web_guide_3">Tranquilo, es normal 👍</string>
+    <string name="duress_wrong_length">El PIN de coacción debe tener tantas cifras como tu PIN.</string>
 </resources>

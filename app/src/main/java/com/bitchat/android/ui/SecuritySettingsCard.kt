@@ -175,10 +175,14 @@ private fun PinSettings() {
             onConfirm = { pin ->
                 if (forPin) {
                     SecurityPreferences.setPin(pin); editing = null
-                } else if (SecurityPreferences.setDuressPin(pin)) {
-                    editing = null
                 } else {
-                    android.widget.Toast.makeText(context, context.getString(R.string.duress_same_as_pin), android.widget.Toast.LENGTH_LONG).show()
+                    val problem = when (SecurityPreferences.setDuressPin(pin)) {
+                        SecurityPreferences.DuressResult.OK -> null
+                        SecurityPreferences.DuressResult.SAME_AS_PIN -> R.string.duress_same_as_pin
+                        SecurityPreferences.DuressResult.WRONG_LENGTH -> R.string.duress_wrong_length
+                    }
+                    if (problem == null) editing = null
+                    else android.widget.Toast.makeText(context, context.getString(problem), android.widget.Toast.LENGTH_LONG).show()
                 }
             }
         )

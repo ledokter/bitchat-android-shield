@@ -929,4 +929,5 @@
     <string name="web_help_3">iPhone：chatbit は Android 専用です。</string>
     <string name="web_guide_1">ここをタップしてね！</string>
     <string name="web_guide_3">大丈夫、これは普通だよ 👍</string>
+    <string name="duress_wrong_length">強要用 PIN は通常の PIN と同じ桁数にしてください。</string>
 </resources>
