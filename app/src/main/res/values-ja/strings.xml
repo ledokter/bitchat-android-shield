@@ -883,4 +883,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 ブロック中</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">インターネット送信には大きすぎます（最大 %1$d KB）。近くの相手に Bluetooth で送ってください</string>
+    <string name="media_no_route">送信できません：この相手には Bluetooth でもインターネットでも届きません</string>
+    <string name="media_pending">送信できません：別の安全な送信が進行中です</string>
+    <string name="media_policy_changed">送信できません：この会話のセキュリティ設定が変わりました</string>
+    <string name="media_timeout">送信できません：安全な接続に時間がかかりすぎました</string>
+    <string name="media_not_saved">送信できません：会話を保存できませんでした</string>
+    <string name="media_not_committed">送信できません：転送を開始できませんでした</string>
+    <string name="media_not_sent_reason">送信できません：%1$s</string>
 </resources>

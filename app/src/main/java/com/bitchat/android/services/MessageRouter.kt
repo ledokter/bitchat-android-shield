@@ -116,6 +116,17 @@ class MessageRouter private constructor(
         }
     }
 
+    /** chatbit: media over Nostr/Tor when no Bluetooth route exists; false when the contact has no Nostr route. */
+    fun sendPrivateFileViaNostr(filePacketTLV: ByteArray, toPeerID: String): Boolean {
+        if (com.bitchat.android.nostr.GeohashAliasRegistry.contains(toPeerID)) {
+            val recipientHex = com.bitchat.android.nostr.GeohashAliasRegistry.get(toPeerID) ?: return false
+            val geohash = com.bitchat.android.nostr.GeohashConversationRegistry.get(toPeerID) ?: return false
+            return nostr.sendPrivateFileGeohash(filePacketTLV, recipientHex, geohash)
+        }
+        val nostrTarget = ContactDirectory.resolve(toPeerID).noiseKeyHex ?: toPeerID
+        return canSendViaNostr(nostrTarget) && nostr.sendPrivateFile(filePacketTLV, nostrTarget)
+    }
+
     fun sendPrivate(content: String, toPeerID: String, recipientNickname: String, messageID: String): RouteResult {
         val resolution = ContactDirectory.resolve(toPeerID)
         val conversationID = resolution.conversationID

@@ -940,4 +940,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 blocked</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">Too heavy to send over the Internet (%1$d KB max): send it nearby over Bluetooth</string>
+    <string name="media_no_route">Media not sent: this contact can\'t be reached by Bluetooth or over the Internet</string>
+    <string name="media_pending">Media not sent: another secure send is still in progress</string>
+    <string name="media_policy_changed">Media not sent: the security settings of this conversation changed</string>
+    <string name="media_timeout">Media not sent: the secure connection took too long</string>
+    <string name="media_not_saved">Media not sent: the conversation could not be saved</string>
+    <string name="media_not_committed">Media not sent: the transfer could not start</string>
+    <string name="media_not_sent_reason">Media not sent: %1$s</string>
 </resources>

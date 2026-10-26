@@ -884,4 +884,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 blockiert</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">Zu groß für das Internet (max. %1$d KB): in der Nähe per Bluetooth senden</string>
+    <string name="media_no_route">Medium nicht gesendet: Kontakt weder per Bluetooth noch über das Internet erreichbar</string>
+    <string name="media_pending">Medium nicht gesendet: ein anderer sicherer Versand läuft noch</string>
+    <string name="media_policy_changed">Medium nicht gesendet: die Sicherheit dieser Unterhaltung hat sich geändert</string>
+    <string name="media_timeout">Medium nicht gesendet: die sichere Verbindung dauerte zu lange</string>
+    <string name="media_not_saved">Medium nicht gesendet: die Unterhaltung konnte nicht gespeichert werden</string>
+    <string name="media_not_committed">Medium nicht gesendet: die Übertragung konnte nicht starten</string>
+    <string name="media_not_sent_reason">Medium nicht gesendet: %1$s</string>
 </resources>

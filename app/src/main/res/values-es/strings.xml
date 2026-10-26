@@ -883,4 +883,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 bloqueado</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">Demasiado pesado para Internet (máx. %1$d KB): envíalo cerca por Bluetooth</string>
+    <string name="media_no_route">Archivo no enviado: el contacto no es accesible ni por Bluetooth ni por Internet</string>
+    <string name="media_pending">Archivo no enviado: hay otro envío seguro en curso</string>
+    <string name="media_policy_changed">Archivo no enviado: la seguridad de esta conversación cambió</string>
+    <string name="media_timeout">Archivo no enviado: la conexión segura tardó demasiado</string>
+    <string name="media_not_saved">Archivo no enviado: no se pudo guardar la conversación</string>
+    <string name="media_not_committed">Archivo no enviado: la transferencia no pudo empezar</string>
+    <string name="media_not_sent_reason">Archivo no enviado: %1$s</string>
 </resources>

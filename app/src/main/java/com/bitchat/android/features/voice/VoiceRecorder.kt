@@ -59,10 +59,10 @@ class VoiceRecorder(
             rec.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             rec.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             rec.setAudioChannels(1)
-            // Target: 16 kHz AAC @ 20 kbps ≈ 2.5 KB/sec
-            // Lower sample rate and bitrate for compact, speech-optimized recordings
+            // chatbit: 16 kHz AAC @ 12 kbps ≈ 1.5 KB/sec, still clear for speech. AAC stays
+            // playable by every bitchat client (iOS included), and ~30 s fits in one Nostr DM.
             rec.setAudioSamplingRate(16000)
-            rec.setAudioEncodingBitRate(20_000)
+            rec.setAudioEncodingBitRate(12_000)
             rec.setOutputFile(file.absolutePath)
             rec.prepare()
             rec.start() 

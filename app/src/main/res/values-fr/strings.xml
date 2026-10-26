@@ -904,4 +904,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 bloqué</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">Trop lourd pour Internet (%1$d Ko max) : envoie-le à proximité par Bluetooth</string>
+    <string name="media_no_route">Média non envoyé : ce contact n\'est joignable ni en Bluetooth ni par Internet</string>
+    <string name="media_pending">Média non envoyé : un autre envoi sécurisé est en cours</string>
+    <string name="media_policy_changed">Média non envoyé : la sécurité de cette conversation a changé</string>
+    <string name="media_timeout">Média non envoyé : la connexion sécurisée a pris trop de temps</string>
+    <string name="media_not_saved">Média non envoyé : la conversation n\'a pas pu être enregistrée</string>
+    <string name="media_not_committed">Média non envoyé : le transfert n\'a pas pu démarrer</string>
+    <string name="media_not_sent_reason">Média non envoyé : %1$s</string>
 </resources>

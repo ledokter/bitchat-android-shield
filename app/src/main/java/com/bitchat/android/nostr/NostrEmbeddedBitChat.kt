@@ -171,6 +171,37 @@ object NostrEmbeddedBitChat {
     }
     
     /**
+     * chatbit: a `bitchat1:` packet carrying an encoded [com.bitchat.android.model.BitchatFilePacket]
+     * (photo, voice note, file) for Nostr DMs, so media also travels over Tor when there is no
+     * Bluetooth route. The receiving side already handles FILE_TRANSFER payloads.
+     */
+    fun encodeFileForNostr(
+        filePacketTLV: ByteArray,
+        senderPeerID: String,
+        recipientPeerID: String?
+    ): String? {
+        return try {
+            val payload = ByteArray(1 + filePacketTLV.size)
+            payload[0] = NoisePayloadType.FILE_TRANSFER.value.toByte()
+            System.arraycopy(filePacketTLV, 0, payload, 1, filePacketTLV.size)
+            val packet = BitchatPacket(
+                version = 1u,
+                type = MessageType.NOISE_ENCRYPTED.value,
+                senderID = hexStringToByteArray(senderPeerID),
+                recipientID = recipientPeerID?.let { hexStringToByteArray(normalizeRecipientPeerID(it)) },
+                timestamp = System.currentTimeMillis().toULong(),
+                payload = payload,
+                signature = null,
+                ttl = com.bitchat.android.util.AppConstants.MESSAGE_TTL_HOPS
+            )
+            packet.toBinaryData()?.let { "bitchat1:" + base64URLEncode(it) }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to encode file for Nostr: ${e.message}")
+            null
+        }
+    }
+
+    /**
      * Normalize recipient peer ID (matches iOS implementation)
      */
     private fun normalizeRecipientPeerID(recipientPeerID: String): String {

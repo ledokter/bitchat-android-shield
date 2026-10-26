@@ -880,4 +880,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 заблокирован</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">Слишком большой для отправки через Интернет (макс. %1$d КБ): отправьте рядом по Bluetooth</string>
+    <string name="media_no_route">Медиа не отправлено: контакт недоступен ни по Bluetooth, ни через Интернет</string>
+    <string name="media_pending">Медиа не отправлено: идёт другая защищённая отправка</string>
+    <string name="media_policy_changed">Медиа не отправлено: изменились настройки безопасности беседы</string>
+    <string name="media_timeout">Медиа не отправлено: защищённое соединение устанавливалось слишком долго</string>
+    <string name="media_not_saved">Медиа не отправлено: не удалось сохранить беседу</string>
+    <string name="media_not_committed">Медиа не отправлено: передача не началась</string>
+    <string name="media_not_sent_reason">Медиа не отправлено: %1$s</string>
 </resources>

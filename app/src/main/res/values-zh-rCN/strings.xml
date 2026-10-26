@@ -860,4 +860,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 已屏蔽</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">太大，无法通过互联网发送（最大 %1$d KB）：请在附近通过蓝牙发送</string>
+    <string name="media_no_route">媒体未发送：无法通过蓝牙或互联网联系此联系人</string>
+    <string name="media_pending">媒体未发送：另一个安全发送仍在进行</string>
+    <string name="media_policy_changed">媒体未发送：此会话的安全设置已更改</string>
+    <string name="media_timeout">媒体未发送：安全连接耗时过长</string>
+    <string name="media_not_saved">媒体未发送：无法保存会话</string>
+    <string name="media_not_committed">媒体未发送：传输无法开始</string>
+    <string name="media_not_sent_reason">媒体未发送：%1$s</string>
 </resources>

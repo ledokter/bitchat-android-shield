@@ -910,4 +910,14 @@
 
     <!-- chabit -->
     <string name="blocked_tag">🚫 bloccato</string>
+
+    <!-- chabit -->
+    <string name="media_too_big_internet">Troppo pesante per Internet (max %1$d KB): invialo vicino via Bluetooth</string>
+    <string name="media_no_route">Media non inviato: il contatto non è raggiungibile né via Bluetooth né via Internet</string>
+    <string name="media_pending">Media non inviato: un altro invio sicuro è in corso</string>
+    <string name="media_policy_changed">Media non inviato: la sicurezza di questa conversazione è cambiata</string>
+    <string name="media_timeout">Media non inviato: la connessione sicura ha impiegato troppo</string>
+    <string name="media_not_saved">Media non inviato: impossibile salvare la conversazione</string>
+    <string name="media_not_committed">Media non inviato: il trasferimento non è partito</string>
+    <string name="media_not_sent_reason">Media non inviato: %1$s</string>
 </resources>

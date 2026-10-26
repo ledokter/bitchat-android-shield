@@ -424,6 +424,54 @@ class NostrTransport(
         }
     }
     
+    // MARK: - chatbit: media over Nostr (Tor)
+
+    /** Sends an encoded file packet to a contact's Nostr key; false when no key is known. */
+    fun sendPrivateFile(filePacketTLV: ByteArray, to: String): Boolean {
+        val recipientNostrPubkey = resolveNostrPublicKey(to) ?: return false
+        val recipientHex = ContactIdentityResolver.nostrPubkeyHex(recipientNostrPubkey) ?: return false
+        val senderIdentity = NostrIdentityBridge.getCurrentNostrIdentity(context) ?: return false
+        val recipientPeerID = try {
+            com.bitchat.android.favorites.FavoritesPersistenceService.shared.findPeerIDForNostrPubkey(recipientNostrPubkey)
+        } catch (_: Exception) { null }
+        transportScope.launch {
+            val embedded = NostrEmbeddedBitChat.encodeFileForNostr(filePacketTLV, senderPeerID, recipientPeerID?.takeIf { it.isNotBlank() })
+                ?: return@launch
+            sendGiftWraps(embedded, recipientHex, senderIdentity)
+        }
+        return true
+    }
+
+    /** Sends an encoded file packet in a geohash DM (per-geohash identity). */
+    fun sendPrivateFileGeohash(filePacketTLV: ByteArray, toRecipientHex: String, sourceGeohash: String): Boolean {
+        val fromIdentity = try {
+            NostrIdentityBridge.deriveIdentity(sourceGeohash, context)
+        } catch (e: Exception) {
+            return false
+        }
+        transportScope.launch {
+            val embedded = NostrEmbeddedBitChat.encodeFileForNostr(filePacketTLV, senderPeerID, null)
+                ?: return@launch
+            sendGiftWraps(embedded, toRecipientHex, fromIdentity)
+        }
+        return true
+    }
+
+    private fun sendGiftWraps(embedded: String, recipientHex: String, identity: NostrIdentity) {
+        try {
+            NostrProtocol.createPrivateMessage(
+                content = embedded,
+                recipientPubkey = recipientHex,
+                senderIdentity = identity
+            ).forEach { event ->
+                NostrRelayManager.registerPendingGiftWrap(event.id)
+                NostrRelayManager.getInstance(context).sendEvent(event)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to send media via Nostr: ${e.message}")
+        }
+    }
+
     // MARK: - Helper Methods
     
     /**
