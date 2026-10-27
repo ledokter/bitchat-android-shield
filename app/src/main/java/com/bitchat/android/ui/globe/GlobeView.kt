@@ -250,8 +250,10 @@ fun GlobeView(
         }
     }
 
-    val labelTextSize = with(density) { 12.5.sp.toPx() }
     val labelTextSizeSmall = with(density) { 10.sp.toPx() }
+    // Tile codes are what people read to pick a channel: larger than city names
+    val cellTextSize = with(density) { 18.sp.toPx() }
+    val cellTextSizeSmall = with(density) { 14.sp.toPx() }
 
     Box(modifier = modifier) {
         // Static background lives in its own layer and is not invalidated by globe movement.
@@ -489,7 +491,7 @@ fun GlobeView(
             drawGeohashLabels(
                 state, cx, cy, r, cLat, cLon, colors,
                 labelPaint, haloPaint, labelTypeface, labelTypefaceBold,
-                labelTextSize, labelTextSizeSmall,
+                cellTextSize, cellTextSizeSmall,
                 includeNeighbors = frameDetail.showNeighborCells
             )
         }
@@ -1160,16 +1162,16 @@ private fun DrawScope.drawGeohashLabels(
             android.graphics.Color.argb(255, (colors.accent.red * 255).toInt(), (colors.accent.green * 255).toInt(), (colors.accent.blue * 255).toInt())
         } else {
             android.graphics.Color.argb(
-                (160 * p.cosC.coerceIn(0.4f, 1f)).toInt(),
+                (235 * p.cosC.coerceIn(0.6f, 1f)).toInt(),
                 (colors.label.red * 255).toInt(), (colors.label.green * 255).toInt(), (colors.label.blue * 255).toInt()
             )
         }
         val baseline = sy - ((paint.descent() + paint.ascent()) / 2f)
         haloPaint.textSize = paint.textSize
         haloPaint.typeface = paint.typeface
-        haloPaint.strokeWidth = paint.textSize * 0.18f
+        haloPaint.strokeWidth = paint.textSize * 0.26f
         haloPaint.color = android.graphics.Color.argb(
-            if (isSelected) 200 else 120,
+            if (isSelected) 240 else 200,
             (colors.labelHalo.red * 255).toInt(), (colors.labelHalo.green * 255).toInt(), (colors.labelHalo.blue * 255).toInt()
         )
         canvas.drawText(cell, sx, baseline, haloPaint)
