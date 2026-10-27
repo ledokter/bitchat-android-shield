@@ -58,6 +58,13 @@ class HotspotActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Stop action from the notification while no session lives in this process any more
+        if (intent.action == HotspotStatus.ACTION_STOP) {
+            HotspotStatus.requestStop()
+            HotspotStatus.ended()
+            finish()
+            return
+        }
 
         // Get APK path from intent
         val apkPath = intent.getStringExtra(EXTRA_APK_PATH)
@@ -88,7 +95,7 @@ class HotspotActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // Handle notification action to stop hotspot
-        if (intent.action == "STOP_HOTSPOT") {
+        if (intent.action == HotspotStatus.ACTION_STOP) {
             viewModel.stopHotspot()
             finish()
         }
@@ -412,6 +419,8 @@ fun ActiveHotspotScreen(state: HotspotViewModel.HotspotState.Active) {
             }
         }
 
+        HotspotLiveControls()
+
         // Tabs
         TabRow(
             selectedTabIndex = selectedTab,
@@ -704,6 +713,33 @@ fun ErrorScreen(
 
         TextButton(onClick = onClose) {
             Text(stringResource(R.string.cd_close))
+        }
+    }
+}
+
+/** Auto-stop countdown and the opt-in mesh announcement. */
+@Composable
+private fun HotspotLiveControls() {
+    val live by HotspotStatus.live.collectAsState()
+    val announce by HotspotStatus.announce.collectAsState()
+    val l = live ?: return
+    var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    LaunchedEffect(Unit) { while (true) { kotlinx.coroutines.delay(30_000); now = System.currentTimeMillis() } }
+    val minutesLeft = (((l.stopsAt - now).coerceAtLeast(0) + 59_999) / 60_000).toInt()
+    Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.hs_auto_stop_in, minutesLeft, l.downloads),
+                style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f)
+            )
+            TextButton(onClick = { HotspotStatus.extend() }) { Text(stringResource(R.string.hs_extend)) }
+        }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.hs_announce_title), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.hs_announce_desc), style = MaterialTheme.typography.bodySmall)
+            }
+            Switch(checked = announce, onCheckedChange = { HotspotStatus.setAnnounce(it) })
         }
     }
 }

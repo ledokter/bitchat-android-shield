@@ -515,6 +515,12 @@ fun ChatScreen(viewModel: ChatViewModel) {
             }
         }
 
+        // A running APK-sharing hotspot is always visible here, with a one-tap stop
+        Box(
+            Modifier.fillMaxWidth().zIndex(2f)
+                .padding(top = statusBarHeight + headerHeight + 4.dp, start = 8.dp, end = 8.dp)
+        ) { com.bitchat.android.hotspot.HotspotBanner() }
+
         // chatbit kitty: badge celebrations and the first-launch tour
         Box(Modifier.fillMaxSize().zIndex(5f)) { com.bitchat.android.ui.kitty.KittyBadgePopup() }
         Box(Modifier.fillMaxSize().zIndex(6f)) { com.bitchat.android.ui.kitty.KittyTour() }

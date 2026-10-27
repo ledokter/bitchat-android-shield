@@ -75,7 +75,7 @@ class ApkWebServer(
             response.addHeader("Content-Disposition", "attachment; filename=\"chatbit-$appVersion.apk\"")
             response.addHeader("Accept-Ranges", "bytes")
             // a full download (not a resumed range) counts as one app shared
-            if (session.headers["range"] == null) com.bitchat.android.game.KittyGame.onAppShared()
+            if (session.headers["range"] == null) { com.bitchat.android.game.KittyGame.onAppShared(); HotspotStatus.onDownload() }
             response
         } catch (e: Exception) {
             Log.e(TAG, "Error serving APK", e)

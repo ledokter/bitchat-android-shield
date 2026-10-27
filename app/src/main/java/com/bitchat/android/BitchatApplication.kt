@@ -17,6 +17,7 @@ class BitchatApplication : Application() {
         com.bitchat.android.security.SecurityPreferences.init(this)
         com.bitchat.android.security.MediaVault.init(this)
         com.bitchat.android.game.KittyGame.init(this)
+        com.bitchat.android.hotspot.HotspotStatus.init(this)
         // plain copies left by "open with…" of a received file
         runCatching { cacheDir.listFiles { f -> f.name.startsWith("bitchat_") }?.forEach { it.delete() } }
         com.bitchat.android.util.AppStrings.init(this)

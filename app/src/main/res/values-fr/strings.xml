@@ -1008,4 +1008,13 @@
     <string name="badge_thug_life">Thug life</string>
     <string name="badge_thug_life_desc">Débloque tous les autres badges.</string>
     <string name="tour_dms">Tes conversations privées. Elle devient orange quand un message t\'attend.</string>
+    <string name="hs_banner_title">Point d’accès actif depuis %1$s</string>
+    <string name="hs_auto_stop_in">Arrêt auto dans %1$d min · %2$d téléchargement(s)</string>
+    <string name="hs_stop_short">Arrêter</string>
+    <string name="hs_extend">+1 h</string>
+    <string name="hs_notif_channel">Point d’accès de partage</string>
+    <string name="hs_notif_text">chatbit se partage en Wi-Fi. Touchez pour voir ou arrêter.</string>
+    <string name="hs_announce_title">Annoncer sur le mesh</string>
+    <string name="hs_announce_desc">Toutes les 10 min, les utilisateurs chatbit proches apprennent qu’on peut installer l’appli ici, sans internet.</string>
+    <string name="hs_announce_message">%1$s · point d’installation à proximité, sans internet\nWi-Fi : %2$s\nMot de passe : %3$s\nPuis ouvrir %4$s\nAmenez vos amis qui n’ont pas encore chatbit !</string>
 </resources>

@@ -1044,4 +1044,13 @@
     <string name="badge_thug_life">Thug life</string>
     <string name="badge_thug_life_desc">Unlock all the other badges.</string>
     <string name="tour_dms">Your private conversations. It turns orange when a message is waiting.</string>
+    <string name="hs_banner_title">Hotspot on for %1$s</string>
+    <string name="hs_auto_stop_in">Auto stop in %1$d min · %2$d download(s)</string>
+    <string name="hs_stop_short">Stop</string>
+    <string name="hs_extend">+1 h</string>
+    <string name="hs_notif_channel">Sharing hotspot</string>
+    <string name="hs_notif_text">chatbit is sharing itself over Wi-Fi. Tap to see it, or stop it.</string>
+    <string name="hs_announce_title">Announce on the mesh</string>
+    <string name="hs_announce_desc">Every 10 min, nearby chatbit users learn that the app can be installed here, offline.</string>
+    <string name="hs_announce_message">%1$s · install point nearby, no internet needed\nWi-Fi: %2$s\nPassword: %3$s\nThen open %4$s\nBring friends who don\'t have chatbit yet!</string>
 </resources>
