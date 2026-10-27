@@ -122,8 +122,8 @@ object AppConstants {
         const val BASE_FONT_SIZE_SP: Int = 14
         const val MESSAGE_DEDUP_TIMEOUT_MS: Long = 30_000L
         const val SYSTEM_EVENT_DEDUP_TIMEOUT_MS: Long = 5_000L
-        const val ACTION_FORCE_FINISH: String = "com.bitchat.shield.ACTION_FORCE_FINISH"
-        const val PERMISSION_FORCE_FINISH: String = "com.bitchat.shield.permission.FORCE_FINISH"
+        const val ACTION_FORCE_FINISH: String = "app.chatbit.ACTION_FORCE_FINISH"
+        const val PERMISSION_FORCE_FINISH: String = "app.chatbit.permission.FORCE_FINISH"
     }
 
     object Media {

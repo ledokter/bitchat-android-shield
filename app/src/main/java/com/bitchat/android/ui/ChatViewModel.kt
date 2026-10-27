@@ -1032,6 +1032,7 @@ class ChatViewModel(
                 geohashViewModel.sendGeohashMessage(content, selectedLocationChannel.channel, mesh.myPeerID, state.getNicknameValue())
             } else {
                 // Send public/channel message via mesh
+                com.bitchat.android.game.KittyGame.onMeshMessageSent()
                 val message = BitchatMessage(
                     sender = state.getNicknameValue() ?: mesh.myPeerID,
                     content = content,
@@ -1467,6 +1468,9 @@ class ChatViewModel(
             com.bitchat.android.services.AppStateStore
                 .panicClearPrivateConversations()
 
+        // chatbit private rooms: keys, identities and messages
+        try { com.bitchat.android.rooms.PrivateRooms.wipe() } catch (_: Exception) { }
+
         // Clear all UI managers
         com.bitchat.android.services.AppStateStore.clear()
         messageManager.clearAllMessages()
@@ -1491,6 +1495,8 @@ class ChatViewModel(
 
         // Clear all media files
         com.bitchat.android.features.file.FileUtils.clearAllMedia(getApplication())
+        com.bitchat.android.security.MediaVault.destroyKey()
+        com.bitchat.android.game.KittyGame.reset()
         
         // Clear Nostr/geohash state, keys, connections, bookmarks, and reinitialize from scratch
         try {
@@ -1668,8 +1674,38 @@ class ChatViewModel(
     /**
      * Block a user in geohash channels by their nickname
      */
+    /** True when [message] comes from someone blocked or reported (mesh fingerprint or Nostr key). */
+    fun isFromBlocked(message: BitchatMessage): Boolean {
+        if (message.sender == "system") return false
+        message.senderNostrPubkey?.lowercase()?.let { key ->
+            if (dataManager.isGeohashUserBlocked(key) || key in com.bitchat.android.nostr.BitchatShield.flaggedKeys()) return true
+        }
+        val peerID = message.senderPeerID ?: return false
+        return !peerID.startsWith("nostr") && privateChatManager.isPeerBlocked(peerID)
+    }
+
     fun blockUserInGeohash(targetNickname: String) {
         geohashViewModel.blockUserInGeohash(targetNickname)
+    }
+
+    fun unblockUserInGeohash(targetNickname: String): Boolean = geohashViewModel.unblockUserInGeohash(targetNickname)
+
+    /** Unblocks the author of [message]: Nostr key (block list + spam flag) or mesh peer. */
+    fun unblockSender(message: BitchatMessage, nickname: String) {
+        val key = message.senderNostrPubkey?.lowercase()
+        if (key != null) {
+            geohashViewModel.unblockPubkey(key)
+            if (key in com.bitchat.android.nostr.BitchatShield.flaggedKeys()) com.bitchat.android.nostr.BitchatShield.unflag(key)
+            com.bitchat.android.ui.DataManager.blockVersion.value++
+            messageManager.addMessage(BitchatMessage(
+                sender = "system",
+                content = com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.sys_unblocked_user, nickname),
+                timestamp = java.util.Date(),
+                isRelay = false
+            ))
+        } else {
+            sendMessage("/unblock $nickname")
+        }
     }
 
     // MARK: - Navigation Management

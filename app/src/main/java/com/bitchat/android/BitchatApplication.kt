@@ -13,6 +13,15 @@ class BitchatApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // chatbit security settings first: the Tor kill switch must apply before any network use
+        com.bitchat.android.security.SecurityPreferences.init(this)
+        com.bitchat.android.security.MediaVault.init(this)
+        com.bitchat.android.game.KittyGame.init(this)
+        com.bitchat.android.hotspot.HotspotStatus.init(this)
+        // plain copies left by "open with…" of a received file
+        runCatching { cacheDir.listFiles { f -> f.name.startsWith("bitchat_") }?.forEach { it.delete() } }
+        com.bitchat.android.util.AppStrings.init(this)
+
         // Start the single process-wide power policy before transport components are constructed.
         com.bitchat.android.mesh.PowerManager.getInstance(this).start()
 
@@ -47,6 +56,9 @@ class BitchatApplication : Application() {
 
         // Initialize theme preference
         ThemePreferenceManager.init(this)
+
+        // chatbit private rooms (subscribes on the default relays, re-established on reconnect)
+        try { com.bitchat.android.rooms.PrivateRooms.init(this) } catch (_: Exception) { }
 
         // Initialize BitchatShield (anti-bot & anti-Zalgo protection) and PoW preferences
         try {

@@ -212,7 +212,7 @@ object NostrProofOfWork {
         val estimatedSeconds = estimatedHashes / hashesPerSecond
         
         return when {
-            estimatedSeconds < 1 -> "< 1 second"
+            estimatedSeconds < 1 -> "< 1 s"
             estimatedSeconds < 60 -> "${estimatedSeconds}s"
             estimatedSeconds < 3600 -> "${estimatedSeconds / 60}m ${estimatedSeconds % 60}s"
             estimatedSeconds < 86400 -> "${estimatedSeconds / 3600}h ${(estimatedSeconds % 3600) / 60}m"

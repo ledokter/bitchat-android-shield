@@ -155,6 +155,7 @@ class MainActivity : OrientationAwareActivity() {
         )
         
         setContent {
+            com.bitchat.android.security.IncognitoKeyboard {
             BitchatTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -164,6 +165,41 @@ class MainActivity : OrientationAwareActivity() {
                         .fillMaxSize()
                         .padding(innerPadding)
                     )
+                }
+                // chatbit app lock: opaque cover until the user authenticates
+                val locked by com.bitchat.android.security.AppLock.locked.collectAsState()
+                if (locked) {
+                    com.bitchat.android.ui.AppLockScreen(
+                        // duress PIN: silent full wipe, then the app opens as if it were new
+                        onDuress = { chatViewModel.panicClearAllData() }
+                    )
+                }
+            }
+            }
+        }
+
+        // chatbit: wipe everything when the app was not opened for longer than the auto-wipe delay
+        if (com.bitchat.android.security.SecurityPreferences.recordOpenAndCheckWipe()) {
+            Log.w("MainActivity", "Auto-wipe: app unused for too long")
+            chatViewModel.panicClearAllData()
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // no screenshots or screen recording of the app
+                launch {
+                    com.bitchat.android.security.SecurityPreferences.blockScreenshots.collect { block ->
+                        if (block && !com.bitchat.android.security.SecurityPreferences.isTestLab(this@MainActivity)) window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+                        else window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+                    }
+                }
+                // ephemeral messages: delete old ones now, then every 15 minutes
+                launch {
+                    while (true) {
+                        com.bitchat.android.security.SecurityPreferences.ephemeralCutoffMs()?.let {
+                            com.bitchat.android.services.AppStateStore.purgeMessagesOlderThan(it)
+                        }
+                        kotlinx.coroutines.delay(15 * 60_000L)
+                    }
                 }
             }
         }
@@ -222,7 +258,7 @@ class MainActivity : OrientationAwareActivity() {
             onDispose {
                 try {
                     context.unregisterReceiver(receiver)
-                } catch (e: IllegalStateException) {
+                } catch (e: IllegalArgumentException) {
                     Log.w("BluetoothStatusUI", "Receiver was not registered")
                 }
             }
@@ -739,11 +775,17 @@ class MainActivity : OrientationAwareActivity() {
 
     override fun onStart() {
         super.onStart()
+        com.bitchat.android.security.AppLock.onStart(this)
         if (pendingMeshForegroundServiceStart) {
             startMeshForegroundServiceBestEffort()
         }
     }
-    
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) com.bitchat.android.security.SecureClipboard.onWindowFocused(this)
+    }
+
     override fun onResume() {
         super.onResume()
         // Revoke stale live-location work before any resumed UI can use cached channels.
@@ -779,6 +821,11 @@ class MainActivity : OrientationAwareActivity() {
         }
     }
     
+    override fun onStop() {
+        super.onStop()
+        com.bitchat.android.security.AppLock.onStop()
+    }
+
     override fun onPause() {
         super.onPause()
         // Only set background state if app is fully initialized
@@ -850,6 +897,13 @@ class MainActivity : OrientationAwareActivity() {
 
     private fun handleVerificationIntent(intent: Intent) {
         val uri = intent.data ?: return
+        // chatbit private room invitation: ask the user before joining
+        if (uri.scheme == "chatbit" && uri.host == "room") {
+            com.bitchat.android.rooms.PrivateRooms.offerInvite(
+                com.bitchat.android.rooms.PrivateRoom.parseInvite(uri.toString())
+            )
+            return
+        }
         if (uri.scheme != "bitchat" || uri.host != "verify") return
 
         chatViewModel.showVerificationSheet()

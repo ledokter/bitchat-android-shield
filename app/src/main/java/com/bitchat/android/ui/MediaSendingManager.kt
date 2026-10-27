@@ -45,6 +45,8 @@ class MediaSendingManager(
         private const val TAG = "MediaSendingManager"
         private const val MAX_FILE_SIZE = com.bitchat.android.util.AppConstants.Media.MAX_FILE_SIZE_BYTES
         private const val PENDING_PRIVATE_MEDIA_TIMEOUT_MS = 15_000L
+        /** Largest media sent inside a Nostr DM; gift wrapping roughly doubles it, relays cap events near 128 KB. */
+        private const val MAX_NOSTR_MEDIA_BYTES = 48_000
     }
 
     // Track in-flight transfer progress: transferId -> messageId and reverse
@@ -153,8 +155,8 @@ class MediaSendingManager(
                     fileName = file.name,
                     fileSize = file.length(),
                     mimeType = "audio/mp4",
-                    content = file.readBytes()
-                )
+                    content = com.bitchat.android.security.MediaVault.readBytes(file)
+                ).also { com.bitchat.android.security.MediaVault.seal(filePath) }
             } ?: return
 
             if (toPeerIDOrNull != null) {
@@ -197,8 +199,8 @@ class MediaSendingManager(
                     fileName = file.name,
                     fileSize = file.length(),
                     mimeType = "image/jpeg",
-                    content = file.readBytes()
-                )
+                    content = com.bitchat.android.security.MediaVault.readBytes(file)
+                ).also { com.bitchat.android.security.MediaVault.seal(filePath) }
             } ?: return
 
             if (toPeerIDOrNull != null) {
@@ -243,6 +245,10 @@ class MediaSendingManager(
                 } catch (_: Exception) {
                     "application/octet-stream"
                 }
+                // chatbit: an image sent as a file keeps its EXIF (GPS, device…): strip it first
+                if (mimeType == "image/jpeg" || mimeType == "image/png" || mimeType == "image/webp") {
+                    com.bitchat.android.features.media.ImageUtils.stripIdentifyingExifInPlace(file.absolutePath)
+                }
 
                 // Try to preserve the original file name if our copier prefixed it earlier
                 val originalName = run {
@@ -263,8 +269,8 @@ class MediaSendingManager(
                     fileName = originalName,
                     fileSize = file.length(),
                     mimeType = mimeType,
-                    content = file.readBytes()
-                )
+                    content = com.bitchat.android.security.MediaVault.readBytes(file)
+                ).also { com.bitchat.android.security.MediaVault.seal(filePath) }
             } ?: return
 
             val messageType = when {
@@ -303,10 +309,8 @@ class MediaSendingManager(
         }
         val recipient = PrivateMediaRecipientResolver.resolve(toPeerID, meshService)
             ?: run {
-                addPrivateMediaSystemMessage(
-                    toPeerID,
-                    "Private media was not sent because this conversation has no active mesh route."
-                )
+                // chatbit: no Bluetooth route → end-to-end encrypted Nostr DM over Tor
+                sendPrivateFileOverNostr(toPeerID, filePacket, filePath, messageType)
                 return
             }
 
@@ -323,7 +327,7 @@ class MediaSendingManager(
         if (!reserveAutomaticPending(pending)) {
             addPrivateMediaSystemMessage(
                 recipient.conversationID,
-                "Private media was not sent because another secure media send is still pending."
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_pending, "Private media was not sent because another secure media send is still pending.")
             )
             return
         }
@@ -356,7 +360,7 @@ class MediaSendingManager(
         if (!reserveAutomaticPending(automatic)) {
             addPrivateMediaSystemMessage(
                 pending.conversationID,
-                "Private media was not sent because another secure media send is still pending."
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_pending, "Private media was not sent because another secure media send is still pending.")
             )
             return
         }
@@ -464,7 +468,7 @@ class MediaSendingManager(
                     Log.w(TAG, "Legacy consent was consumed but policy still requested consent; send aborted")
                     addPrivateMediaSystemMessage(
                         pending.conversationID,
-                        "Private media was not sent because its security policy changed."
+                        com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_policy_changed, "Private media was not sent because its security policy changed.")
                     )
                     return
                 }
@@ -517,7 +521,7 @@ class MediaSendingManager(
                 Log.w(TAG, "Private media not sent: ${preparation.reason}")
                 addPrivateMediaSystemMessage(
                     pending.conversationID,
-                    "Private media was not sent: ${preparation.reason}"
+                    com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_not_sent_reason, "Private media was not sent: %1\$s", preparation.reason)
                 )
             }
         }
@@ -557,7 +561,7 @@ class MediaSendingManager(
             if (expired) {
                 addPrivateMediaSystemMessage(
                     pending.conversationID,
-                    "Private media was not sent because secure session setup timed out."
+                    com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_timeout, "Private media was not sent because secure session setup timed out.")
                 )
             }
         }
@@ -573,6 +577,67 @@ class MediaSendingManager(
                 pendingAutomaticTimeoutRequestId = null
             }
         }
+    }
+
+    /**
+     * Media in a Nostr DM (gift-wrapped, end-to-end encrypted, over Tor). Relays cap event size,
+     * so photos are shrunk to fit and other media must stay under [MAX_NOSTR_MEDIA_BYTES]
+     * (about 30 s of voice). Works between chatbit users.
+     */
+    private suspend fun sendPrivateFileOverNostr(
+        toPeerID: String,
+        original: BitchatFilePacket,
+        filePath: String,
+        messageType: BitchatMessageType
+    ) {
+        val packet = withContext(mediaWorkDispatcher) {
+            if (original.content.size <= MAX_NOSTR_MEDIA_BYTES) original
+            else if (messageType == BitchatMessageType.Image) {
+                shrinkJpeg(original.content, MAX_NOSTR_MEDIA_BYTES)?.let {
+                    original.copy(content = it, fileSize = it.size.toLong())
+                }
+            } else null
+        }
+        if (packet == null) {
+            addPrivateMediaSystemMessage(toPeerID, com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_too_big_internet, "Too heavy to send over the Internet (%1\$d KB max)", MAX_NOSTR_MEDIA_BYTES / 1000))
+            return
+        }
+        val tlv = withContext(mediaWorkDispatcher) { packet.encode() }
+        val router = com.bitchat.android.services.MessageRouter.tryGetInstance()
+        if (tlv == null || router == null || !router.sendPrivateFileViaNostr(tlv, toPeerID)) {
+            addPrivateMediaSystemMessage(toPeerID, com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_no_route, "Private media was not sent: no Bluetooth or Internet route to this contact."))
+            return
+        }
+        val conversationID = com.bitchat.android.services.ContactDirectory.canonicalConversationId(toPeerID)
+        val msg = BitchatMessage(
+            id = UUID.randomUUID().toString().uppercase(),
+            sender = state.getNicknameValue() ?: "me",
+            content = filePath,
+            type = messageType,
+            timestamp = Date(),
+            isRelay = false,
+            isPrivate = true,
+            senderPeerID = meshService.myPeerID,
+            deliveryStatus = com.bitchat.android.model.DeliveryStatus.Sent
+        )
+        messageManager.addPrivateMessageDurably(conversationID, msg, forceRead = true)
+    }
+
+    /** Re-encodes a photo smaller (size, then quality) until it fits [maxBytes]; null if impossible. */
+    private fun shrinkJpeg(bytes: ByteArray, maxBytes: Int): ByteArray? {
+        val src = android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return null
+        for (dim in intArrayOf(512, 400, 320, 256)) {
+            val scale = minOf(1f, dim.toFloat() / maxOf(src.width, src.height))
+            val bmp = if (scale < 1f) android.graphics.Bitmap.createScaledBitmap(
+                src, (src.width * scale).toInt().coerceAtLeast(1), (src.height * scale).toInt().coerceAtLeast(1), true
+            ) else src
+            for (q in intArrayOf(70, 55, 40)) {
+                val out = java.io.ByteArrayOutputStream()
+                bmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, q, out)
+                if (out.size() <= maxBytes) return out.toByteArray()
+            }
+        }
+        return null
     }
 
     private fun addPrivateMediaSystemMessage(peerID: String, text: String) {
@@ -634,7 +699,7 @@ class MediaSendingManager(
             Log.e(TAG, "Prepared private-media message could not be persisted; send aborted")
             addPrivateMediaSystemMessage(
                 conversationID,
-                "Private media was not sent because the conversation could not be saved."
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_not_saved, "Private media was not sent because the conversation could not be saved.")
             )
             return
         }
@@ -661,7 +726,7 @@ class MediaSendingManager(
             Log.w(TAG, "Prepared private-media commit failed; local echo marked failed")
             addPrivateMediaSystemMessage(
                 conversationID,
-                "Private media was not sent because the prepared transfer could not be committed."
+                com.bitchat.android.util.AppStrings.getOr(com.bitchat.android.R.string.media_not_committed, "Private media was not sent because the prepared transfer could not be committed.")
             )
             return
         }

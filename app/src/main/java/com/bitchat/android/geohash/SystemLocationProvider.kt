@@ -68,9 +68,10 @@ internal class SystemLocationProvider(private val context: Context) : LocationPr
         }
 
         try {
+            // chatbit: satellites only. The network provider asks Google's location service
+            // (Wi-Fi / cell scans sent to Google), so it is never requested.
             val providers = listOf(
                 LocationManager.GPS_PROVIDER,
-                LocationManager.NETWORK_PROVIDER,
                 LocationManager.PASSIVE_PROVIDER
             )
 
@@ -187,7 +188,7 @@ internal class SystemLocationProvider(private val context: Context) : LocationPr
                 activeListeners[callback] = listener
             }
 
-            val providers = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER)
+            val providers = listOf(LocationManager.GPS_PROVIDER, LocationManager.PASSIVE_PROVIDER)
             var registered = false
             
             for (provider in providers) {

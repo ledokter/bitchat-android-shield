@@ -35,7 +35,7 @@ class HotspotManager(private val context: Context) {
         private const val GROUP_FORMATION_TIMEOUT_MILLIS = 15_000L
 
         // SSID and password configuration
-        private const val SSID_SUFFIX_LENGTH = 8
+        private const val SSID_SUFFIX_LENGTH = 4
         private const val PASSWORD_LENGTH = 16
 
         // Records the group we created so a later run can tell our own orphan apart
@@ -831,13 +831,14 @@ class HotspotManager(private val context: Context) {
 
     /**
      * Generate random SSID.
-     * Format: DIRECT-BC-XXXXXXXX
+     * Format: DIRECT-BC-chatbit-XXXX. The name is the advert people without the app see
+     * in their phone's Wi-Fi list.
      */
     private fun generateSsid(): String {
         val suffix = (1..SSID_SUFFIX_LENGTH)
             .map { RANDOM_CHARS[random.nextInt(RANDOM_CHARS.length)] }
             .joinToString("")
-        return "${HotspotStartupPolicy.SSID_PREFIX}$suffix"
+        return "${HotspotStartupPolicy.SSID_PREFIX}chatbit-$suffix"
     }
 
     /**

@@ -11,6 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
@@ -163,6 +164,18 @@ class ArtiTorManager private constructor() {
             appScope.launch {
                 TorPreferenceManager.modeFlow.collect { mode ->
                     applyMode(application, mode)
+                }
+            }
+
+            appScope.launch {
+                TorPreferenceManager.rotationFlow.collectLatest { minutes ->
+                    if (minutes <= 0) return@collectLatest
+                    while (true) {
+                        // intervalle ± 30 % pour ne pas tourner à heure fixe
+                        val base = minutes * 60_000L
+                        delay(base + kotlin.random.Random.nextLong(-base * 3 / 10, base * 3 / 10 + 1))
+                        newRoute(application)
+                    }
                 }
             }
         }
@@ -367,6 +380,42 @@ class ArtiTorManager private constructor() {
         stopArtiInternal()
         waitForStateTransition(target = TorState.OFF, timeoutMs = timeoutMs)
         delay(200)
+    }
+
+    private val _lastRouteChange = MutableStateFlow(0L)
+    /** Horodatage (ms) du dernier changement de route Tor, 0 si aucun. */
+    val lastRouteChange: StateFlow<Long> = _lastRouteChange.asStateFlow()
+
+    /**
+     * Nouvelle route Tor : Arti n'a pas de commande NEWNYM, on le redémarre (le consensus est
+     * en cache, la reconnexion prend quelques secondes) puis les relais Nostr se reconnectent
+     * par de nouveaux circuits. Sans effet si Tor est coupé.
+     */
+    suspend fun newRoute(application: Application? = currentApplication): Boolean {
+        val app = application ?: return false
+        return applyMutex.withLock {
+            if (desiredMode != TorMode.ON || lifecycleState != LifecycleState.RUNNING) return@withLock false
+            Log.i(TAG, "Rotation : nouvelle route Tor")
+            _rotating.value = true
+            try {
+                restartArti(app)
+                withTimeoutOrNull(90_000) { waitUntilBootstrapped() }
+                resetNetworkConnections()
+                _lastRouteChange.value = System.currentTimeMillis()
+            } finally {
+                _rotating.value = false
+            }
+            true
+        }
+    }
+
+    private val _rotating = MutableStateFlow(false)
+    /** True while a new Tor route is being built (header button spins, the cat beats). */
+    val rotating: StateFlow<Boolean> = _rotating.asStateFlow()
+
+    fun requestNewRoute() {
+        com.bitchat.android.game.KittyGame.onTorRotated()
+        appScope.launch { newRoute() }
     }
 
     private suspend fun restartArti(application: Application) {

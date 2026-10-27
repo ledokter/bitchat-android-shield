@@ -1,6 +1,8 @@
 package com.bitchat.android.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,6 +37,7 @@ fun ChatUserSheet(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
+    val secureCopyContext = androidx.compose.ui.platform.LocalContext.current
     
     val colorScheme = MaterialTheme.colorScheme
     val palette = LocalBitchatPalette.current
@@ -71,6 +74,27 @@ fun ChatUserSheet(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
                 
+                // chatbit: animated kitty reactions, sent as a short message "😻 @nick"
+                if (selectedMessage?.sender != viewModel.nickname.value) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        com.bitchat.android.ui.kitty.KITTY_REACTIONS.forEach { emoji ->
+                            Text(
+                                emoji, fontSize = 30.sp,
+                                modifier = Modifier
+                                    .clip(androidx.compose.foundation.shape.CircleShape)
+                                    .clickable {
+                                        viewModel.sendMessage("$emoji @$targetNickname")
+                                        onDismiss()
+                                    }
+                                    .padding(6.dp)
+                            )
+                        }
+                    }
+                }
+
                 // Action list (iOS-style plain list)
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth()
@@ -84,7 +108,7 @@ fun ChatUserSheet(
                                 titleColor = standardGrey,
                                 onClick = {
                                     // Copy the message content to clipboard
-                                    clipboardManager.setText(AnnotatedString(message.content))
+                                    com.bitchat.android.security.SecureClipboard.copy(secureCopyContext, "message", message.content)
                                     onDismiss()
                                 }
                             )
@@ -148,6 +172,20 @@ fun ChatUserSheet(
                             )
                         }
                         
+                        if (selectedMessage != null && viewModel.isFromBlocked(selectedMessage)) {
+                            // chatbit: already blocked / reported → offer to unblock instead
+                            item {
+                                UserActionRow(
+                                    title = stringResource(R.string.action_unblock_title, targetNickname),
+                                    subtitle = stringResource(R.string.action_unblock_subtitle),
+                                    titleColor = standardGreen,
+                                    onClick = {
+                                        viewModel.unblockSender(selectedMessage, targetNickname)
+                                        onDismiss()
+                                    }
+                                )
+                            }
+                        } else {
                         // Block action
                         item {
                             UserActionRow(
@@ -167,6 +205,34 @@ fun ChatUserSheet(
                                     onDismiss()
                                 }
                             )
+                        }
+
+                        // Report (required for public chat): block + flag the key as a spammer,
+                        // which hides its messages and adds it to the shareable flagged list
+                        item {
+                            UserActionRow(
+                                title = stringResource(R.string.action_report_title, targetNickname),
+                                subtitle = stringResource(R.string.action_report_subtitle),
+                                titleColor = standardRed,
+                                onClick = {
+                                    val selectedLocationChannel = viewModel.selectedLocationChannel.value
+                                    if (selectedLocationChannel is com.bitchat.android.geohash.ChannelID.Location) {
+                                        viewModel.blockUserInGeohash(targetNickname)
+                                    } else {
+                                        viewModel.sendMessage("/block $targetNickname")
+                                    }
+                                    selectedMessage?.senderNostrPubkey?.let {
+                                        com.bitchat.android.nostr.BitchatShield.flagKeys(listOf(it))
+                                    }
+                                    android.widget.Toast.makeText(
+                                        secureCopyContext,
+                                        secureCopyContext.getString(R.string.action_report_done),
+                                        android.widget.Toast.LENGTH_LONG
+                                    ).show()
+                                    onDismiss()
+                                }
+                            )
+                        }
                         }
                     }
                 }

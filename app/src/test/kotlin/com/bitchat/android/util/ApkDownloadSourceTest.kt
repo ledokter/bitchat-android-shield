@@ -24,12 +24,12 @@ class ApkDownloadSourceTest {
     @Test
     fun `default source downloads the stable latest universal asset directly`() {
         assertEquals(
-            "https://github.com/permissionlesstech/bitchat-android/releases/latest/" +
-                "download/bitchat-android-universal.apk",
+            "https://github.com/ledokter/chatbit/releases/latest/" +
+                "download/chatbit-universal.apk",
             DefaultApkDownloadSources.all.single().latestApkUrls.first()
         )
         assertEquals(
-            "https://github.com/permissionlesstech/bitchat-android/releases/latest/" +
+            "https://github.com/ledokter/chatbit/releases/latest/" +
                 "download/app-universal-release.apk",
             DefaultApkDownloadSources.all.single().latestApkUrls[1]
         )

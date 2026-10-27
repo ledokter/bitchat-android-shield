@@ -209,6 +209,16 @@ fun ChatScreen(viewModel: ChatViewModel) {
         }
     }
 
+    // Blocked / reported people disappear from the timeline at once, unless the user ticks
+    // "show blocked messages" (Settings → filters), like on the bot.
+    val blockVersion by com.bitchat.android.ui.DataManager.blockVersion.collectAsStateWithLifecycle()
+    val flaggedCount by com.bitchat.android.nostr.BitchatShield.flaggedCount.collectAsStateWithLifecycle()
+    val showBlocked by com.bitchat.android.security.SecurityPreferences.showBlocked.collectAsStateWithLifecycle()
+    val (visibleMessages, blockedIds) = remember(displayMessages, blockVersion, flaggedCount, showBlocked) {
+        val (blocked, others) = displayMessages.partition(viewModel::isFromBlocked)
+        if (showBlocked) displayMessages to blocked.mapTo(HashSet()) { it.id } else others to emptySet<String>()
+    }
+
     // Identity of the timeline on screen, derived exactly like displayMessages above. Drives the
     // per-conversation scroll position and animation state in MessagesList.
     val conversationKey = when {
@@ -248,7 +258,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
         }
     }
     val mentionPeerIdentities = rememberMentionPeerIdentities(
-        displayMessages, knownMentionPeers, conversationKey
+        visibleMessages, knownMentionPeers, conversationKey
     )
 
     // Determine whether to show media buttons (only hide in geohash location chats)
@@ -299,8 +309,22 @@ fun ChatScreen(viewModel: ChatViewModel) {
             val showNotesStrip =
                 isMeshTimeline && nearbyNotesRevealed && nearbyNotes.isNotEmpty()
 
+            // chatbit: a location channel's history comes over the network; until it has
+            // arrived (or for the first seconds after joining) kitty waits, arms crossed
+            val waitContext = androidx.compose.ui.platform.LocalContext.current
+            val torStatus by remember { com.bitchat.android.net.ArtiTorManager.getInstance() }.statusFlow.collectAsStateWithLifecycle()
+            val relaysUp by remember { com.bitchat.android.nostr.NostrRelayManager.getInstance(waitContext) }.isConnected.collectAsStateWithLifecycle()
+            var justJoined by remember(selectedLocationChannel) { mutableStateOf(true) }
+            LaunchedEffect(selectedLocationChannel) { kotlinx.coroutines.delay(10_000); justJoined = false }
+            val networkReady = relaysUp && (torStatus.mode == com.bitchat.android.net.TorMode.OFF ||
+                (torStatus.running && torStatus.bootstrapPercent >= 100))
+            val conversationLoading = selectedLocationChannel is ChannelID.Location &&
+                visibleMessages.isEmpty() && (!networkReady || justJoined)
+            LaunchedEffect(conversationLoading) { com.bitchat.android.ui.kitty.ConversationLoading.active.value = conversationLoading }
+
             MessagesList(
-                messages = displayMessages,
+                messages = visibleMessages,
+                blockedIds = blockedIds,
                 currentUserNickname = nickname,
                 meshService = viewModel.meshServiceFacade,
                 mentionPeerIdentities = mentionPeerIdentities,
@@ -361,6 +385,15 @@ fun ChatScreen(viewModel: ChatViewModel) {
                     showFullScreenImageViewer = true
                 }
             )
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = conversationLoading,
+                enter = androidx.compose.animation.fadeIn(),
+                exit = androidx.compose.animation.fadeOut(),
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                com.bitchat.android.ui.kitty.KittyWaiting()
+            }
 
             if (showNotesStrip) {
                 NearbyNotesStrip(
@@ -503,6 +536,16 @@ fun ChatScreen(viewModel: ChatViewModel) {
                 }
             }
         }
+
+        // A running APK-sharing hotspot is always visible here, with a one-tap stop
+        Box(
+            Modifier.fillMaxWidth().zIndex(2f)
+                .padding(top = statusBarHeight + headerHeight + 4.dp, start = 8.dp, end = 8.dp)
+        ) { com.bitchat.android.hotspot.HotspotBanner() }
+
+        // chatbit kitty: badge celebrations and the first-launch tour
+        Box(Modifier.fillMaxSize().zIndex(5f)) { com.bitchat.android.ui.kitty.KittyBadgePopup() }
+        Box(Modifier.fillMaxSize().zIndex(6f)) { com.bitchat.android.ui.kitty.KittyTour() }
     }
 
     // Full-screen image viewer - separate from other sheets to allow image browsing without navigation
@@ -854,11 +897,27 @@ private fun ChatDialogs(
 
     // About sheet
     var showDebugSheet by remember { mutableStateOf(false) }
+    var showFloodSheet by remember { mutableStateOf(false) }
     AboutSheet(
         isPresented = showAppInfo,
         onDismiss = onAppInfoDismiss,
-        onShowDebug = { showDebugSheet = true }
+        onShowDebug = { showDebugSheet = true },
+        onShowFloodSettings = { showFloodSheet = true }
     )
+    // chatbit private rooms (header lock button or a chatbit://room invitation link)
+    val roomsOpen by com.bitchat.android.rooms.PrivateRooms.sheetOpen.collectAsState()
+    if (roomsOpen) {
+        PrivateRoomsSheet(
+            nickname = viewModel.nickname.collectAsState().value,
+            onDismiss = { com.bitchat.android.rooms.PrivateRooms.closeSheet() }
+        )
+    }
+    if (showFloodSheet) {
+        FloodSettingsSheet(
+            onDismiss = { showFloodSheet = false },
+            geohashViewModel = viewModel.geohashViewModel
+        )
+    }
     if (showDebugSheet) {
         com.bitchat.android.ui.debug.DebugSettingsSheet(
             isPresented = showDebugSheet,

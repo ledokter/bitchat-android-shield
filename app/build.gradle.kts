@@ -27,11 +27,11 @@ android {
     buildToolsVersion = libs.versions.buildTools.get()
 
     defaultConfig {
-        applicationId = "com.bitchat.shield"
+        applicationId = "app.chatbit"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 40
-        versionName = "2.0.3"
+        versionCode = 41
+        versionName = "2.1.0"
         buildConfigField(
             "String",
             "GITHUB_RELEASE_CERT_SHA256",
@@ -53,6 +53,8 @@ android {
 
     buildTypes {
         debug {
+            // chatbit: pseudo-locales (en-XA, ar-XB) make any hard-coded, untranslated text stand out
+            isPseudoLocalesEnabled = true
             ndk {
                 // Include x86_64 for emulator support during development
                 abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a", "x86")
@@ -147,7 +149,6 @@ dependencies {
 
     // QR
     implementation(libs.zxing.core)
-    implementation(libs.mlkit.barcode.scanning)
 
     // CameraX
     implementation(libs.androidx.camera.camera2)
@@ -182,7 +183,6 @@ dependencies {
     // Note: AAR is kept in libs/ for reference, but libraries loaded from jniLibs/
 
     // Google Play Services Location
-    implementation(libs.gms.location)
 
     // Security preferences
     implementation(libs.androidx.security.crypto)

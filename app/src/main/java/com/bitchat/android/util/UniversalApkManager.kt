@@ -43,7 +43,7 @@ class UniversalApkManager(
         private const val CACHE_DIR_NAME = "universal_apk"
         private const val METADATA_FILE_NAME = "universal_apk_info.json"
         private const val PROGRESS_FILE_NAME = "download_progress.json"
-        private const val APK_FILE_PREFIX = "bitchat-universal-"
+        private const val APK_FILE_PREFIX = "chatbit-universal-"
         private const val TEMP_FILE_NAME = "download_temp.apk"
         private const val ROUTE_READY_TIMEOUT_MILLIS = 60_000L
 
@@ -733,11 +733,17 @@ class UniversalApkManager(
                 return cachedInfo
             }
 
-            // Keep an already cached artifact if it is the same version or
-            // newer. Otherwise prefer the running build so sharing cannot
-            // silently downgrade recipients to an older downloadable release.
-            if (cachedInfo != null &&
-                !AppVersion.isNewer(cachedInfo.version, installedVersion)
+            // chatbit: keep a downloaded release only when it is strictly newer, and a copy of
+            // the running build only when it is this exact install. Every build used to share the
+            // version name, so an older copy kept being shared after an update.
+            if (cachedInfo != null && (
+                    (cachedInfo.source == ApkSource.DOWNLOADED &&
+                        AppVersion.isNewer(installedVersion, cachedInfo.version)) ||
+                    (cachedInfo.source == ApkSource.INSTALLED &&
+                        cachedInfo.version == installedVersion &&
+                        cachedInfo.file.length() == installedApk.length() &&
+                        cachedInfo.file.lastModified() >= installedApk.lastModified())
+                )
             ) {
                 return cachedInfo
             }

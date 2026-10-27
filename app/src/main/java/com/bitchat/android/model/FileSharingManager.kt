@@ -33,7 +33,7 @@ object FileSharingManager {
 
             // Read file content
             val file = File(localPath)
-            val content = file.readBytes()
+            val content = com.bitchat.android.security.MediaVault.readBytes(file)
             val fileSize = file.length()
 
             // Clean up temp file

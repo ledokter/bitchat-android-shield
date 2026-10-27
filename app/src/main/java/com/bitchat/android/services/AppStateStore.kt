@@ -627,6 +627,23 @@ object AppStateStore {
         return true
     }
 
+    /**
+     * chatbit ephemeral messages: drops messages older than [cutoffMs], on disk (private
+     * conversations) and in memory (public, channel and private lists). Returns how many were stored.
+     */
+    suspend fun purgeMessagesOlderThan(cutoffMs: Long): Int {
+        val removed = conversationRepository?.deleteMessagesOlderThan(cutoffMs) ?: emptySet()
+        synchronized(this) {
+            fun keep(m: BitchatMessage) = m.id !in removed && m.timestamp.time >= cutoffMs
+            _privateMessages.value = _privateMessages.value
+                .mapValues { (_, list) -> list.filter(::keep) }
+                .filterValues { it.isNotEmpty() }
+            _publicMessages.value = _publicMessages.value.filter(::keep)
+            _channelMessages.value = _channelMessages.value.mapValues { (_, list) -> list.filter(::keep) }
+        }
+        return removed.size
+    }
+
     fun deletePrivateConversation(peerOrConversationID: String): Set<String> {
         synchronized(this) {
             val canonicalID = ContactDirectory.canonicalConversationId(peerOrConversationID)

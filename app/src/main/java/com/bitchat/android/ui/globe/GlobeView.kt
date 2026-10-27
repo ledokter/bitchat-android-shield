@@ -20,9 +20,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.withFrameNanos
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -152,10 +154,18 @@ fun GlobeView(
     cities: List<LandData.City>,
     labelTypeface: Typeface?,
     labelTypefaceBold: Typeface?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    // chatbit world map layers (all optional: the geohash picker passes none)
+    markers: List<GlobeMarker> = emptyList(),
+    nightShading: Boolean = false,
+    tileLayer: GlobeTileLayer? = null,
+    onTap: ((lat: Double, lon: Double, marker: GlobeMarker?) -> Unit)? = null
 ) {
     val view = LocalView.current
     val density = LocalDensity.current
+    // read inside the long-lived gesture handler, so always the latest values
+    val markersNow = rememberUpdatedState(markers)
+    val onTapNow = rememberUpdatedState(onTap)
 
     val stars = remember {
         val rnd = kotlin.random.Random(42)
@@ -240,8 +250,10 @@ fun GlobeView(
         }
     }
 
-    val labelTextSize = with(density) { 12.5.sp.toPx() }
     val labelTextSizeSmall = with(density) { 10.sp.toPx() }
+    // Tile codes are what people read to pick a channel: larger than city names
+    val cellTextSize = with(density) { 18.sp.toPx() }
+    val cellTextSizeSmall = with(density) { 14.sp.toPx() }
 
     Box(modifier = modifier) {
         // Static background lives in its own layer and is not invalidated by globe movement.
@@ -337,6 +349,14 @@ fun GlobeView(
                                 } else {
                                     state.animateTo(latLon.first, latLon.second, null, null, 450)
                                 }
+                                onTapNow.value?.invoke(
+                                    latLon.first, latLon.second,
+                                    nearestMarker(
+                                        markersNow.value, downPos.x, downPos.y, cx, cy, r,
+                                        state.centerLat.toDouble(), state.centerLon.toDouble(),
+                                        28.dp.toPx()
+                                    )
+                                )
                             }
                         }
                     } else if (dragStarted && !hadMultiplePointers) {
@@ -423,6 +443,7 @@ fun GlobeView(
             }
         }
 
+        tileLayer?.draw(this, cx, cy, r, cLat, cLon)
         // Sphere shading: dark limb + night side for 3D depth
         drawCircle(
             brush = Brush.radialGradient(
@@ -448,6 +469,8 @@ fun GlobeView(
             center = Offset(cx, cy)
         )
 
+        if (nightShading) drawNightShading(cx, cy, r, cLat, cLon)
+        if (markers.isNotEmpty()) drawMarkers(markers, cx, cy, r, cLat, cLon, density.density)
         // Cities are detail-only; omitting them while moving keeps touch latency predictable.
         val cityMaxRank = frameDetail.cityMaxRank
         if (cityMaxRank == null || cityMaxRank >= 0) {
@@ -468,7 +491,7 @@ fun GlobeView(
             drawGeohashLabels(
                 state, cx, cy, r, cLat, cLon, colors,
                 labelPaint, haloPaint, labelTypeface, labelTypefaceBold,
-                labelTextSize, labelTextSizeSmall,
+                cellTextSize, cellTextSizeSmall,
                 includeNeighbors = frameDetail.showNeighborCells
             )
         }
@@ -1139,16 +1162,16 @@ private fun DrawScope.drawGeohashLabels(
             android.graphics.Color.argb(255, (colors.accent.red * 255).toInt(), (colors.accent.green * 255).toInt(), (colors.accent.blue * 255).toInt())
         } else {
             android.graphics.Color.argb(
-                (160 * p.cosC.coerceIn(0.4f, 1f)).toInt(),
+                (235 * p.cosC.coerceIn(0.6f, 1f)).toInt(),
                 (colors.label.red * 255).toInt(), (colors.label.green * 255).toInt(), (colors.label.blue * 255).toInt()
             )
         }
         val baseline = sy - ((paint.descent() + paint.ascent()) / 2f)
         haloPaint.textSize = paint.textSize
         haloPaint.typeface = paint.typeface
-        haloPaint.strokeWidth = paint.textSize * 0.18f
+        haloPaint.strokeWidth = paint.textSize * 0.26f
         haloPaint.color = android.graphics.Color.argb(
-            if (isSelected) 200 else 120,
+            if (isSelected) 240 else 200,
             (colors.labelHalo.red * 255).toInt(), (colors.labelHalo.green * 255).toInt(), (colors.labelHalo.blue * 255).toInt()
         )
         canvas.drawText(cell, sx, baseline, haloPaint)

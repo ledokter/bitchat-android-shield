@@ -23,6 +23,8 @@ class NostrBackgroundEventProcessorTest {
     @Before
     fun setUp() {
         AppStateStore.clear()
+        // 300 near-identical messages from one key are a flood: this test is about queue capacity
+        BitchatShield.setFloodEnabled(false)
         scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
 
@@ -30,6 +32,7 @@ class NostrBackgroundEventProcessorTest {
     fun tearDown() {
         scope.cancel()
         AppStateStore.clear()
+        BitchatShield.setFloodEnabled(true)
     }
 
     @Test

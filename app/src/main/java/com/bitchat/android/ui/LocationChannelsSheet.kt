@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Hub
@@ -230,6 +231,9 @@ fun LocationChannelsSheet(
                     contentPadding = PaddingValues(top = 72.dp, bottom = 32.dp),
                     verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
+                    item(key = "kitty_tip") {
+                        com.bitchat.android.ui.kitty.KittyTip("channels", stringResource(R.string.tip_channels), Modifier.padding(horizontal = 16.dp))
+                    }
                     // Mesh section: icon + title header, offline subtitle, then selection card
                     item(key = "mesh_card") {
                         Column {
@@ -545,6 +549,45 @@ fun LocationChannelsSheet(
                                     )
                                 )
                             }
+                        }
+                    }
+
+                    // chatbit world map: live activity, geocaches, day/night (glub.chat style)
+                    item(key = "world_map") {
+                        androidx.compose.material3.OutlinedButton(
+                            onClick = {
+                                mapPickerLauncher.launch(Intent(context, WorldMapActivity::class.java))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            Icon(painterResource(R.drawable.ic_spec_globe), contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.map_open),
+                                fontFamily = BitchatFontFamily
+                            )
+                        }
+                    }
+
+                    // chatbit: find a zone by place name (offline list, by continent and country)
+                    item(key = "zone_directory") {
+                        androidx.compose.material3.OutlinedButton(
+                            onClick = {
+                                mapPickerLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 8.dp)
+                        ) {
+                            Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.dir_open),
+                                fontFamily = BitchatFontFamily
+                            )
                         }
                     }
 
@@ -1121,15 +1164,18 @@ private fun geohashTitleWithCount(channel: GeohashChannel, participantCount: Int
     } else {
         ctx.resources.getQuantityString(R.plurals.people_count, participantCount, participantCount)
     }
-    val levelName = when (channel.level) {
-        GeohashChannelLevel.BUILDING -> "Building"
-        GeohashChannelLevel.BLOCK -> stringResource(R.string.location_level_block)
-        GeohashChannelLevel.NEIGHBORHOOD -> stringResource(R.string.location_level_neighborhood)
-        GeohashChannelLevel.CITY -> stringResource(R.string.location_level_city)
-        GeohashChannelLevel.PROVINCE -> stringResource(R.string.location_level_province)
-        GeohashChannelLevel.REGION -> stringResource(R.string.location_level_region)
-    }
+    val levelName = levelLabel(channel.level)
     return "$levelName$TITLE_COUNT_SEP$peopleText"
+}
+
+@Composable
+internal fun levelLabel(level: GeohashChannelLevel): String = when (level) {
+    GeohashChannelLevel.BUILDING -> stringResource(R.string.location_level_building)
+    GeohashChannelLevel.BLOCK -> stringResource(R.string.location_level_block)
+    GeohashChannelLevel.NEIGHBORHOOD -> stringResource(R.string.location_level_neighborhood)
+    GeohashChannelLevel.CITY -> stringResource(R.string.location_level_city)
+    GeohashChannelLevel.PROVINCE -> stringResource(R.string.location_level_province)
+    GeohashChannelLevel.REGION -> stringResource(R.string.location_level_region)
 }
 
 @Composable

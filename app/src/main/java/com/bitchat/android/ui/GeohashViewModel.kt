@@ -1,5 +1,7 @@
 package com.bitchat.android.ui
 
+import com.bitchat.android.R
+
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -278,6 +280,39 @@ class GeohashViewModel(
 
     fun getNostrKeyMapping(): Map<String, String> = repo.getNostrKeyMapping()
 
+    /** Blocked geohash pubkeys (hex), for list export. */
+    fun blockedPubkeys(): Set<String> = dataManager.geohashBlockedUsers
+
+    /** Display name of a known pubkey, or null. */
+    fun knownNickname(pubkey: String): String? = repo.getCachedNickname(pubkey)
+
+    /** Blocks many pubkeys at once (list import); returns how many were new. */
+    fun blockPubkeys(pubkeys: Collection<String>): Int {
+        val fresh = pubkeys.map { it.lowercase() }.filter { !dataManager.isGeohashUserBlocked(it) }
+        fresh.forEach { dataManager.addGeohashBlockedUser(it) }
+        if (fresh.isNotEmpty()) {
+            repo.refreshGeohashPeople()
+            repo.updateReactiveParticipantCounts()
+        }
+        return fresh.size
+    }
+
+    fun unblockPubkey(pubkey: String) {
+        dataManager.removeGeohashBlockedUser(pubkey)
+        repo.refreshGeohashPeople()
+        repo.updateReactiveParticipantCounts()
+    }
+
+    /** Unblocks a geohash user by nickname; true when someone was unblocked. */
+    fun unblockUserInGeohash(targetNickname: String): Boolean {
+        val pubkey = repo.findPubkeyByNickname(targetNickname) ?: return false
+        if (!dataManager.isGeohashUserBlocked(pubkey)) return false
+        dataManager.removeGeohashBlockedUser(pubkey)
+        repo.refreshGeohashPeople()
+        repo.updateReactiveParticipantCounts()
+        return true
+    }
+
     fun blockUserInGeohash(targetNickname: String) {
         val pubkey = repo.findPubkeyByNickname(targetNickname)
         if (pubkey != null) {
@@ -287,7 +322,7 @@ class GeohashViewModel(
             repo.updateReactiveParticipantCounts()
             val sysMsg = com.bitchat.android.model.BitchatMessage(
                 sender = "system",
-                content = "blocked $targetNickname in geohash channels",
+                content = com.bitchat.android.util.AppStrings.get(R.string.sys_blocked_geohash, targetNickname),
                 timestamp = Date(),
                 isRelay = false
             )
@@ -295,7 +330,7 @@ class GeohashViewModel(
         } else {
             val sysMsg = com.bitchat.android.model.BitchatMessage(
                 sender = "system",
-                content = "user '$targetNickname' not found in current geohash",
+                content = com.bitchat.android.util.AppStrings.get(R.string.sys_user_not_in_geohash, targetNickname),
                 timestamp = Date(),
                 isRelay = false
             )

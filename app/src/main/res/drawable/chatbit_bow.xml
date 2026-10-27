@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- chatbit bow, tinted with the accent colour -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="84dp"
+    android:viewportWidth="24"
+    android:viewportHeight="21">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,1h3v1h-3zM19,1h3v1h-3zM15,2h7v1h-7zM15,3h7v1h-7zM15,4h7v1h-7zM15,5h3v1h-3zM19,5h3v1h-3z" />
+</vector>

@@ -175,7 +175,7 @@ private fun PermissionCategoryCard(
     ) {
         Icon(
             imageVector = getPermissionIcon(category.type),
-            contentDescription = category.type.nameValue,
+            contentDescription = permissionTypeLabel(category.type),
             tint = colorScheme.primary,
             modifier = Modifier
                 .padding(top = 2.dp)
@@ -184,7 +184,7 @@ private fun PermissionCategoryCard(
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(
-                text = category.type.nameValue,
+                text = permissionTypeLabel(category.type),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium,
                 color = colorScheme.onBackground
@@ -211,4 +211,16 @@ private fun getPermissionIcon(permissionType: PermissionType): ImageVector {
         PermissionType.BATTERY_OPTIMIZATION -> Icons.Filled.Power
         PermissionType.OTHER -> Icons.Filled.Settings
     }
+}
+
+@Composable
+private fun permissionTypeLabel(type: PermissionType): String = when (type) {
+    PermissionType.NEARBY_DEVICES -> stringResource(R.string.perm_type_nearby_devices)
+    PermissionType.PRECISE_LOCATION -> stringResource(R.string.perm_type_precise_location)
+    PermissionType.BACKGROUND_LOCATION -> stringResource(R.string.perm_type_background_location)
+    PermissionType.MICROPHONE -> stringResource(R.string.perm_type_microphone)
+    PermissionType.NOTIFICATIONS -> stringResource(R.string.perm_type_notifications)
+    PermissionType.WIFI_AWARE -> stringResource(R.string.perm_type_wifi_aware)
+    PermissionType.BATTERY_OPTIMIZATION -> stringResource(R.string.perm_type_battery_optimization)
+    PermissionType.OTHER -> stringResource(R.string.perm_type_other)
 }

@@ -16,7 +16,7 @@ object GeohashAliasRegistry {
 
     fun initialize(context: Context) {
         if (prefs == null) {
-            prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            prefs = com.bitchat.android.security.SecurePrefs.open(context, PREFS_NAME)
             loadFromPrefs()
         }
     }

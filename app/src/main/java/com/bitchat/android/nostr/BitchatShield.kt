@@ -63,6 +63,29 @@ object BitchatShield {
     private val _blockedCount = MutableStateFlow(0)
     val blockedCount: StateFlow<Int> = _blockedCount.asStateFlow()
 
+    // Two-stage flood detector (port of the bitchat-bot anti-flood): flagged keys are hidden
+    private const val KEY_FLOOD_ENABLED = "flood_enabled"
+    private const val KEY_FLOOD_FLAGGED = "flood_flagged"
+    private const val KEY_FLOOD_IGNORED = "flood_ignored"
+    private const val KEY_FLOOD_RULES = "flood_rules"
+    private const val MAX_HIDDEN = 200
+
+    data class HiddenMessage(val pubkey: String, val name: String, val content: String, val atMs: Long)
+
+    val detector = FloodDetector()
+
+    private val _floodEnabled = MutableStateFlow(true)
+    val floodEnabled: StateFlow<Boolean> = _floodEnabled.asStateFlow()
+
+    private val _floodRules = MutableStateFlow(FloodDetector.Rules())
+    val floodRules: StateFlow<FloodDetector.Rules> = _floodRules.asStateFlow()
+
+    private val _flaggedCount = MutableStateFlow(0)
+    val flaggedCount: StateFlow<Int> = _flaggedCount.asStateFlow()
+
+    private val _hidden = MutableStateFlow<List<HiddenMessage>>(emptyList())
+    val hidden: StateFlow<List<HiddenMessage>> = _hidden.asStateFlow()
+
     private lateinit var prefs: SharedPreferences
     private var initialized = false
 
@@ -85,13 +108,21 @@ object BitchatShield {
 
     fun init(context: Context) {
         if (initialized) return
-        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs = com.bitchat.android.security.SecurePrefs.open(context, PREFS_NAME)
         _shieldEnabled.value = prefs.getBoolean(KEY_SHIELD_ENABLED, true)
         _blockZalgo.value = prefs.getBoolean(KEY_BLOCK_ZALGO, true)
         _blockBots.value = prefs.getBoolean(KEY_BLOCK_BOTS, true)
         _blockLinks.value = prefs.getBoolean(KEY_BLOCK_LINKS, true)
         _strictNicknames.value = prefs.getBoolean(KEY_STRICT_NICKNAMES, true)
         _blockedCount.value = prefs.getInt(KEY_BLOCKED_COUNT, 0)
+        _floodEnabled.value = prefs.getBoolean(KEY_FLOOD_ENABLED, true)
+        prefs.getString(KEY_FLOOD_RULES, null)?.let { _floodRules.value = FloodRulesCodec.decode(it) }
+        detector.rules = _floodRules.value
+        synchronized(detector) {
+            detector.flagged.addAll(prefs.getStringSet(KEY_FLOOD_FLAGGED, emptySet()) ?: emptySet())
+            detector.ignored.addAll(prefs.getStringSet(KEY_FLOOD_IGNORED, emptySet()) ?: emptySet())
+        }
+        _flaggedCount.value = detector.flagged.size
         initialized = true
     }
 
@@ -118,6 +149,79 @@ object BitchatShield {
     fun setStrictNicknames(enabled: Boolean) {
         _strictNicknames.value = enabled
         if (::prefs.isInitialized) prefs.edit().putBoolean(KEY_STRICT_NICKNAMES, enabled).apply()
+    }
+
+    fun setFloodEnabled(enabled: Boolean) {
+        _floodEnabled.value = enabled
+        if (::prefs.isInitialized) prefs.edit().putBoolean(KEY_FLOOD_ENABLED, enabled).apply()
+    }
+
+    fun setFloodRules(rules: FloodDetector.Rules) {
+        _floodRules.value = rules
+        detector.rules = rules
+        if (::prefs.isInitialized) prefs.edit().putString(KEY_FLOOD_RULES, FloodRulesCodec.encode(rules)).apply()
+    }
+
+    /** Keys flagged as flooders (hidden while the flood filter is on). */
+    fun flaggedKeys(): Set<String> = synchronized(detector) { detector.flagged.toSet() }
+
+    /** Marks keys as flooders (import); returns how many were new. */
+    fun flagKeys(keys: Collection<String>): Int {
+        val added = synchronized(detector) {
+            val fresh = keys.map { it.lowercase() }.filter { it !in detector.flagged }
+            detector.flagged.addAll(fresh)
+            detector.ignored.removeAll(fresh.toSet())
+            fresh.size
+        }
+        saveFloodLists()
+        return added
+    }
+
+    /** False positive: unflags the key and its linked keys, never scores them again. */
+    fun unflag(pubkey: String) {
+        synchronized(detector) {
+            val group = detector.group(pubkey)
+            detector.unflag(group)
+            detector.ignored.addAll(group)
+        }
+        _hidden.value = _hidden.value.filter { it.pubkey != pubkey }
+        saveFloodLists()
+    }
+
+    fun clearHidden() {
+        _hidden.value = emptyList()
+    }
+
+    private fun saveFloodLists() {
+        val (flagged, ignored) = synchronized(detector) { detector.flagged.toSet() to detector.ignored.toSet() }
+        _flaggedCount.value = flagged.size
+        if (::prefs.isInitialized) {
+            prefs.edit().putStringSet(KEY_FLOOD_FLAGGED, flagged).putStringSet(KEY_FLOOD_IGNORED, ignored).apply()
+        }
+    }
+
+    /** Feeds the detector; returns true when the message must be hidden. */
+    private fun checkFlood(
+        pubkey: String,
+        rawContent: String,
+        nickname: String?,
+        geohash: String?,
+        teleport: Boolean,
+        createdAtSeconds: Long?,
+        nowMs: Long
+    ): Boolean {
+        if (!_floodEnabled.value) return false
+        // relay backfills deliver old events at once: use the event time, never in the future
+        val now = minOf(createdAtSeconds?.toDouble() ?: Double.MAX_VALUE, nowMs / 1000.0)
+        val alert = detector.process(pubkey, rawContent, nickname, geohash, teleport, now)
+        if (alert != null) {
+            Log.w(TAG, "Flood group flagged: ${alert.keys.size} key(s), score ${"%.1f".format(alert.score)}")
+            saveFloodLists()
+        }
+        if (!detector.isFlagged(pubkey)) return false
+        val entry = HiddenMessage(pubkey, detector.displayName(pubkey), sanitizeText(rawContent, 300), nowMs)
+        _hidden.value = (listOf(entry) + _hidden.value).take(MAX_HIDDEN)
+        return true
     }
 
     private fun recordBlocked(reason: String, pubkey: String? = null) {
@@ -283,13 +387,23 @@ object BitchatShield {
         rawContent: String,
         rawNickname: String?,
         createdAtSeconds: Long? = null,
-        nowMs: Long = System.currentTimeMillis()
+        nowMs: Long = System.currentTimeMillis(),
+        geohash: String? = null,
+        teleport: Boolean = false
     ): InspectionResult {
         if (!_shieldEnabled.value) {
             return InspectionResult.Allowed(rawContent, rawNickname)
         }
 
         val normalizedPubkey = pubkey.lowercase()
+
+        // 0. Two-stage flood detector (sees every message, even those the rules below block)
+        if (rawContent.isNotEmpty() &&
+            checkFlood(normalizedPubkey, rawContent, rawNickname, geohash, teleport, createdAtSeconds, nowMs)
+        ) {
+            recordBlocked("flood", normalizedPubkey)
+            return InspectionResult.Blocked("flood")
+        }
 
         // 1. Zalgo & forbidden character check on both nickname and content
         if (_blockZalgo.value) {
@@ -414,6 +528,9 @@ object BitchatShield {
         recentLongSpamFingerprints.clear()
         recentLinkTimestamps.clear()
         _blockedCount.value = 0
+        _hidden.value = emptyList()
+        _floodEnabled.value = true
+        detector.reset()
         _shieldEnabled.value = true
         _blockZalgo.value = true
         _blockBots.value = true

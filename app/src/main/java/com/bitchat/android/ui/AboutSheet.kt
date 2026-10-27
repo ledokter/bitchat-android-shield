@@ -15,6 +15,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -61,6 +62,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.draw.clip
+import androidx.compose.foundation.border
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -304,9 +310,11 @@ fun AboutSheet(
     isPresented: Boolean,
     onDismiss: () -> Unit,
     onShowDebug: (() -> Unit)? = null,
+    onShowFloodSettings: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val advancedMode by com.bitchat.android.security.SecurityPreferences.advancedMode.collectAsState()
     
     // Get version name from package info
     val versionName = remember {
@@ -332,6 +340,8 @@ fun AboutSheet(
     val colorScheme = MaterialTheme.colorScheme
     val palette = LocalBitchatPalette.current
     var selectedTab by remember { mutableStateOf(AboutTab.Info) }
+    var showKitty by remember { mutableStateOf(false) }
+    if (showKitty) com.bitchat.android.ui.kitty.KittyCollectionSheet(onDismiss = { showKitty = false })
     val supportedLanguages = remember(context) {
         LanguagePreferenceManager.supportedLanguages(context)
     }
@@ -355,6 +365,17 @@ fun AboutSheet(
                     // Header Section - App Identity
                     item(key = "hero") {
                         AboutHero(versionName = versionName ?: "")
+                    }
+
+                    // chatbit: kitty collection (badges, rank, outfits)
+                    item(key = "kitty") {
+                        val badgeCount by com.bitchat.android.game.KittyGame.badges.collectAsState()
+                        Box(Modifier.fillMaxWidth().padding(top = 14.dp), contentAlignment = Alignment.Center) {
+                            ChatbitButton(
+                                text = "🐱 " + stringResource(R.string.kitty_collection, badgeCount.size, com.bitchat.android.game.Badge.entries.size),
+                                onClick = { showKitty = true }
+                            )
+                        }
                     }
 
                     item(key = "tabs") {
@@ -422,6 +443,39 @@ fun AboutSheet(
                                             onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.Dark) },
                                             modifier = Modifier.weight(1f)
                                         )
+                                    }
+                                    // Accent palette: every tone meets WCAG AA in light and dark themes
+                                    val accent by com.bitchat.android.ui.theme.ThemePreferenceManager.accentFlow.collectAsState()
+                                    val darkNow = colorScheme.background.luminance() < 0.5f
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        com.bitchat.android.ui.theme.AccentColor.entries.forEach { a ->
+                                            val selected = a == accent
+                                            val accentLabel = stringResource(a.label)
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .clip(CircleShape)
+                                                    .background(Color(if (darkNow) a.dark else a.light))
+                                                    .border(
+                                                        width = if (selected) 3.dp else 0.dp,
+                                                        color = if (selected) colorScheme.onSurface else Color.Transparent,
+                                                        shape = CircleShape
+                                                    )
+                                                    .clickable { com.bitchat.android.ui.theme.ThemePreferenceManager.setAccent(context, a) }
+                                                    .semantics { contentDescription = accentLabel },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                if (selected) Icon(
+                                                    Icons.Filled.Check,
+                                                    contentDescription = null,
+                                                    tint = if (darkNow) Color.Black else Color.White,
+                                                    modifier = Modifier.size(16.dp)
+                                                )
+                                            }
+                                        }
                                     }
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
@@ -517,6 +571,8 @@ fun AboutSheet(
                         val shieldBots by com.bitchat.android.nostr.BitchatShield.blockBots.collectAsState()
                         val shieldLinks by com.bitchat.android.nostr.BitchatShield.blockLinks.collectAsState()
                         val shieldBlockedCount by com.bitchat.android.nostr.BitchatShield.blockedCount.collectAsState()
+                        val floodEnabled by com.bitchat.android.nostr.BitchatShield.floodEnabled.collectAsState()
+                        val floodFlagged by com.bitchat.android.nostr.BitchatShield.flaggedCount.collectAsState()
                         var backgroundEnabled by remember { mutableStateOf(com.bitchat.android.service.MeshServicePreferences.isBackgroundEnabled(true)) }
                         var liveVoiceEnabled by remember {
                             mutableStateOf(com.bitchat.android.features.voice.LiveVoicePreferences.isEnabled(context))
@@ -561,8 +617,8 @@ fun AboutSheet(
 
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Mic,
-                                        title = "Live push-to-talk",
-                                        subtitle = "Play voice bursts live on the mesh; voice notes are always sent on release",
+                                        title = stringResource(R.string.live_ptt_title),
+                                        subtitle = stringResource(R.string.live_ptt_desc),
                                         checked = liveVoiceEnabled,
                                         onCheckedChange = { enabled ->
                                             liveVoiceEnabled = enabled
@@ -576,11 +632,12 @@ fun AboutSheet(
                                         color = colorScheme.outlineVariant
                                     )
 
+                                    if (advancedMode) {
                                     // Incoming Proof of Work Filter Toggle (default: 0 bits / disabled)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Speed,
-                                        title = "Proof of Work Réception (${if (powEnabled) "${powDifficulty} bits" else "0 bit"})",
-                                        subtitle = "Filtre minimum requis pour voir les messages reçus (0 par défaut)",
+                                        title = stringResource(R.string.pow_receive_title, if (powEnabled) powDifficulty else 0),
+                                        subtitle = stringResource(R.string.pow_receive_desc),
                                         checked = powEnabled,
                                         onCheckedChange = { PoWPreferenceManager.setPowEnabled(it) }
                                     )
@@ -594,8 +651,8 @@ fun AboutSheet(
                                     // Outgoing Send Proof of Work Toggle (default: 12 bits / enabled)
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Speed,
-                                        title = "Proof of Work d'Envoi (${if (sendPowEnabled) "${sendPowDifficulty} bits" else "0 bit"})",
-                                        subtitle = "Mine tes messages envoyés (12 bits par défaut pour passer les filtres)",
+                                        title = stringResource(R.string.pow_send_title, if (sendPowEnabled) sendPowDifficulty else 0),
+                                        subtitle = stringResource(R.string.pow_send_desc),
                                         checked = sendPowEnabled,
                                         onCheckedChange = { PoWPreferenceManager.setSendPowEnabled(it) }
                                     )
@@ -609,8 +666,8 @@ fun AboutSheet(
                                     // Anti-Zalgo & Forbidden Characters Toggle
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Warning,
-                                        title = "Anti-Zalgo & Caractères interdits",
-                                        subtitle = "Bloque les diacritiques empilés (baguette#̢̛ͥ...), caractères invisibles et # dans les pseudos",
+                                        title = stringResource(R.string.shield_zalgo_title),
+                                        subtitle = stringResource(R.string.shield_zalgo_desc),
                                         checked = shieldZalgo,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockZalgo(it) }
                                     )
@@ -624,8 +681,8 @@ fun AboutSheet(
                                     // Anti-Bot Heuristics Toggle
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Lock,
-                                        title = "Protection Anti-Bot ($shieldBlockedCount bloqués)",
-                                        subtitle = "Bloque les pseudos auto-générés (bot_xxxx), le spam répété multi-clés et les rafales Sybil",
+                                        title = stringResource(R.string.shield_bots_title, shieldBlockedCount),
+                                        subtitle = stringResource(R.string.shield_bots_desc),
                                         checked = shieldBots,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockBots(it) }
                                     )
@@ -639,11 +696,35 @@ fun AboutSheet(
                                     // Anti-Link Spam Toggle
                                     SettingsToggleRow(
                                         icon = Icons.Filled.Public,
-                                        title = "Anti-Spam de Liens (URLs)",
-                                        subtitle = "Autorise les liens normaux mais bloque le spam répété d'un même lien/domaine",
+                                        title = stringResource(R.string.shield_links_title),
+                                        subtitle = stringResource(R.string.shield_links_desc),
                                         checked = shieldLinks,
                                         onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setBlockLinks(it) }
                                     )
+
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(start = 54.dp),
+                                        thickness = 1.dp,
+                                        color = colorScheme.outlineVariant
+                                    )
+
+                                    }
+
+                                    // Two-stage anti-flood (detection ported from bitchat-bot)
+                                    SettingsToggleRow(
+                                        icon = Icons.Filled.Shield,
+                                        title = stringResource(R.string.flood_row_title, floodFlagged),
+                                        subtitle = stringResource(R.string.flood_row_desc),
+                                        checked = floodEnabled,
+                                        onCheckedChange = { com.bitchat.android.nostr.BitchatShield.setFloodEnabled(it) }
+                                    )
+                                    if (advancedMode && onShowFloodSettings != null) {
+                                        ChatbitButton(
+                                            text = stringResource(R.string.flood_open_settings),
+                                            onClick = onShowFloodSettings,
+                                            modifier = Modifier.padding(start = 54.dp, bottom = 8.dp)
+                                        )
+                                    }
 
                                     HorizontalDivider(
                                         modifier = Modifier.padding(start = 54.dp),
@@ -1169,7 +1250,12 @@ fun AboutSheet(
                     }
 
                     // PoW Difficulty Sliders (Incoming filter + Outgoing send PoW)
-                    item(key = "pow_slider") {
+                    // chatbit protections: summary by default, every switch in advanced mode
+                    item(key = "security") {
+                        SecuritySettingsCard(advanced = advancedMode)
+                    }
+
+                    if (advancedMode) item(key = "pow_slider") {
                         val powEnabled by PoWPreferenceManager.powEnabled.collectAsState()
                         val powDifficulty by PoWPreferenceManager.powDifficulty.collectAsState()
                         val sendPowEnabled by PoWPreferenceManager.sendPowEnabled.collectAsState()
@@ -1194,7 +1280,8 @@ fun AboutSheet(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = "PoW Réception (filtre entrant)",
+                                                text = stringResource(R.string.pow_receive_header),
+                                                modifier = Modifier.weight(1f).padding(end = 8.dp),
                                                 fontFamily = BitchatFontFamily,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
@@ -1264,7 +1351,8 @@ fun AboutSheet(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = "PoW d'Envoi (tes messages)",
+                                                text = stringResource(R.string.pow_send_header),
+                                                modifier = Modifier.weight(1f).padding(end = 8.dp),
                                                 fontFamily = BitchatFontFamily,
                                                 fontSize = 14.sp,
                                                 fontWeight = FontWeight.Medium,
@@ -1366,6 +1454,55 @@ fun AboutSheet(
                                                 maxLines = 2
                                             )
                                         }
+                                        // Rotation de la route Tor
+                                        val rotation by TorPreferenceManager.rotationFlow.collectAsState()
+                                        val derniereRoute by torProvider.lastRouteChange.collectAsState()
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                        ) {
+                                            ChatbitButton(
+                                                text = stringResource(R.string.tor_new_route),
+                                                onClick = { torProvider.requestNewRoute() },
+                                                enabled = torStatus.running && torStatus.bootstrapPercent >= 100
+                                            )
+                                            if (derniereRoute > 0) {
+                                                Text(
+                                                    text = stringResource(R.string.tor_route_changed_at, java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT).format(java.util.Date(derniereRoute))),
+                                                    fontFamily = BitchatFontFamily,
+                                                    fontSize = 11.sp,
+                                                    color = palette.textTertiary
+                                                )
+                                            }
+                                        }
+                                        if (advancedMode) {
+                                        Text(
+                                            text = stringResource(R.string.tor_auto_rotation),
+                                            fontFamily = BitchatFontFamily,
+                                            fontSize = 12.sp,
+                                            color = colorScheme.onSurface
+                                        )
+                                        // wraps instead of cutting the last choice off-screen
+                                        androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                            TorPreferenceManager.ROTATION_CHOICES.forEach { m ->
+                                                FilterChip(
+                                                    selected = rotation == m,
+                                                    onClick = { TorPreferenceManager.setRotation(context, m) },
+                                                    label = {
+                                                        Text(
+                                                            when {
+                                                                m == 0 -> stringResource(R.string.tor_rotation_never)
+                                                                m < 60 -> stringResource(R.string.duration_minutes, m)
+                                                                else -> stringResource(R.string.duration_hours, m / 60)
+                                                            },
+                                                            fontFamily = BitchatFontFamily,
+                                                            fontSize = 11.sp
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
+                                        }
                                     }
                                 }
                             }
@@ -1387,7 +1524,10 @@ fun AboutSheet(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            if (selectedTab == AboutTab.Settings && onShowDebug != null) {
+                            if (selectedTab == AboutTab.Settings) {
+                                AdvancedModeToggle(advanced = advancedMode)
+                            }
+                            if (selectedTab == AboutTab.Settings && advancedMode && onShowDebug != null) {
                                 TextButton(onClick = onShowDebug) {
                                     Text(
                                         text = stringResource(R.string.about_debug_settings),

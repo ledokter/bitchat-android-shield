@@ -18,6 +18,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -245,7 +246,9 @@ fun MessagesList(
     onNicknameClick: ((String) -> Unit)? = null,
     onMessageLongPress: ((BitchatMessage) -> Unit)? = null,
     onCancelTransfer: ((BitchatMessage) -> Unit)? = null,
-    onImageClick: ((String, List<String>, Int) -> Unit)? = null
+    onImageClick: ((String, List<String>, Int) -> Unit)? = null,
+    /** Messages from blocked / reported people shown on request: drawn faded with a tag, like on the bot. */
+    blockedIds: Set<String> = emptySet()
 ) {
     val resolvedMentionPeerIdentities = mentionPeerIdentities
         ?: rememberMentionPeerIdentities(messages, conversationKey = conversationKey)
@@ -376,6 +379,29 @@ fun MessagesList(
                 Modifier
             }
 
+            val isBlocked = message.id in blockedIds
+            Column(
+                modifier = Modifier
+                    // Animates the shift when a neighbour is inserted or removed: this is what
+                    // makes the conversation glide up instead of jumping.
+                    .animateItem(
+                        // Entry fade is handled by entryModifier, together with the slide, so the
+                        // two cannot drift out of step.
+                        fadeInSpec = null,
+                        placementSpec = if (placementArmed) MessagePlacementSpec else null,
+                        fadeOutSpec = MessageFadeOutSpec
+                    )
+                    .then(entryModifier)
+            ) {
+            if (isBlocked && !isGrouped) {
+                Text(
+                    text = androidx.compose.ui.res.stringResource(R.string.blocked_tag),
+                    fontFamily = BitchatFontFamily,
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
             MessageItem(
                 message = message,
                 messages = messages,
@@ -392,18 +418,9 @@ fun MessagesList(
                 onMessageLongPress = onMessageLongPress,
                 onCancelTransfer = onCancelTransfer,
                 onImageClick = onImageClick,
-                modifier = Modifier
-                    // Animates the shift when a neighbour is inserted or removed: this is what
-                    // makes the conversation glide up instead of jumping.
-                    .animateItem(
-                        // Entry fade is handled by entryModifier, together with the slide, so the
-                        // two cannot drift out of step.
-                        fadeInSpec = null,
-                        placementSpec = if (placementArmed) MessagePlacementSpec else null,
-                        fadeOutSpec = MessageFadeOutSpec
-                    )
-                    .then(entryModifier)
+                modifier = if (isBlocked) Modifier.graphicsLayer { alpha = 0.35f } else Modifier
             )
+            }
         }
     }
 }
@@ -443,6 +460,18 @@ fun MessageItem(
                 // Provide a small end padding for own private messages so overlay doesn't cover text.
                 // Bubble mode draws the status beneath the bubble instead, so no inset is needed.
                 val endPad = if (!bubbles && message.isPrivate && message.sender == currentUserNickname) 16.dp else 0.dp
+                // chatbit: a message made only of cat emojis (+ optional @target) is a kitty reaction
+                val reaction = if (message.type == BitchatMessageType.Message) com.bitchat.android.ui.kitty.parseKittyReaction(message.content) else null
+                // chatbit: "* nick took a screenshot *" (sent by bitchat for iPhone) stands out as an alert
+                val screenshotBy = if (reaction == null && message.type == BitchatMessageType.Message) screenshotNoticeSender(message.content) else null
+                if (reaction != null) {
+                    com.bitchat.android.ui.kitty.KittyReaction(
+                        sender = message.sender, emojis = reaction.first, target = reaction.second,
+                        onLongPress = onMessageLongPress?.let { { it(message) } }
+                    )
+                } else if (screenshotBy != null) {
+                    ScreenshotNotice(screenshotBy, message.timestamp, timeFormatter)
+                } else
                 // Create a custom layout that combines selectable text with clickable nickname areas
                 MessageTextWithClickableNicknames(
                     message = message,
@@ -617,7 +646,7 @@ fun MessageItem(
                         fileName = file.name,
                         fileSize = file.length(),
                         mimeType = com.bitchat.android.features.file.FileUtils.getMimeTypeFromExtension(file.name),
-                        content = file.readBytes()
+                        content = com.bitchat.android.security.MediaVault.readBytes(file)
                     )
                 } else null
             } catch (e: Exception) {
@@ -1182,8 +1211,7 @@ internal fun CashuPaymentChip(
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.cashu_copy_token)) },
                 onClick = {
-                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    clipboard.setPrimaryClip(ClipData.newPlainText("Cashu token", token))
+                    com.bitchat.android.security.SecureClipboard.copy(context, "Cashu token", token)
                     showMenu = false
                 }
             )
@@ -1293,4 +1321,34 @@ fun DeliveryStatusIcon(status: DeliveryStatus) {
             scaleY = scale.value
         }
     )
+}
+
+
+private val SCREENSHOT_NOTICE = Regex("""^\* (.{1,64}) took a screenshot \*$""")
+
+/** Nickname in a bitchat screenshot notice ("* anon42 took a screenshot *"), or null. */
+internal fun screenshotNoticeSender(content: String): String? = SCREENSHOT_NOTICE.find(content.trim())?.groupValues?.get(1)
+
+@Composable
+private fun ScreenshotNotice(nickname: String, timestamp: java.util.Date, timeFormatter: java.text.SimpleDateFormat) {
+    val warn = MaterialTheme.colorScheme.error
+    Row(
+        Modifier
+            .padding(vertical = 2.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(warn.copy(alpha = 0.12f))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            painter = androidx.compose.ui.res.painterResource(R.drawable.ic_screenshot_notice),
+            contentDescription = null, tint = warn, modifier = Modifier.size(18.dp)
+        )
+        Text(
+            stringResource(R.string.screenshot_notice, nickname),
+            color = warn, fontFamily = BitchatFontFamily, fontSize = 13.sp, fontWeight = FontWeight.SemiBold
+        )
+        Text(timeFormatter.format(timestamp), color = warn.copy(alpha = 0.7f), fontSize = 11.sp, fontFamily = BitchatFontFamily)
+    }
 }

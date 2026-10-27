@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- chatbit in-app logo: cat without its bow (bow is a separate tinted layer) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="84dp"
+    android:viewportWidth="24"
+    android:viewportHeight="21">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M3,1h1v1h-1zM3,2h2v1h-2zM3,3h3v1h-3zM3,4h4v1h-4zM3,5h5v1h-5zM9,5h6v1h-6zM18,5h1v1h-1zM6,6h12v1h-12zM4,7h16v1h-16zM3,8h18v1h-18zM3,9h18v1h-18zM2,10h20v1h-20zM2,11h4v1h-4zM8,11h8v1h-8zM18,11h4v1h-4zM4,12h2v1h-2zM8,12h8v1h-8zM18,12h2v1h-2zM2,13h4v1h-4zM8,13h8v1h-8zM18,13h4v1h-4zM4,14h7v1h-7zM13,14h7v1h-7zM3,15h18v1h-18zM4,16h16v1h-16zM4,17h16v1h-16zM6,18h12v1h-12zM9,19h6v1h-6z" />
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M3,0h1v1h-1zM15,0h3v1h-3zM19,0h3v1h-3zM2,1h1v1h-1zM4,1h1v1h-1zM14,1h1v1h-1zM18,1h1v1h-1zM22,1h1v1h-1zM2,2h1v1h-1zM5,2h1v1h-1zM14,2h1v1h-1zM22,2h1v1h-1zM2,3h1v1h-1zM6,3h1v1h-1zM14,3h1v1h-1zM22,3h1v1h-1zM2,4h1v1h-1zM7,4h1v1h-1zM9,4h6v1h-6zM22,4h1v1h-1zM2,5h1v1h-1zM8,5h1v1h-1zM22,5h1v1h-1zM3,6h3v1h-3zM18,6h4v1h-4zM3,7h1v1h-1zM20,7h1v1h-1zM2,8h1v1h-1zM21,8h1v1h-1zM2,9h1v1h-1zM21,9h1v1h-1zM1,10h1v1h-1zM22,10h1v1h-1zM1,11h1v1h-1zM6,11h2v1h-2zM16,11h2v1h-2zM22,11h1v1h-1zM0,12h4v1h-4zM6,12h2v1h-2zM16,12h2v1h-2zM20,12h4v1h-4zM1,13h1v1h-1zM6,13h2v1h-2zM16,13h2v1h-2zM22,13h1v1h-1zM0,14h4v1h-4zM20,14h4v1h-4zM2,15h1v1h-1zM21,15h1v1h-1zM1,16h3v1h-3zM20,16h3v1h-3zM3,17h1v1h-1zM20,17h1v1h-1zM4,18h2v1h-2zM18,18h2v1h-2zM6,19h3v1h-3zM15,19h3v1h-3zM9,20h6v1h-6z" />
+    <path
+        android:fillColor="#FFC828"
+        android:pathData="M11,14h2v1h-2z" />
+</vector>

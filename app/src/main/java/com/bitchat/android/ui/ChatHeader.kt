@@ -1,5 +1,6 @@
 package com.bitchat.android.ui
 
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
@@ -15,6 +16,9 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import com.bitchat.android.ui.kitty.KittyAnchors
+import com.bitchat.android.ui.kitty.kittyAnchor
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -743,7 +747,7 @@ private fun MainHeader(
                 onClick = onTitleClick,
                 onTripleClick = onTripleTitleClick,
                 contentDescription = stringResource(R.string.cd_open_about),
-                modifier = Modifier.size(HeaderTapTarget),
+                modifier = Modifier.size(HeaderTapTarget).kittyAnchor(KittyAnchors.LOGO),
             )
 
             // Nudge toward the brand glyph: the 44.dp tap target leaves more optical gap than the
@@ -777,16 +781,24 @@ private fun MainHeader(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                if (hasUnreadPrivateMessages.isNotEmpty()) {
-                    HeaderIconButton(
-                        onClick = { viewModel.openLatestUnreadPrivateChat() },
-                        contentDescription = stringResource(R.string.cd_unread_private_messages)
-                    ) {
+                // chatbit: private conversations always one tap away; orange + dot when unread
+                val hasUnreadDm = hasUnreadPrivateMessages.isNotEmpty()
+                HeaderIconButton(
+                    onClick = {
+                        if (hasUnreadDm) viewModel.openLatestUnreadPrivateChat() else viewModel.showMeshPeerList()
+                    },
+                    contentDescription = stringResource(if (hasUnreadDm) R.string.cd_unread_private_messages else R.string.conversations),
+                    modifier = Modifier.kittyAnchor(KittyAnchors.DMS)
+                ) {
+                    Box {
                         Icon(
                             painter = painterResource(R.drawable.ic_spec_envelope),
-                            contentDescription = stringResource(R.string.cd_unread_private_messages),
+                            contentDescription = null,
                             modifier = Modifier.size(HeaderIconSize),
-                            tint = palette.accentOrange
+                            tint = if (hasUnreadDm) palette.accentOrange else colorScheme.primary
+                        )
+                        if (hasUnreadDm) Box(
+                            Modifier.align(Alignment.TopEnd).size(7.dp).clip(CircleShape).background(palette.accentOrange)
                         )
                     }
                 }
@@ -795,6 +807,28 @@ private fun MainHeader(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
+                    // chatbit: on the mesh, globe = world map; long press = recent channels
+                    if (selectedLocationChannel !is com.bitchat.android.geohash.ChannelID.Location) {
+                        MeshGlobeButton()
+                    }
+
+                    // chatbit: one tap = new Tor route (new exit IP); spins while it is built
+                    TorRotateButton()
+
+                    // chatbit private rooms
+                    HeaderIconButton(
+                        onClick = { com.bitchat.android.rooms.PrivateRooms.openSheet() },
+                        contentDescription = stringResource(R.string.rooms_title),
+                        modifier = Modifier.kittyAnchor(KittyAnchors.ROOMS)
+                    ) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Filled.Lock,
+                            contentDescription = null,
+                            modifier = Modifier.size(HeaderIconSize),
+                            tint = colorScheme.primary
+                        )
+                    }
+
                     LocationNotesButton(
                         viewModel = viewModel,
                         onClick = onLocationNotesClick
@@ -815,6 +849,7 @@ private fun MainHeader(
                     selectedLocationChannel = selectedLocationChannel,
                     geohashPeople = geohashPeople,
                     onClick = onSidebarClick,
+                    modifier = Modifier.kittyAnchor(KittyAnchors.PEOPLE),
                     showJoinedChannelCount = crowdingMode == HeaderCrowdingMode.Full
                 )
             }
@@ -871,6 +906,7 @@ private fun LocationChannelsButton(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = if (showLabel) Arrangement.spacedBy(6.dp) else Arrangement.Center,
         modifier = Modifier
+            .kittyAnchor(KittyAnchors.CHANNEL)
             .clip(HeaderClusterShape)
             .pressScaleClickable(
                 onClick = onClick,
@@ -899,5 +935,116 @@ private fun LocationChannelsButton(
                 modifier = Modifier.widthIn(max = 88.dp)
             )
         }
+    }
+}
+
+/** Opens the world map; a long press lists the location channels visited lately. */
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
+@Composable
+private fun MeshGlobeButton() {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val manager = remember { com.bitchat.android.geohash.LocationChannelManager.getInstance(context) }
+    val recents by manager.recentGeohashes.collectAsStateWithLifecycle()
+    val names by remember { com.bitchat.android.geohash.GeohashBookmarksStore.getInstance(context) }
+        .bookmarkNames.collectAsStateWithLifecycle()
+    var menu by remember { mutableStateOf(false) }
+    val open: (String) -> Unit = { gh -> channelForManualGeohash(gh)?.let { manager.selectManual(it) } }
+    val mapLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            result.data?.getStringExtra(GeohashPickerActivity.EXTRA_RESULT_GEOHASH)
+                ?.takeIf { it.isNotBlank() }?.let(open)
+        }
+    }
+    val label = stringResource(R.string.map_open)
+    Box {
+        Box(
+            modifier = Modifier
+                .size(HeaderTapTarget)
+                .kittyAnchor(KittyAnchors.GLOBE)
+                .clip(CircleShape)
+                .combinedClickable(
+                    onClickLabel = label,
+                    onClick = { mapLauncher.launch(android.content.Intent(context, WorldMapActivity::class.java)) },
+                    onLongClick = { menu = true }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_spec_globe),
+                contentDescription = label,
+                modifier = Modifier.size(HeaderIconSize),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        androidx.compose.material3.DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
+            Text(
+                text = stringResource(R.string.recent_channels),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+            )
+            if (recents.isEmpty()) {
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(stringResource(R.string.recent_channels_empty)) },
+                    onClick = { menu = false },
+                    enabled = false
+                )
+            }
+            recents.forEach { gh ->
+                androidx.compose.material3.DropdownMenuItem(
+                    text = { Text(names[gh]?.let { "#$gh · $it" } ?: "#$gh", maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    leadingIcon = {
+                        Icon(painterResource(R.drawable.ic_spec_globe), null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.primary)
+                    },
+                    onClick = { menu = false; open(gh) }
+                )
+            }
+            androidx.compose.material3.HorizontalDivider()
+            androidx.compose.material3.DropdownMenuItem(
+                text = { Text(label) },
+                onClick = { menu = false; mapLauncher.launch(android.content.Intent(context, WorldMapActivity::class.java)) }
+            )
+        }
+    }
+}
+
+/** New Tor route on demand. Hidden when Tor is off; spins and is disabled while rotating. */
+@Composable
+private fun TorRotateButton() {
+    val tor = remember { ArtiTorManager.getInstance() }
+    val status by tor.statusFlow.collectAsStateWithLifecycle()
+    val rotating by tor.rotating.collectAsStateWithLifecycle()
+    // chatbit: the arrows also turn while a location channel's conversation is loading
+    val loading by com.bitchat.android.ui.kitty.ConversationLoading.active.collectAsStateWithLifecycle()
+    if (status.mode == TorMode.OFF) return
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val angle = if (rotating || loading) {
+        val t = androidx.compose.animation.core.rememberInfiniteTransition(label = "torRotate")
+        t.animateFloat(
+            0f, 360f,
+            androidx.compose.animation.core.infiniteRepeatable(
+                androidx.compose.animation.core.tween(1100, easing = androidx.compose.animation.core.LinearEasing)
+            ),
+            label = "torAngle"
+        ).value
+    } else 0f
+    val ready = status.running && status.bootstrapPercent >= 100
+    HeaderIconButton(
+        onClick = {
+            if (rotating) return@HeaderIconButton
+            android.widget.Toast.makeText(context, context.getString(R.string.tor_rotating_toast), android.widget.Toast.LENGTH_SHORT).show()
+            tor.requestNewRoute()
+        },
+        contentDescription = stringResource(R.string.tor_new_route)
+    ) {
+        Icon(
+            imageVector = androidx.compose.material.icons.Icons.Filled.Autorenew,
+            contentDescription = null,
+            modifier = Modifier.size(HeaderIconSize).graphicsLayer { rotationZ = angle },
+            tint = if (ready && !rotating && !loading) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+        )
     }
 }

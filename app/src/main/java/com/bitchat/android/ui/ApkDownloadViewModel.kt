@@ -237,13 +237,14 @@ class ApkDownloadViewModel internal constructor(
     }
 
     private fun onHotspotShareClicked() {
-        val apkFile = apkManager.getCachedApk()
-        if (apkFile != null) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            // refresh first: an update installed since the last share must replace the cached copy
+            val apkFile = apkManager.prepareLocalApkInfo()?.file
+            if (apkFile != null) {
                 _effect.send(ApkUiEffect.NavigateToHotspot(apkFile.absolutePath))
+            } else {
+                sendToast(getString(R.string.apk_not_ready_please_prepare_it_first))
             }
-        } else {
-            sendToast(getString(R.string.apk_not_ready_please_prepare_it_first))
         }
     }
 
@@ -251,7 +252,7 @@ class ApkDownloadViewModel internal constructor(
         _state.update { it.copy(showShareApkDialog = false) }
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val apkFile = apkManager.getCachedApk()
+                val apkFile = apkManager.prepareLocalApkInfo()?.file
                 if (apkFile == null || !apkFile.exists()) {
                     sendToast(getString(R.string.apk_not_ready_please_prepare_it_first))
                     return@launch

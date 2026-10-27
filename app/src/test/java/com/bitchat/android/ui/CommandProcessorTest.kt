@@ -158,7 +158,8 @@ class CommandProcessorTest {
     )
 
     assertEquals(
-      "invalid cashu token — not sending it",
+      // system messages are translated resources (resolved to their id without Android resources)
+      com.bitchat.android.util.AppStrings.get(com.bitchat.android.R.string.sys_invalid_cashu),
       chatState.getChannelMessagesValue()["geo:$geohash"]?.single()?.content
     )
     assertEquals(0, chatState.getMessagesValue().size)

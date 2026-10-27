@@ -9,7 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.bitchat.android.wifiaware.WifiAwareController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -41,6 +44,35 @@ class HotspotViewModel(application: Application) : AndroidViewModel(application)
     /** Once-releasable radio claim owned by the current hotspot session. */
     private var awareLease: WifiAwareController.HotspotLease? = null
     private val context = application.applicationContext
+
+    /** Auto-stop and periodic mesh announcement for the running session. */
+    private var watchdog: Job? = null
+
+    init {
+        // Stop button on the chat-screen banner
+        viewModelScope.launch { HotspotStatus.stopRequests.collect { stopHotspot() } }
+    }
+
+    private fun startWatchdog() {
+        watchdog?.cancel()
+        watchdog = viewModelScope.launch {
+            var lastAnnounce = 0L
+            while (isActive) {
+                val live = HotspotStatus.live.value ?: break
+                val now = System.currentTimeMillis()
+                if (now >= live.stopsAt) {
+                    Log.d(TAG, "No visitor for a while, stopping hotspot")
+                    stopHotspot()
+                    break
+                }
+                if (HotspotStatus.announce.value && now - lastAnnounce >= HotspotStatus.ANNOUNCE_EVERY_MS) {
+                    HotspotStatus.announceNow()
+                    lastAnnounce = now
+                }
+                delay(30_000)
+            }
+        }
+    }
 
     /**
      * Start the hotspot with the provided APK file.
@@ -96,6 +128,11 @@ class HotspotViewModel(application: Application) : AndroidViewModel(application)
                                     port = ApkWebServer.DEFAULT_PORT,
                                     connectedPeers = info.connectedPeers
                                 )
+                                HotspotStatus.started(
+                                    info.ssid, info.password,
+                                    "http://${info.ipAddress}:${ApkWebServer.DEFAULT_PORT}"
+                                )
+                                startWatchdog()
                             } catch (e: Exception) {
                                 Log.e(TAG, "Failed to start web server", e)
                                 failWith("Failed to start web server: ${e.message}")
@@ -109,6 +146,7 @@ class HotspotViewModel(application: Application) : AndroidViewModel(application)
                             val currentState = _state.value
                             if (currentState is HotspotState.Active && info != null) {
                                 _state.value = currentState.copy(connectedPeers = info.connectedPeers)
+                                HotspotStatus.peersChanged(info.connectedPeers)
                             }
                         }
                     }
@@ -186,6 +224,9 @@ class HotspotViewModel(application: Application) : AndroidViewModel(application)
 
     /** Releases every resource startHotspot may have acquired. Safe to call twice. */
     private fun teardown() {
+        watchdog?.cancel()
+        watchdog = null
+        HotspotStatus.ended()
         webServer?.stopServer()
         webServer = null
 

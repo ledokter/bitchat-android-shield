@@ -185,12 +185,7 @@ internal fun AboutHero(
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            imageVector = BitChatIcon,
-            contentDescription = null,
-            tint = colorScheme.primary,
-            modifier = Modifier.size(64.dp)
-        )
+        ChatbitLogo(height = 64.dp, dressed = true)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -322,7 +317,8 @@ private fun AboutTabLabel(
 @Composable
 private fun AboutInstructionRow(
     @DrawableRes iconRes: Int,
-    text: String
+    text: String,
+    kitty: Boolean = false
 ) {
     val colorScheme = MaterialTheme.colorScheme
 
@@ -333,7 +329,11 @@ private fun AboutInstructionRow(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.Top
     ) {
-        Icon(
+        if (kitty) {
+            Box(Modifier.padding(top = 1.dp).size(22.dp), contentAlignment = Alignment.Center) {
+                ChatbitLogo(height = 19.dp)
+            }
+        } else Icon(
             painter = painterResource(iconRes),
             contentDescription = null,
             tint = colorScheme.primary,
@@ -398,7 +398,8 @@ internal fun AboutHowToUseSection(modifier: Modifier = Modifier) {
         )
         AboutInstructionRow(
             iconRes = R.drawable.ic_spec_waveform,
-            text = stringResource(R.string.about_howto_panic)
+            text = stringResource(R.string.about_howto_panic),
+            kitty = true
         )
     }
 }
