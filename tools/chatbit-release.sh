@@ -53,7 +53,7 @@ ALIGNED="$DIST/chatbit-universal-aligned.apk"
 OUT="$DIST/chatbit-universal.apk"
 "$BUILD_TOOLS/zipalign" -f -p 4 "$UNSIGNED" "$ALIGNED"
 "$BUILD_TOOLS/apksigner" sign --ks "$KEYSTORE" --ks-key-alias chatbit \
-    --ks-pass "file:$PASSWORD_FILE" --key-pass "file:$PASSWORD_FILE" --out "$OUT" "$ALIGNED"
+    --ks-pass "file:$PASSWORD_FILE" --out "$OUT" "$ALIGNED"  # key password = store password (apksigner would read a 2nd line)
 rm -f "$ALIGNED" "$OUT.idsig"
 
 echo "→ verifying the signature"
