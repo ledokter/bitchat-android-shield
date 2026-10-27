@@ -10,6 +10,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Hub
@@ -561,8 +562,30 @@ fun LocationChannelsSheet(
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp)
                         ) {
+                            Icon(painterResource(R.drawable.ic_spec_globe), contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
                             Text(
-                                text = "🌍 " + stringResource(R.string.map_open),
+                                text = stringResource(R.string.map_open),
+                                fontFamily = BitchatFontFamily
+                            )
+                        }
+                    }
+
+                    // chatbit: find a zone by place name (offline list, by continent and country)
+                    item(key = "zone_directory") {
+                        androidx.compose.material3.OutlinedButton(
+                            onClick = {
+                                mapPickerLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java))
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(top = 8.dp)
+                        ) {
+                            Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.dir_open),
                                 fontFamily = BitchatFontFamily
                             )
                         }

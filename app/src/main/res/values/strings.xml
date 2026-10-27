@@ -1052,4 +1052,23 @@
     <string name="hs_announce_title">Announce on the mesh</string>
     <string name="hs_announce_desc">Every 10 min, nearby chatbit users learn that the app can be installed here, offline.</string>
     <string name="hs_announce_message">%1$s · install point nearby, no internet needed\nWi-Fi: %2$s\nPassword: %3$s\nThen open %4$s\nBring friends who don\'t have chatbit yet!</string>
+    <string name="dir_open">Zone directory</string>
+    <string name="dir_title">Directory</string>
+    <string name="dir_search">Search a city or district</string>
+    <string name="dir_countries">%1$d countries</string>
+    <string name="dir_cities">%1$d cities</string>
+    <string name="dir_districts">Districts</string>
+    <string name="dir_join">Join</string>
+    <string name="dir_empty">No place found</string>
+    <string name="dir_source">Places: GeoNames (CC BY 4.0), read offline. Nothing is sent.</string>
+    <string name="dir_size_city">≈ 5 km</string>
+    <string name="dir_size_hood">≈ 1.2 km</string>
+    <string name="dir_size_block">≈ 150 m</string>
+    <string name="continent_eu">Europe</string>
+    <string name="continent_af">Africa</string>
+    <string name="continent_na">North America</string>
+    <string name="continent_sa">South America</string>
+    <string name="continent_as">Asia</string>
+    <string name="continent_oc">Oceania</string>
+    <string name="continent_an">Antarctica</string>
 </resources>

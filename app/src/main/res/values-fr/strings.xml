@@ -1016,4 +1016,23 @@
     <string name="hs_announce_title">Annoncer sur le mesh</string>
     <string name="hs_announce_desc">Toutes les 10 min, les utilisateurs chatbit proches apprennent qu’on peut installer l’appli ici, sans internet.</string>
     <string name="hs_announce_message">%1$s · point d’installation à proximité, sans internet\nWi-Fi : %2$s\nMot de passe : %3$s\nPuis ouvrir %4$s\nAmenez vos amis qui n’ont pas encore chatbit !</string>
+    <string name="dir_open">Annuaire des zones</string>
+    <string name="dir_title">Annuaire</string>
+    <string name="dir_search">Chercher une ville ou un quartier</string>
+    <string name="dir_countries">%1$d pays</string>
+    <string name="dir_cities">%1$d villes</string>
+    <string name="dir_districts">Quartiers et arrondissements</string>
+    <string name="dir_join">Rejoindre</string>
+    <string name="dir_empty">Aucun lieu trouvé</string>
+    <string name="dir_source">Lieux : GeoNames (CC BY 4.0), consultés hors ligne. Rien n\'est envoyé.</string>
+    <string name="dir_size_city">≈ 5 km</string>
+    <string name="dir_size_hood">≈ 1,2 km</string>
+    <string name="dir_size_block">≈ 150 m</string>
+    <string name="continent_eu">Europe</string>
+    <string name="continent_af">Afrique</string>
+    <string name="continent_na">Amérique du Nord</string>
+    <string name="continent_sa">Amérique du Sud</string>
+    <string name="continent_as">Asie</string>
+    <string name="continent_oc">Océanie</string>
+    <string name="continent_an">Antarctique</string>
 </resources>

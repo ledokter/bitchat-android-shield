@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -112,6 +115,9 @@ class WorldMapActivity : ComponentActivity() {
                 var night by remember { mutableStateOf(true) }
                 var spin by remember { mutableStateOf(true) }
                 var selected by remember { mutableStateOf<GlobeMarker?>(null) }
+                val directoryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
+                    if (r.resultCode == Activity.RESULT_OK) { setResult(Activity.RESULT_OK, r.data); finish() }
+                }
 
                 val counts by activity.collectAsState()
                 val caches by geocaches.collectAsState()
@@ -174,12 +180,16 @@ class WorldMapActivity : ComponentActivity() {
 
                     // top bar: back, title, layers and toggles
                     Column(Modifier.fillMaxWidth().statusBarsPadding().padding(8.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             // the globe is always on a dark sky: light text whatever the app theme
                             IconButton(onClick = { finish() }) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.rooms_back), tint = androidx.compose.ui.graphics.Color.White)
                             }
-                            Text(stringResource(R.string.map_title), fontFamily = BitchatFontFamily, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.White)
+                            Text(stringResource(R.string.map_title), fontFamily = BitchatFontFamily, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.White, modifier = Modifier.weight(1f))
+                            // place names vanish when zoomed in: find a zone by name instead
+                            IconButton(onClick = { directoryLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java)) }) {
+                                Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.dir_open), tint = androidx.compose.ui.graphics.Color.White)
+                            }
                         }
                         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                             Chip(stringResource(R.string.map_layer_activity), layer == Layer.ACTIVITY) { layer = Layer.ACTIVITY; selected = null }
