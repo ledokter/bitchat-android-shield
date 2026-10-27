@@ -7,6 +7,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -81,14 +83,32 @@ class HotspotActivity : ComponentActivity() {
             return
         }
 
+        // Leaving while the hotspot runs goes back to the chat and keeps it on; the chat
+        // banner and the notification show it and stop it.
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() = leave()
+        })
+        lifecycleScope.launch { HotspotStatus.stopRequests.collect { finish() } }
+
         setContent {
             BitchatTheme {
                 HotspotScreen(
                     viewModel = viewModel,
                     apkFile = apkFile,
-                    onClose = { finish() }
+                    onClose = { leave() }
                 )
             }
+        }
+    }
+
+    private fun leave() {
+        if (viewModel.state.value is HotspotViewModel.HotspotState.Active) {
+            startActivity(
+                Intent(this, com.bitchat.android.MainActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            )
+        } else {
+            finish()
         }
     }
 
