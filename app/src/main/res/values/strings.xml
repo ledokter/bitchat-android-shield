@@ -1055,8 +1055,6 @@
     <string name="dir_open">Zone directory</string>
     <string name="dir_title">Directory</string>
     <string name="dir_search">Search a city or district</string>
-    <string name="dir_countries">%1$d countries</string>
-    <string name="dir_cities">%1$d cities</string>
     <string name="dir_districts">Districts</string>
     <string name="dir_join">Join</string>
     <string name="dir_empty">No place found</string>
@@ -1071,4 +1069,12 @@
     <string name="continent_as">Asia</string>
     <string name="continent_oc">Oceania</string>
     <string name="continent_an">Antarctica</string>
+    <string name="dir_level_large">large zone</string>
+    <string name="dir_level_zone">zone</string>
+    <string name="dir_subzones">Smaller zones inside</string>
+    <string name="dir_cities_here">Cities in this zone</string>
+    <string name="dir_no_city">No city above 15,000 people here: join the zone itself.</string>
+    <string name="dir_all_cities">All cities</string>
+    <plurals name="dir_cities"><item quantity="one">%1$d city</item><item quantity="other">%1$d cities</item></plurals>
+    <plurals name="dir_countries"><item quantity="one">%1$d country</item><item quantity="other">%1$d countries</item></plurals>
 </resources>

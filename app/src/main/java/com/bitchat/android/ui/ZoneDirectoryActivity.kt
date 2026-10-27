@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -108,44 +109,59 @@ private fun continentName(code: String): String = stringResource(
     }
 )
 
+/** "" = the country's zones, ALL_CITIES = its city list, otherwise a tile code (1 to 4 characters). */
+private const val ALL_CITIES = "*"
+
+/** Approximate tile width by code length, in km (geohash cells). */
+private val TILE_SIZE = mapOf(1 to "≈ 5000 km", 2 to "≈ 1250 km", 3 to "≈ 156 km", 4 to "≈ 39 km")
+
+@Composable
+private fun tileLevel(length: Int): String = when (length) {
+    1 -> stringResource(R.string.dir_level_large)
+    2 -> stringResource(R.string.location_level_region)
+    3 -> stringResource(R.string.dir_level_zone)
+    else -> stringResource(R.string.location_level_province)
+} + " · " + TILE_SIZE[length.coerceIn(1, 4)]
+
 @Composable
 private fun Directory(onJoin: (String) -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
-    val colors = MaterialTheme.colorScheme
     val data by produceState<ZoneDirectory.Data?>(null) {
         value = withContext(Dispatchers.IO) { ZoneDirectory.load(context) }
     }
     var continent by rememberSaveable { mutableStateOf<String?>(null) }
     var country by rememberSaveable { mutableStateOf<String?>(null) }
+    var path by rememberSaveable { mutableStateOf("") }
     var query by rememberSaveable { mutableStateOf("") }
     var open by remember { mutableStateOf<ZoneDirectory.Place?>(null) }
     val list = rememberLazyListState()
-    LaunchedEffect(continent, country, query.isBlank()) { list.scrollToItem(0) }
+    LaunchedEffect(continent, country, path, query.isBlank()) { list.scrollToItem(0) }
 
-    BackHandler {
+    // one step up: tile -> parent tile -> country -> continent -> close
+    fun up() {
+        open = null
         when {
-            query.isNotEmpty() -> query = ""
-            country != null -> { country = null; open = null }
+            path == ALL_CITIES || path.length <= 2 -> path = ""
+            path.isNotEmpty() -> path = path.dropLast(1)
+            country != null -> country = null
             continent != null -> continent = null
             else -> onClose()
         }
     }
+    BackHandler { if (query.isNotEmpty()) query = "" else up() }
 
     Column(
         Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().imePadding()
     ) {
         Row(Modifier.fillMaxWidth().padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = {
-                when {
-                    country != null -> { country = null; open = null }
-                    continent != null -> continent = null
-                    else -> onClose()
-                }
-            }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.rooms_back)) }
-            // where we are: Directory / Europe / France
+            IconButton(onClick = { up() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.rooms_back)) }
+            // where we are: Directory / Europe / France / #u0
             Text(
-                listOfNotNull(stringResource(R.string.dir_title), continent?.let { continentName(it) }, country?.let(::countryName))
-                    .joinToString(" / "),
+                // while searching, results come from everywhere: the path would mislead
+                if (query.isNotBlank()) stringResource(R.string.dir_title) else listOfNotNull(
+                    stringResource(R.string.dir_title), continent?.let { continentName(it) }, country?.let(::countryName),
+                    path.takeIf { it.isNotEmpty() && it != ALL_CITIES }?.let { "#$it" }
+                ).joinToString(" / "),
                 fontFamily = BitchatFontFamily, fontWeight = FontWeight.Bold, fontSize = 17.sp,
                 maxLines = 1, overflow = TextOverflow.Ellipsis
             )
@@ -165,35 +181,143 @@ private fun Directory(onJoin: (String) -> Unit, onClose: () -> Unit) {
 
         val d = data ?: return@Column
         val collator = remember { Collator.getInstance() }
+        val cc = country
         LazyColumn(Modifier.fillMaxSize(), state = list) {
             when {
                 query.isNotBlank() -> {
+                    // a typed zone code ("#u09") comes first, then places by name
+                    ZoneDirectory.asCode(query)?.let { code ->
+                        item(key = "code") {
+                            val inCountries = d.countriesWithTile(code)
+                            TileRow(
+                                code = code,
+                                places = inCountries.take(4).map(::countryName),
+                                showLevel = code.length <= 4,
+                                onOpen = if (inCountries.size == 1 && code.length <= 4) {
+                                    { country = inCountries[0]; continent = d.continentOf[inCountries[0]]; path = if (code.length == 1) "" else code; query = "" }
+                                } else null,
+                                onJoin = onJoin
+                            )
+                        }
+                    }
                     val found = d.search(query)
-                    if (found.isEmpty()) item { Hint(stringResource(R.string.dir_empty)) }
+                    if (found.isEmpty() && ZoneDirectory.asCode(query) == null) item { Hint(stringResource(R.string.dir_empty)) }
                     items(found, key = { "s" + it.geohash + it.name }) { p ->
                         PlaceRow(p, expanded = open === p, showCountry = true, onToggle = { open = if (open === p) null else p }, onJoin = onJoin)
                     }
                 }
-                country != null -> {
-                    items(d.citiesByCountry[country].orEmpty(), key = { it.geohash + it.name }) { p ->
+                cc != null && path == ALL_CITIES -> {
+                    items(d.citiesByCountry[cc].orEmpty(), key = { it.geohash + it.name }) { p ->
                         PlaceRow(p, expanded = open === p, showCountry = false, onToggle = { open = if (open === p) null else p }, onJoin = onJoin)
+                    }
+                }
+                cc != null && path.isEmpty() -> {
+                    // the whole territory at a glance: large zones, then regions to open
+                    item(key = "large") {
+                        Section(stringResource(R.string.dir_level_large) + " · " + TILE_SIZE[1])
+                        LargeZones(d.subTiles(cc, "").map { it.code }, onJoin)
+                    }
+                    item(key = "regions") { Section(stringResource(R.string.location_level_region) + " · " + TILE_SIZE[2]) }
+                    items(d.subTiles(cc, "").flatMap { d.subTiles(cc, it.code) }, key = { "t" + it.code }) { t ->
+                        TileRow(t.code, t.places, showLevel = false, onOpen = { path = t.code }, onJoin = onJoin)
+                    }
+                    item(key = "all") {
+                        NavRow(stringResource(R.string.dir_all_cities), cityCount(d.citiesByCountry[cc]?.size ?: 0)) { path = ALL_CITIES }
+                    }
+                }
+                cc != null -> {
+                    // the current tile on top, so it can be joined as a whole
+                    d.tile(cc, path)?.let { t ->
+                        item(key = "here") { TileRow(t.code, t.places, showLevel = true, current = true, onOpen = null, onJoin = onJoin) }
+                    }
+                    if (path.length < 4) {
+                        item(key = "sub") { Section(stringResource(R.string.dir_subzones)) }
+                        items(d.subTiles(cc, path), key = { "t" + it.code }) { t ->
+                            TileRow(t.code, t.places, showLevel = true, onOpen = { path = t.code }, onJoin = onJoin)
+                        }
+                    } else {
+                        item(key = "cities") { Section(stringResource(R.string.dir_cities_here)) }
+                        val cities = d.citiesIn(cc, path)
+                        if (cities.isEmpty()) item { Hint(stringResource(R.string.dir_no_city)) }
+                        items(cities, key = { it.geohash + it.name }) { p ->
+                            PlaceRow(p, expanded = open === p, showCountry = false, onToggle = { open = if (open === p) null else p }, onJoin = onJoin)
+                        }
                     }
                 }
                 continent != null -> {
                     val ccs = d.countries(continent!!).sortedWith(compareBy(collator) { countryName(it) })
-                    items(ccs, key = { it }) { cc ->
-                        NavRow(countryName(cc), stringResource(R.string.dir_cities, d.citiesByCountry[cc]?.size ?: 0)) { country = cc }
+                    items(ccs, key = { it }) { c ->
+                        NavRow(countryName(c), cityCount(d.citiesByCountry[c]?.size ?: 0)) { country = c; path = "" }
                     }
                 }
                 else -> {
                     items(ZoneDirectory.CONTINENTS, key = { it }) { c ->
-                        NavRow(continentName(c), stringResource(R.string.dir_countries, d.countries(c).size)) { continent = c }
+                        NavRow(continentName(c), pluralStringResource(R.plurals.dir_countries, d.countries(c).size, d.countries(c).size)) { continent = c }
                     }
                     item { Hint(stringResource(R.string.dir_source)) }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun cityCount(n: Int) = pluralStringResource(R.plurals.dir_cities, n, n)
+
+/** The 1-character tiles of a country, side by side: each is joinable, too large to be worth opening. */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun LargeZones(codes: List<String>, onJoin: (String) -> Unit) {
+    androidx.compose.foundation.layout.FlowRow(
+        Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        codes.forEach { code ->
+            androidx.compose.material3.OutlinedButton(onClick = { onJoin(code) }) {
+                Text("#$code", fontFamily = BitchatFontFamily, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            }
+        }
+    }
+    HorizontalDivider(Modifier.padding(top = 6.dp), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f))
+}
+
+@Composable
+private fun Section(text: String) {
+    Text(
+        text, Modifier.padding(start = 20.dp, top = 14.dp, bottom = 4.dp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp, fontFamily = BitchatFontFamily
+    )
+}
+
+/**
+ * A zone tile: its code, size, largest places and a join button. Tapping the row opens the
+ * smaller tiles inside it ([onOpen] null: not openable, e.g. the tile currently shown).
+ */
+@Composable
+private fun TileRow(
+    code: String, places: List<String>, showLevel: Boolean, onOpen: (() -> Unit)?,
+    onJoin: (String) -> Unit, current: Boolean = false
+) {
+    val colors = MaterialTheme.colorScheme
+    Row(
+        Modifier.fillMaxWidth()
+            .then(if (current) Modifier.background(colors.primary.copy(alpha = 0.08f)) else Modifier)
+            .then(if (onOpen != null) Modifier.clickable(onClick = onOpen) else Modifier)
+            .padding(start = 20.dp, end = 8.dp, top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            "#$code", fontFamily = BitchatFontFamily, color = colors.primary, fontWeight = FontWeight.Bold,
+            fontSize = 20.sp, modifier = Modifier.width(92.dp)
+        )
+        Column(Modifier.weight(1f)) {
+            if (showLevel) Text(tileLevel(code.length), fontSize = 12.sp, color = colors.onSurfaceVariant, fontFamily = BitchatFontFamily)
+            if (places.isNotEmpty()) Text(places.joinToString(", "), fontSize = 14.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        }
+        TextButton(onClick = { onJoin(code) }) { Text(stringResource(R.string.dir_join), fontFamily = BitchatFontFamily) }
+        if (onOpen != null) Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null, tint = colors.primary)
+    }
+    HorizontalDivider(color = colors.outline.copy(alpha = 0.15f))
 }
 
 @Composable

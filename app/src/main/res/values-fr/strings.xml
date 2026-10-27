@@ -1019,8 +1019,6 @@
     <string name="dir_open">Annuaire des zones</string>
     <string name="dir_title">Annuaire</string>
     <string name="dir_search">Chercher une ville ou un quartier</string>
-    <string name="dir_countries">%1$d pays</string>
-    <string name="dir_cities">%1$d villes</string>
     <string name="dir_districts">Quartiers et arrondissements</string>
     <string name="dir_join">Rejoindre</string>
     <string name="dir_empty">Aucun lieu trouvé</string>
@@ -1035,4 +1033,12 @@
     <string name="continent_as">Asie</string>
     <string name="continent_oc">Océanie</string>
     <string name="continent_an">Antarctique</string>
+    <string name="dir_level_large">grande zone</string>
+    <string name="dir_level_zone">zone</string>
+    <string name="dir_subzones">Zones plus petites à l\'intérieur</string>
+    <string name="dir_cities_here">Villes dans cette zone</string>
+    <string name="dir_no_city">Pas de ville de plus de 15 000 habitants ici : rejoignez la zone elle-même.</string>
+    <string name="dir_all_cities">Toutes les villes</string>
+    <plurals name="dir_cities"><item quantity="one">%1$d ville</item><item quantity="many">%1$d villes</item><item quantity="other">%1$d villes</item></plurals>
+    <plurals name="dir_countries"><item quantity="one">%1$d pays</item><item quantity="many">%1$d pays</item><item quantity="other">%1$d pays</item></plurals>
 </resources>

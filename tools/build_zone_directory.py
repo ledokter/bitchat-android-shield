@@ -8,6 +8,9 @@ Usage: build_zone_directory.py cities1000.txt countryInfo.txt app/src/main/asset
 Output lines (tab separated):
   C  <iso2> <continent>                       one per country
   P  <name> <iso2> <geohash7> <population> <parent>   parent = index of the city a district belongs to, or -1
+  K  <iso2>                                   starts the tiles of a country
+  T  <tile> <names>                           a geohash tile (1 to 4 characters) holding inhabited places of
+                                              that country, with its largest places ("|" separated)
 """
 import math, re, sys
 from collections import defaultdict
@@ -42,11 +45,15 @@ for line in open(country_txt, encoding="utf-8"):
     if len(f) > 8: continent[f[0]] = f[8]
 
 places = []
+tile_places = defaultdict(list)   # (cc, tile) -> [(pop, name)] over every inhabited place, small ones included
 for line in open(cities_txt, encoding="utf-8"):
     f = line.rstrip("\n").split("\t")
     cc, fcode, pop = f[8], f[7], int(f[14] or 0)
     if cc not in continent: continue
     places.append(dict(name=f[1], cc=cc, lat=float(f[4]), lon=float(f[5]), pop=pop, fcode=fcode))
+    if fcode != "PPLX":
+        gh = geohash(float(f[4]), float(f[5]), 4)
+        for n in range(1, 5): tile_places[(cc, gh[:n])].append((pop, f[1]))
 
 by_cc = defaultdict(list)
 for p in places: by_cc[p["cc"]].append(p)
@@ -96,4 +103,14 @@ with open(out_path, "w", encoding="utf-8") as out:
         par = index[id(parent)] if parent else -1
         name = p["name"].replace("\t", " ")
         out.write(f"P\t{name}\t{p['cc']}\t{geohash(p['lat'], p['lon'])}\t{p['pop']}\t{par}\n")
-print(len(by_cc), "countries,", sum(1 for r in rows if r[1] is None), "cities,", sum(1 for r in rows if r[1]), "districts")
+    for cc in sorted(by_cc):
+        out.write(f"K\t{cc}\n")
+        for (c2, tile), lst in sorted(tile_places.items()):
+            if c2 != cc: continue
+            lst.sort(reverse=True)
+            names = []
+            for _, n in lst:
+                if n not in names: names.append(n.replace("|", " ").replace("\t", " "))
+                if len(names) == (3 if len(tile) < 4 else 2): break
+            out.write(f"T\t{tile}\t{'|'.join(names)}\n")
+print(len(tile_places), "tiles,", len(by_cc), "countries,", sum(1 for r in rows if r[1] is None), "cities,", sum(1 for r in rows if r[1]), "districts")
