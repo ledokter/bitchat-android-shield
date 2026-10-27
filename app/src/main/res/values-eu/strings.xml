@@ -870,7 +870,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">eguna/gaua</string>
     <string name="map_spin">biratu</string>
-    <string name="map_streets">kaleak (Tor bidez)</string>
     <string name="map_cell_activity">%1$d mezu publiko edo presentzia azken 15 minututan</string>
     <string name="map_cell_quiet">Ez da jarduera publikorik ikusi hemen azkenaldian</string>
     <string name="map_geocache">Geocachea: %1$s</string>

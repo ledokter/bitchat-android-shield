@@ -838,7 +838,6 @@
     <string name="map_layer_geocaches">แคชภูมิศาสตร์</string>
     <string name="map_daynight">กลางวัน/กลางคืน</string>
     <string name="map_spin">หมุน</string>
-    <string name="map_streets">ถนน (ผ่าน Tor)</string>
     <string name="map_cell_activity">%1$d ข้อความสาธารณะหรือสถานะใน 15 นาทีที่ผ่านมา</string>
     <string name="map_cell_quiet">ไม่มีกิจกรรมสาธารณะที่นี่เมื่อเร็วๆ นี้</string>
     <string name="map_geocache">แคชภูมิศาสตร์: %1$s</string>

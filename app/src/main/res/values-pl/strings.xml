@@ -810,7 +810,6 @@
     <string name="map_layer_geocaches">geoskrzynki</string>
     <string name="map_daynight">dzień/noc</string>
     <string name="map_spin">obrót</string>
-    <string name="map_streets">ulice (przez Tor)</string>
     <string name="map_cell_activity">%1$d publicznych wiadomości lub obecności w ostatnich 15 min</string>
     <string name="map_cell_quiet">Ostatnio brak tu publicznej aktywności</string>
     <string name="map_geocache">Geoskrzynka: %1$s</string>

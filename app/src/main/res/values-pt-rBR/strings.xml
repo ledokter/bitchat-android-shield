@@ -842,7 +842,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">dia/noite</string>
     <string name="map_spin">girar</string>
-    <string name="map_streets">ruas (via Tor)</string>
     <string name="map_cell_activity">%1$d mensagens públicas ou presenças nos últimos 15 minutos</string>
     <string name="map_cell_quiet">Nenhuma atividade pública vista aqui recentemente</string>
     <string name="map_geocache">Geocache: %1$s</string>

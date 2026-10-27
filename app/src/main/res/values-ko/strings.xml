@@ -842,7 +842,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">낮/밤</string>
     <string name="map_spin">회전</string>
-    <string name="map_streets">거리 (Tor 경유)</string>
     <string name="map_cell_activity">지난 15분 동안 공개 메시지 또는 상태 표시 %1$d개</string>
     <string name="map_cell_quiet">최근 이곳에서 공개 활동 없음</string>
     <string name="map_geocache">Geocache: %1$s</string>

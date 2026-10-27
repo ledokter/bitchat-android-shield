@@ -811,7 +811,6 @@
     <string name="map_layer_geocaches">геокеши</string>
     <string name="map_daynight">день/ночь</string>
     <string name="map_spin">Повернуть</string>
-    <string name="map_streets">улицы (через Tor)</string>
     <string name="map_cell_activity">%1$d публичных сообщений или присутствий за последние 15 минут</string>
     <string name="map_cell_quiet">В последнее время здесь нет публичной активности</string>
     <string name="map_geocache">Геокеш: %1$s</string>

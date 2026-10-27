@@ -838,7 +838,6 @@
     <string name="map_layer_geocaches">জিওক্যাশ</string>
     <string name="map_daynight">দিন/রাত</string>
     <string name="map_spin">ঘোরান</string>
-    <string name="map_streets">রাস্তা (Tor এর মাধ্যমে)</string>
     <string name="map_cell_activity">গত ১৫ মিনিটে %1$dটি পাবলিক মেসেজ বা উপস্থিতি</string>
     <string name="map_cell_quiet">এখানে সম্প্রতি কোনো পাবলিক অ্যাক্টিভিটি দেখা যায়নি</string>
     <string name="map_geocache">জিওক্যাশ: %1$s</string>

@@ -845,7 +845,6 @@
     <string name="map_layer_geocaches">geocache</string>
     <string name="map_daynight">siang/malam</string>
     <string name="map_spin">pusing</string>
-    <string name="map_streets">jalan (via Tor)</string>
     <string name="map_cell_activity">%1$d mesej awam atau kehadiran dalam 15 minit terakhir</string>
     <string name="map_cell_quiet">Tiada aktiviti awam di sini baru-baru ini</string>
     <string name="map_geocache">Geocache: %1$s</string>

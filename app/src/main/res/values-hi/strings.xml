@@ -842,7 +842,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">दिन/रात</string>
     <string name="map_spin">घुमाएं</string>
-    <string name="map_streets">सड़कें (Tor के ज़रिए)</string>
     <string name="map_cell_activity">पिछले 15 मिनट में %1$d पब्लिक मैसेज या उपस्थिति</string>
     <string name="map_cell_quiet">हाल ही में यहां कोई पब्लिक एक्टिविटी नहीं देखी गई</string>
     <string name="map_geocache">Geocache: %1$s</string>

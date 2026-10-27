@@ -802,7 +802,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">晝／夜</string>
     <string name="map_spin">旋轉</string>
-    <string name="map_streets">街道（透過 Tor）</string>
     <string name="map_cell_activity">過去 15 分鐘內有 %1$d 則公開訊息或足跡</string>
     <string name="map_cell_quiet">最近此處無公開活動</string>
     <string name="map_geocache">Geocache：%1$s</string>

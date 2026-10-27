@@ -839,7 +839,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">araw/gabi</string>
     <string name="map_spin">ikutin</string>
-    <string name="map_streets">mga kalye (via Tor)</string>
     <string name="map_cell_activity">%1$d na public na mensahe o presences sa nakaraang 15 minuto</string>
     <string name="map_cell_quiet">Walang public na aktibidad dito kamakailan</string>
     <string name="map_geocache">Geocache: %1$s</string>

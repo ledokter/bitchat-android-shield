@@ -848,7 +848,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">dag/nacht</string>
     <string name="map_spin">draaien</string>
-    <string name="map_streets">straten (via Tor)</string>
     <string name="map_cell_activity">%1$d openbare berichten of aanwezigheden in de laatste 15 minuten</string>
     <string name="map_cell_quiet">Hier recent geen openbare activiteit gezien</string>
     <string name="map_geocache">Geocache: %1$s</string>

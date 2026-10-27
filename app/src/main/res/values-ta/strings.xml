@@ -802,7 +802,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">பகல்/இரவு</string>
     <string name="map_spin">சுழற்று</string>
-    <string name="map_streets">தெருக்கள் (Tor வழியாக)</string>
     <string name="map_cell_activity">கடந்த 15 நிமிடங்களில் %1$d பொது செய்திகள் அல்லது இருப்புகள்</string>
     <string name="map_cell_quiet">சமீபத்தில் இங்கு பொது செயல்பாடு எதுவும் இல்லை</string>
     <string name="map_geocache">Geocache: %1$s</string>

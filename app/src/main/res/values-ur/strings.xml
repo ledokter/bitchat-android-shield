@@ -842,7 +842,6 @@
     <string name="map_layer_geocaches">جیو کیشز</string>
     <string name="map_daynight">دن/رات</string>
     <string name="map_spin">اسپن</string>
-    <string name="map_streets">سڑکیں (Tor کے ذریعے)</string>
     <string name="map_cell_activity">پچھلے 15 منٹ میں %1$d عوامی پیغامات یا موجودگی</string>
     <string name="map_cell_quiet">حال ہی میں یہاں کوئی عوامی سرگرمی نہیں دیکھی گئی</string>
     <string name="map_geocache">Geocache: %1$s</string>

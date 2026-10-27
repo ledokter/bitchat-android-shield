@@ -804,7 +804,6 @@
     <string name="map_layer_geocaches">מטמונים</string>
     <string name="map_daynight">יום/לילה</string>
     <string name="map_spin">סיבוב</string>
-    <string name="map_streets">רחובות (דרך Tor)</string>
     <string name="map_cell_activity">%1$d הודעות ציבוריות או נוכחויות ב-15 הדקות האחרונות</string>
     <string name="map_cell_quiet">לא נראתה כאן פעילות ציבורית לאחרונה</string>
     <string name="map_geocache">מטמון: %1$s</string>

@@ -854,7 +854,6 @@
     <string name="map_layer_geocaches">地理藏宝</string>
     <string name="map_daynight">昼夜</string>
     <string name="map_spin">旋转</string>
-    <string name="map_streets">街道（经 Tor）</string>
     <string name="map_cell_activity">最近 15 分钟内有 %1$d 条公开消息或在线状态</string>
     <string name="map_cell_quiet">最近这里没有公开动态</string>
     <string name="map_geocache">地理藏宝：%1$s</string>

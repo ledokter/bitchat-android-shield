@@ -830,7 +830,6 @@
     <string name="map_layer_geocaches">геотайники</string>
     <string name="map_daynight">день/ночь</string>
     <string name="map_spin">вращение</string>
-    <string name="map_streets">улицы (через Tor)</string>
     <string name="map_cell_activity">Публичных сообщений и присутствий за 15 минут: %1$d</string>
     <string name="map_cell_quiet">Здесь недавно не было публичной активности</string>
     <string name="map_geocache">Геотайник: %1$s</string>

@@ -30,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,7 +58,6 @@ import com.bitchat.android.nostr.NostrRelayManager
 import com.bitchat.android.ui.globe.GlobeColors
 import com.bitchat.android.ui.globe.GlobeMarker
 import com.bitchat.android.ui.globe.GlobeState
-import com.bitchat.android.ui.globe.GlobeTileLayer
 import com.bitchat.android.ui.globe.GlobeView
 import com.bitchat.android.ui.globe.LandData
 import com.bitchat.android.ui.theme.BitchatFontFamily
@@ -113,10 +111,7 @@ class WorldMapActivity : ComponentActivity() {
                 var layer by remember { mutableStateOf(Layer.ACTIVITY) }
                 var night by remember { mutableStateOf(true) }
                 var spin by remember { mutableStateOf(true) }
-                var streets by remember { mutableStateOf(false) }
                 var selected by remember { mutableStateOf<GlobeMarker?>(null) }
-                val tiles = remember { GlobeTileLayer("chatbit/2.1 (offline-first messenger; https://github.com/ledokter/chatbit)") }
-                DisposableEffect(Unit) { onDispose { tiles.close() } }
 
                 val counts by activity.collectAsState()
                 val caches by geocaches.collectAsState()
@@ -169,7 +164,6 @@ class WorldMapActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize(),
                             markers = markers,
                             nightShading = night,
-                            tileLayer = if (streets) tiles else null,
                             onTap = { lat, lon, marker ->
                                 spin = false
                                 selected = marker ?: GlobeMarker(lat, lon, 0f, accent,
@@ -192,7 +186,6 @@ class WorldMapActivity : ComponentActivity() {
                             Chip(stringResource(R.string.map_layer_geocaches), layer == Layer.GEOCACHES) { layer = Layer.GEOCACHES; selected = null }
                             Chip(stringResource(R.string.map_daynight), night) { night = !night }
                             Chip(stringResource(R.string.map_spin), spin) { spin = !spin }
-                            Chip(stringResource(R.string.map_streets), streets) { streets = !streets }
                         }
                     }
 

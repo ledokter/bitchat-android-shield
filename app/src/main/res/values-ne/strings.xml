@@ -840,7 +840,6 @@
     <string name="map_layer_geocaches">जियोक्यासहरू</string>
     <string name="map_daynight">दिन/रात</string>
     <string name="map_spin">घुमाउनुहोस्</string>
-    <string name="map_streets">सडकहरू (Tor मार्फत)</string>
     <string name="map_cell_activity">%1$d सार्वजनिक सन्देश वा उपस्थिति पछिल्लो १५ मिनेटमा</string>
     <string name="map_cell_quiet">यहाँ हालै कुनै सार्वजनिक गतिविधि देखिएन</string>
     <string name="map_geocache">जियोक्यास: %1$s</string>

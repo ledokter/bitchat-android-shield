@@ -818,7 +818,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">gündüz/gece</string>
     <string name="map_spin">döndür</string>
-    <string name="map_streets">sokaklar (Tor üzerinden)</string>
     <string name="map_cell_activity">son 15 dakikada %1$d herkese açık mesaj veya mevcudiyet</string>
     <string name="map_cell_quiet">Burada yakın zamanda herkese açık bir etkinlik görülmedi</string>
     <string name="map_geocache">Geocache: %1$s</string>

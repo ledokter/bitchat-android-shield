@@ -836,7 +836,6 @@
     <string name="map_layer_geocaches">გეოქეშები</string>
     <string name="map_daynight">დღე/ღამე</string>
     <string name="map_spin">ტრიალი</string>
-    <string name="map_streets">ქუჩები (Tor-ის მეშვეობით)</string>
     <string name="map_cell_activity">ბოლო 15 წუთში %1$d საჯარო შეტყობინება ან ყოფნა</string>
     <string name="map_cell_quiet">აქ ბოლო დროს საჯარო აქტივობა არ ჩანს</string>
     <string name="map_geocache">გეოქეში: %1$s</string>

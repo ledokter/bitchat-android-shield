@@ -838,7 +838,6 @@
     <string name="map_layer_geocaches">جیو کیچز</string>
     <string name="map_daynight">دن/رات</string>
     <string name="map_spin">گھماو</string>
-    <string name="map_streets">سڑکیں (Tor راہیں)</string>
     <string name="map_cell_activity">%1$d عوامی میسیجز یا موجودگی پچھلے 15 منٹ وچ</string>
     <string name="map_cell_quiet">ایتھے حالیہ کوئی عوامی سرگرمی نظر نئیں آئی</string>
     <string name="map_geocache">جیو کیچ: %1$s</string>

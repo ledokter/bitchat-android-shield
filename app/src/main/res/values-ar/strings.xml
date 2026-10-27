@@ -842,7 +842,6 @@
     <string name="map_layer_geocaches">geocaches</string>
     <string name="map_daynight">ليل/نهار</string>
     <string name="map_spin">دوران</string>
-    <string name="map_streets">شوارع (عبر Tor)</string>
     <string name="map_cell_activity">%1$d رسالة عامة أو ظهور في آخر ١٥ دقيقة</string>
     <string name="map_cell_quiet">لا نشاط عام هنا مؤخرًا</string>
     <string name="map_geocache">Geocache: %1$s</string>

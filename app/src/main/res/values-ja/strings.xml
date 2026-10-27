@@ -833,7 +833,6 @@
     <string name="map_layer_geocaches">ジオキャッシュ</string>
     <string name="map_daynight">昼夜</string>
     <string name="map_spin">回転</string>
-    <string name="map_streets">道路（Tor 経由）</string>
     <string name="map_cell_activity">直近 15 分の公開メッセージ・在席: %1$d 件</string>
     <string name="map_cell_quiet">最近ここで公開の活動はありません</string>
     <string name="map_geocache">ジオキャッシュ: %1$s</string>
