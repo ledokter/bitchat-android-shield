@@ -1077,4 +1077,5 @@
     <string name="dir_all_cities">All cities</string>
     <plurals name="dir_cities"><item quantity="one">%1$d city</item><item quantity="other">%1$d cities</item></plurals>
     <plurals name="dir_countries"><item quantity="one">%1$d country</item><item quantity="other">%1$d countries</item></plurals>
+    <string name="screenshot_notice">%1$s took a screenshot</string>
 </resources>

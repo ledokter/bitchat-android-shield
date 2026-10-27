@@ -309,6 +309,19 @@ fun ChatScreen(viewModel: ChatViewModel) {
             val showNotesStrip =
                 isMeshTimeline && nearbyNotesRevealed && nearbyNotes.isNotEmpty()
 
+            // chatbit: a location channel's history comes over the network; until it has
+            // arrived (or for the first seconds after joining) kitty waits, arms crossed
+            val waitContext = androidx.compose.ui.platform.LocalContext.current
+            val torStatus by remember { com.bitchat.android.net.ArtiTorManager.getInstance() }.statusFlow.collectAsStateWithLifecycle()
+            val relaysUp by remember { com.bitchat.android.nostr.NostrRelayManager.getInstance(waitContext) }.isConnected.collectAsStateWithLifecycle()
+            var justJoined by remember(selectedLocationChannel) { mutableStateOf(true) }
+            LaunchedEffect(selectedLocationChannel) { kotlinx.coroutines.delay(10_000); justJoined = false }
+            val networkReady = relaysUp && (torStatus.mode == com.bitchat.android.net.TorMode.OFF ||
+                (torStatus.running && torStatus.bootstrapPercent >= 100))
+            val conversationLoading = selectedLocationChannel is ChannelID.Location &&
+                visibleMessages.isEmpty() && (!networkReady || justJoined)
+            LaunchedEffect(conversationLoading) { com.bitchat.android.ui.kitty.ConversationLoading.active.value = conversationLoading }
+
             MessagesList(
                 messages = visibleMessages,
                 blockedIds = blockedIds,
@@ -372,6 +385,15 @@ fun ChatScreen(viewModel: ChatViewModel) {
                     showFullScreenImageViewer = true
                 }
             )
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = conversationLoading,
+                enter = androidx.compose.animation.fadeIn(),
+                exit = androidx.compose.animation.fadeOut(),
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                com.bitchat.android.ui.kitty.KittyWaiting()
+            }
 
             if (showNotesStrip) {
                 NearbyNotesStrip(

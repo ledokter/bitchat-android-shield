@@ -1016,9 +1016,11 @@ private fun TorRotateButton() {
     val tor = remember { ArtiTorManager.getInstance() }
     val status by tor.statusFlow.collectAsStateWithLifecycle()
     val rotating by tor.rotating.collectAsStateWithLifecycle()
+    // chatbit: the arrows also turn while a location channel's conversation is loading
+    val loading by com.bitchat.android.ui.kitty.ConversationLoading.active.collectAsStateWithLifecycle()
     if (status.mode == TorMode.OFF) return
     val context = androidx.compose.ui.platform.LocalContext.current
-    val angle = if (rotating) {
+    val angle = if (rotating || loading) {
         val t = androidx.compose.animation.core.rememberInfiniteTransition(label = "torRotate")
         t.animateFloat(
             0f, 360f,
@@ -1041,7 +1043,7 @@ private fun TorRotateButton() {
             imageVector = androidx.compose.material.icons.Icons.Filled.Autorenew,
             contentDescription = null,
             modifier = Modifier.size(HeaderIconSize).graphicsLayer { rotationZ = angle },
-            tint = if (ready && !rotating) MaterialTheme.colorScheme.primary
+            tint = if (ready && !rotating && !loading) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
     }

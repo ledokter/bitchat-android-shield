@@ -1041,4 +1041,5 @@
     <string name="dir_all_cities">Toutes les villes</string>
     <plurals name="dir_cities"><item quantity="one">%1$d ville</item><item quantity="many">%1$d villes</item><item quantity="other">%1$d villes</item></plurals>
     <plurals name="dir_countries"><item quantity="one">%1$d pays</item><item quantity="many">%1$d pays</item><item quantity="other">%1$d pays</item></plurals>
+    <string name="screenshot_notice">%1$s a fait une capture d\'écran</string>
 </resources>
