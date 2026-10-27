@@ -205,34 +205,40 @@ private fun PinRow(title: Int, desc: Int, isSet: Boolean, onSet: () -> Unit, onR
 
 @Composable
 private fun PinDialog(title: String, onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
-    var pin by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-    var again by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf("") }
-    val valid = SecurityPreferences.isValidPin(pin) && pin == again
-    val digits = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.NumberPassword)
+    // In-app keypad only: the PIN never reaches the system keyboard.
+    var first by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
+    var mismatch by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(title, fontFamily = BitchatFontFamily) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
                 SecHint(stringResource(R.string.pin_rules, SecurityPreferences.PIN_MIN, SecurityPreferences.PIN_MAX))
-                androidx.compose.material3.OutlinedTextField(
-                    value = pin, onValueChange = { v -> pin = v.filter { it.isDigit() }.take(SecurityPreferences.PIN_MAX) },
-                    label = { Text(stringResource(R.string.pin_new)) }, singleLine = true, keyboardOptions = digits,
-                    visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-                )
-                androidx.compose.material3.OutlinedTextField(
-                    value = again, onValueChange = { v -> again = v.filter { it.isDigit() }.take(SecurityPreferences.PIN_MAX) },
-                    label = { Text(stringResource(R.string.pin_confirm)) }, singleLine = true, keyboardOptions = digits,
-                    visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation()
-                )
+                Keypad(
+                    title = stringResource(when {
+                        mismatch -> R.string.pin_mismatch
+                        first == null -> R.string.pin_new
+                        else -> R.string.pin_confirm
+                    }),
+                    isError = mismatch,
+                    enabled = true,
+                    autoLength = first?.length ?: 0,
+                    keySize = 54.dp
+                ) { typed ->
+                    val firstPin = first
+                    when {
+                        firstPin == null -> if (SecurityPreferences.isValidPin(typed)) { first = typed; mismatch = false }
+                        firstPin == typed -> onConfirm(typed)
+                        else -> { first = null; mismatch = true }
+                    }
+                }
             }
         },
         confirmButton = {
-            androidx.compose.material3.TextButton(onClick = { onConfirm(pin) }, enabled = valid) {
-                Text(stringResource(R.string.pin_save), fontFamily = BitchatFontFamily)
-            }
-        },
-        dismissButton = {
             androidx.compose.material3.TextButton(onClick = onDismiss) {
                 Text(stringResource(R.string.cancel_lower), fontFamily = BitchatFontFamily)
             }

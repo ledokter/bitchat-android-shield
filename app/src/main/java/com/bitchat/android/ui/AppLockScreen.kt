@@ -161,9 +161,12 @@ private fun PinPad(onDuress: () -> Unit) {
     )
 }
 
-/** Dots + 3×4 keypad; [onSubmit] gets the typed digits when OK is pressed. */
+/**
+ * Dots + 3×4 keypad drawn by the app; [onSubmit] gets the typed digits when OK is pressed.
+ * PINs never go through the system keyboard, so third-party keyboards (Samsung, SwiftKey…) never see them.
+ */
 @Composable
-private fun Keypad(title: String, isError: Boolean, enabled: Boolean, autoLength: Int = 0, onSubmit: (String) -> Unit) {
+internal fun Keypad(title: String, isError: Boolean, enabled: Boolean, autoLength: Int = 0, keySize: androidx.compose.ui.unit.Dp = 68.dp, onSubmit: (String) -> Unit) {
     var pin by remember { mutableStateOf("") }
     val colors = MaterialTheme.colorScheme
     Text(title, fontFamily = BitchatFontFamily, color = if (isError) colors.error else colors.onBackground)
@@ -181,7 +184,7 @@ private fun Keypad(title: String, isError: Boolean, enabled: Boolean, autoLength
             Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
                 row.forEach { k ->
                     Box(
-                        Modifier.size(68.dp).clip(CircleShape)
+                        Modifier.size(keySize).clip(CircleShape)
                             .background(colors.surfaceVariant)
                             .clickable(enabled = enabled) {
                                 when (k) {
