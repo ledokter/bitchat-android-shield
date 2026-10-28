@@ -114,6 +114,75 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
     }
 }
 
+/** How many of the 11 protections are on (link previews, photo metadata and lock-screen notifications always are). */
+@Composable
+internal fun securityActiveCount(): Int {
+    val lock by SecurityPreferences.appLock.collectAsState()
+    val screenshots by SecurityPreferences.blockScreenshots.collectAsState()
+    val presence by SecurityPreferences.sendPresence.collectAsState()
+    val killSwitch by SecurityPreferences.killSwitch.collectAsState()
+    val clipboard by SecurityPreferences.clipboardClear.collectAsState()
+    val ephemeral by SecurityPreferences.ephemeralHours.collectAsState()
+    val wipe by SecurityPreferences.autoWipeDays.collectAsState()
+    val rotation by TorPreferenceManager.rotationFlow.collectAsState()
+    return listOf(rotation > 0, killSwitch, !presence, true, true, ephemeral > 0, true,
+        screenshots, lock, clipboard, wipe > 0).count { it }
+}
+
+/** Every protection switch and delay, each with its help bubble (settings tab, Security card). */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+internal fun SecurityToggles() {
+    val lock by SecurityPreferences.appLock.collectAsState()
+    val screenshots by SecurityPreferences.blockScreenshots.collectAsState()
+    val presence by SecurityPreferences.sendPresence.collectAsState()
+    val killSwitch by SecurityPreferences.killSwitch.collectAsState()
+    val clipboard by SecurityPreferences.clipboardClear.collectAsState()
+    val ephemeral by SecurityPreferences.ephemeralHours.collectAsState()
+    val wipe by SecurityPreferences.autoWipeDays.collectAsState()
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        SecSwitch(R.string.sec_lock_title, R.string.sec_lock_pin_desc, lock, help = R.string.help_lock) { SecurityPreferences.setAppLock(it) }
+        SecSwitch(R.string.sec_screenshots_title, R.string.sec_screenshots_desc, screenshots, help = R.string.help_screenshots) { SecurityPreferences.setBlockScreenshots(it) }
+        SecSwitch(R.string.sec_killswitch_title, R.string.sec_killswitch_desc, killSwitch, help = R.string.help_killswitch) { SecurityPreferences.setKillSwitch(it) }
+        SecSwitch(R.string.sec_presence_title, R.string.sec_presence_desc, presence, help = R.string.help_presence) { SecurityPreferences.setSendPresence(it) }
+        SecSwitch(R.string.sec_clipboard_title, R.string.sec_clipboard_desc, clipboard, help = R.string.help_clipboard) { SecurityPreferences.setClipboardClear(it) }
+        SecLabel(stringResource(R.string.sec_ephemeral_title), R.string.help_ephemeral)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            SecurityPreferences.EPHEMERAL_CHOICES.forEach { h ->
+                FilterChip(
+                    selected = ephemeral == h,
+                    onClick = { SecurityPreferences.setEphemeralHours(h) },
+                    label = {
+                        Text(
+                            when {
+                                h == 0 -> stringResource(R.string.sec_keep_forever)
+                                h < 24 -> stringResource(R.string.duration_hours, h)
+                                else -> stringResource(R.string.duration_days, h / 24)
+                            },
+                            fontFamily = BitchatFontFamily, fontSize = 11.sp
+                        )
+                    }
+                )
+            }
+        }
+        SecLabel(stringResource(R.string.sec_autowipe_title), R.string.help_autowipe)
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            SecurityPreferences.AUTO_WIPE_CHOICES.forEach { d ->
+                FilterChip(
+                    selected = wipe == d,
+                    onClick = { SecurityPreferences.setAutoWipeDays(d) },
+                    label = {
+                        Text(
+                            if (d == 0) stringResource(R.string.tor_rotation_never) else stringResource(R.string.duration_days, d),
+                            fontFamily = BitchatFontFamily, fontSize = 11.sp
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
 /** Always-visible switch between the simple settings and every power-user option. */
 @Composable
 internal fun AdvancedModeToggle(advanced: Boolean) {
@@ -122,7 +191,7 @@ internal fun AdvancedModeToggle(advanced: Boolean) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(Modifier.weight(1f)) {
-            SecLabel(stringResource(R.string.advanced_mode_title))
+            SecLabel(stringResource(R.string.advanced_mode_title), R.string.help_advanced)
             SecHint(stringResource(R.string.advanced_mode_desc))
         }
         Switch(checked = advanced, onCheckedChange = { SecurityPreferences.setAdvancedMode(it) })
@@ -130,10 +199,10 @@ internal fun AdvancedModeToggle(advanced: Boolean) {
 }
 
 @Composable
-private fun SecSwitch(title: Int, desc: Int, checked: Boolean, enabled: Boolean = true, onChange: (Boolean) -> Unit) {
+private fun SecSwitch(title: Int, desc: Int, checked: Boolean, enabled: Boolean = true, help: Int? = null, onChange: (Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
-            SecLabel(stringResource(title))
+            SecLabel(stringResource(title), help)
             SecHint(stringResource(desc))
         }
         Switch(checked = checked && enabled, onCheckedChange = onChange, enabled = enabled)
@@ -141,8 +210,11 @@ private fun SecSwitch(title: Int, desc: Int, checked: Boolean, enabled: Boolean 
 }
 
 @Composable
-private fun SecLabel(text: String) {
-    Text(text, fontFamily = BitchatFontFamily, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+private fun SecLabel(text: String, help: Int? = null) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(text, fontFamily = BitchatFontFamily, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+        help?.let { HelpDot(it) }
+    }
 }
 
 @Composable
@@ -152,19 +224,19 @@ private fun SecHint(text: String) {
 
 /** chatbit PIN and duress PIN: always visible, they matter more than any tunable. */
 @Composable
-private fun PinSettings() {
+internal fun PinSettings() {
     val context = LocalContext.current
     val hasPin by SecurityPreferences.hasPin.collectAsState()
     val hasDuress by SecurityPreferences.hasDuress.collectAsState()
     var editing by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<Boolean?>(null) } // true = PIN, false = duress
 
     PinRow(
-        title = R.string.pin_title, desc = R.string.pin_desc, isSet = hasPin,
+        title = R.string.pin_title, desc = R.string.pin_desc, isSet = hasPin, help = R.string.help_pin,
         onSet = { editing = true }, onRemove = { SecurityPreferences.setPin(null) }
     )
     if (hasPin) {
         PinRow(
-            title = R.string.duress_title, desc = R.string.duress_desc, isSet = hasDuress,
+            title = R.string.duress_title, desc = R.string.duress_desc, isSet = hasDuress, help = R.string.help_duress,
             onSet = { editing = false }, onRemove = { SecurityPreferences.setDuressPin(null) }
         )
     }
@@ -190,10 +262,10 @@ private fun PinSettings() {
 }
 
 @Composable
-private fun PinRow(title: Int, desc: Int, isSet: Boolean, onSet: () -> Unit, onRemove: () -> Unit) {
+private fun PinRow(title: Int, desc: Int, isSet: Boolean, help: Int? = null, onSet: () -> Unit, onRemove: () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(Modifier.weight(1f)) {
-            SecLabel(stringResource(title))
+            SecLabel(stringResource(title), help)
             SecHint(stringResource(desc))
         }
         Column(horizontalAlignment = Alignment.End, verticalArrangement = Arrangement.spacedBy(4.dp)) {

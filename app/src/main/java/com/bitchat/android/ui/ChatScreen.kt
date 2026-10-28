@@ -47,6 +47,7 @@ import com.bitchat.android.nostr.LocationNotesManager
 import com.bitchat.android.nostr.NearbyNotesController
 import com.bitchat.android.ui.media.FullScreenImageViewer
 import com.bitchat.android.ui.theme.BitchatMotion
+import com.bitchat.android.ui.kitty.kittyAnchor
 
 /**
  * Main ChatScreen - REFACTORED to use component-based architecture
@@ -59,7 +60,7 @@ import com.bitchat.android.ui.theme.BitchatMotion
  * - ChatUIUtils: Utility functions for formatting and colors
  */
 @Composable
-fun ChatScreen(viewModel: ChatViewModel) {
+fun ChatScreen(viewModel: ChatViewModel, bottomBarHeight: Dp = 0.dp) {
     val colorScheme = MaterialTheme.colorScheme
     val messages by viewModel.messages.collectAsStateWithLifecycle()
     val connectedPeers by viewModel.connectedPeers.collectAsStateWithLifecycle()
@@ -98,6 +99,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
     var initialViewerIndex by remember { mutableStateOf(0) }
     var forceScrollToBottom by remember { mutableStateOf(false) }
     var isScrolledUp by remember { mutableStateOf(false) }
+    var showTorSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedPrivatePeer) {
         messageText = TextFieldValue(
@@ -299,6 +301,8 @@ fun ChatScreen(viewModel: ChatViewModel) {
                         Modifier.windowInsetsPadding(WindowInsets.navigationBars)
                     }
                 )
+                // the tab bar sits under the composer (MainTabs hides it while typing)
+                .padding(bottom = bottomBarHeight)
         ) {
           Box(modifier = Modifier.weight(1f)) {
             // Messages area - takes up available space, will compress when keyboard appears
@@ -419,6 +423,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
     ChatInputSection(
         modifier = Modifier
             .align(Alignment.BottomCenter)
+            .kittyAnchor(com.bitchat.android.ui.kitty.KittyAnchors.COMPOSER)
             .onSizeChanged { size ->
                 composerHeight = with(density) { size.height.toDp() }
             },
@@ -490,7 +495,8 @@ fun ChatScreen(viewModel: ChatViewModel) {
             viewModel = viewModel,
             colorScheme = colorScheme,
             onSidebarToggle = { viewModel.showMeshPeerList() },
-            onShowAppInfo = { viewModel.showAppInfo() },
+            // the cat now opens Tor; settings have their own tab
+            onShowAppInfo = { showTorSheet = true },
             onPanicClear = { viewModel.panicClearAllData() },
             onLocationChannelsClick = { showLocationChannelsSheet = true },
             onLocationNotesClick = {
@@ -514,7 +520,7 @@ fun ChatScreen(viewModel: ChatViewModel) {
             ) + fadeOut(tween(BitchatMotion.QUICK_MS)),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = composerHeight + 8.dp)
+                .padding(end = 16.dp, bottom = composerHeight + 8.dp + bottomBarHeight)
                 .zIndex(1.5f)
                 .windowInsetsPadding(WindowInsets.navigationBars)
                 .windowInsetsPadding(WindowInsets.ime)
@@ -545,8 +551,10 @@ fun ChatScreen(viewModel: ChatViewModel) {
 
         // chatbit kitty: badge celebrations and the first-launch tour
         Box(Modifier.fillMaxSize().zIndex(5f)) { com.bitchat.android.ui.kitty.KittyBadgePopup() }
-        Box(Modifier.fillMaxSize().zIndex(6f)) { com.bitchat.android.ui.kitty.KittyTour() }
+        // the first-launch tour is drawn by MainTabs, above the tab bar
     }
+
+    if (showTorSheet) TorSheet(onDismiss = { showTorSheet = false })
 
     // Full-screen image viewer - separate from other sheets to allow image browsing without navigation
     if (showFullScreenImageViewer) {

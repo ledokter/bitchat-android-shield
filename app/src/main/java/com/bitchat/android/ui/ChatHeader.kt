@@ -15,6 +15,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import com.bitchat.android.ui.kitty.KittyAnchors
@@ -732,128 +733,128 @@ private fun MainHeader(
     val selectedLocationChannel by viewModel.selectedLocationChannel.collectAsStateWithLifecycle()
     val geohashPeople by viewModel.geohashPeople.collectAsStateWithLifecycle()
 
-    BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
-        val crowdingMode = headerCrowdingMode(maxWidth)
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(ChatHeaderHeight)
-                .padding(start = HeaderInsetStart, end = HeaderInsetEnd),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Keep the brand and trailing actions fixed. Only the nickname yields under pressure.
+    // chatbit tabbed interface: the cat (Tor dot underneath, 3 taps = panic wipe) and one
+    // "where I chat" button. Private chats, rooms, map and settings moved to the bottom tabs.
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(ChatHeaderHeight)
+            .padding(start = HeaderInsetStart - 4.dp, end = HeaderInsetEnd + 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Box(Modifier.size(HeaderTapTarget).kittyAnchor(KittyAnchors.LOGO)) {
             BitChatBrandButton(
                 onClick = onTitleClick,
                 onTripleClick = onTripleTitleClick,
-                contentDescription = stringResource(R.string.cd_open_about),
-                modifier = Modifier.size(HeaderTapTarget).kittyAnchor(KittyAnchors.LOGO),
+                contentDescription = stringResource(R.string.about_tor_title),
+                modifier = Modifier.size(HeaderTapTarget),
             )
-
-            // Nudge toward the brand glyph: the 44.dp tap target leaves more optical gap than the
-            // spacing between the mark and path label.
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .weight(1f)
-                    .offset(x = (-6).dp)
-            ) {
-                Text(
-                    text = "/",
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = HeaderTextSize,
-                    // Dimmed: the slash is a separator, not content. At full brightness it competed
-                    // with the nickname beside it.
-                    color = colorScheme.primary.copy(alpha = 0.45f),
-                    modifier = Modifier.padding(end = 2.dp)
-                )
-
-                NicknameEditor(
-                    value = nickname,
-                    onValueChange = onNicknameChange,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            // Order, left to right: unread DMs, notes, channel, people. This cluster is measured
-            // before the weighted nickname, so actions cannot be pushed off-screen by identity.
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                // chatbit: private conversations always one tap away; orange + dot when unread
-                val hasUnreadDm = hasUnreadPrivateMessages.isNotEmpty()
-                HeaderIconButton(
-                    onClick = {
-                        if (hasUnreadDm) viewModel.openLatestUnreadPrivateChat() else viewModel.showMeshPeerList()
-                    },
-                    contentDescription = stringResource(if (hasUnreadDm) R.string.cd_unread_private_messages else R.string.conversations),
-                    modifier = Modifier.kittyAnchor(KittyAnchors.DMS)
-                ) {
-                    Box {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_spec_envelope),
-                            contentDescription = null,
-                            modifier = Modifier.size(HeaderIconSize),
-                            tint = if (hasUnreadDm) palette.accentOrange else colorScheme.primary
-                        )
-                        if (hasUnreadDm) Box(
-                            Modifier.align(Alignment.TopEnd).size(7.dp).clip(CircleShape).background(palette.accentOrange)
-                        )
-                    }
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(0.dp)
-                ) {
-                    // chatbit: on the mesh, globe = world map; long press = recent channels
-                    if (selectedLocationChannel !is com.bitchat.android.geohash.ChannelID.Location) {
-                        MeshGlobeButton()
-                    }
-
-                    // chatbit: one tap = new Tor route (new exit IP); spins while it is built
-                    TorRotateButton()
-
-                    // chatbit private rooms
-                    HeaderIconButton(
-                        onClick = { com.bitchat.android.rooms.PrivateRooms.openSheet() },
-                        contentDescription = stringResource(R.string.rooms_title),
-                        modifier = Modifier.kittyAnchor(KittyAnchors.ROOMS)
-                    ) {
-                        Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Filled.Lock,
-                            contentDescription = null,
-                            modifier = Modifier.size(HeaderIconSize),
-                            tint = colorScheme.primary
-                        )
-                    }
-
-                    LocationNotesButton(
-                        viewModel = viewModel,
-                        onClick = onLocationNotesClick
-                    )
-
-                    LocationChannelsButton(
-                        viewModel = viewModel,
-                        onClick = onLocationChannelsClick,
-                        showLabel = crowdingMode != HeaderCrowdingMode.IconOnlyLocationChannel
-                    )
-                }
-
-                PeerCounter(
-                    connectedPeers = connectedPeers.filter { it != viewModel.myPeerID },
-                    joinedChannels = joinedChannels,
-                    hasUnreadChannels = hasUnreadChannels,
-                    isConnected = isConnected,
-                    selectedLocationChannel = selectedLocationChannel,
-                    geohashPeople = geohashPeople,
-                    onClick = onSidebarClick,
-                    modifier = Modifier.kittyAnchor(KittyAnchors.PEOPLE),
-                    showJoinedChannelCount = crowdingMode == HeaderCrowdingMode.Full
-                )
-            }
+            TorDot(Modifier.align(Alignment.BottomEnd).padding(end = 5.dp, bottom = 7.dp))
         }
+        PlaceChip(
+            viewModel = viewModel,
+            onClick = onLocationChannelsClick,
+            modifier = Modifier.weight(1f).kittyAnchor(KittyAnchors.CHANNEL)
+        )
+    }
+}
+
+/** Tor state on the cat: green ready, orange (blinking) connecting, red down, grey off. */
+@Composable
+private fun TorDot(modifier: Modifier = Modifier) {
+    val tor = remember { ArtiTorManager.getInstance() }
+    val status by tor.statusFlow.collectAsStateWithLifecycle()
+    val rotating by tor.rotating.collectAsStateWithLifecycle()
+    val palette = LocalBitchatPalette.current
+    val colorScheme = MaterialTheme.colorScheme
+    val ready = status.running && status.bootstrapPercent >= 100 && !rotating
+    val color = when {
+        status.mode == TorMode.OFF -> palette.textTertiary
+        ready -> okColor()
+        status.running || rotating -> palette.accentOrange
+        else -> colorScheme.error
+    }
+    val blink = if (!ready && status.mode != TorMode.OFF) {
+        androidx.compose.animation.core.rememberInfiniteTransition(label = "torDot").animateFloat(
+            1f, 0.3f,
+            androidx.compose.animation.core.infiniteRepeatable(
+                androidx.compose.animation.core.tween(600),
+                androidx.compose.animation.core.RepeatMode.Reverse
+            ),
+            label = "torDotAlpha"
+        ).value
+    } else 1f
+    Box(
+        modifier
+            .size(11.dp)
+            .graphicsLayer { alpha = blink }
+            .clip(CircleShape)
+            .background(colorScheme.background)
+            .padding(2.dp)
+            .clip(CircleShape)
+            .background(color)
+    )
+}
+
+/** "#mesh · 4 v": where the conversation happens and how many people are there. Opens the places sheet. */
+@Composable
+private fun PlaceChip(viewModel: ChatViewModel, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val colorScheme = MaterialTheme.colorScheme
+    val selected by viewModel.selectedLocationChannel.collectAsStateWithLifecycle()
+    val connectedPeers by viewModel.connectedPeers.collectAsStateWithLifecycle()
+    val geohashPeople by viewModel.geohashPeople.collectAsStateWithLifecycle()
+    val location = selected as? com.bitchat.android.geohash.ChannelID.Location
+    val label = location?.let { "#${it.channel.geohash}" } ?: "#${stringResource(R.string.mesh_label)}"
+    val count = if (location != null) geohashPeople.size else connectedPeers.count { it != viewModel.myPeerID }
+    Row(
+        modifier = modifier
+            .height(40.dp)
+            .clip(RoundedCornerShape(50))
+            .background(colorScheme.surface)
+            .border(1.dp, colorScheme.outlineVariant, RoundedCornerShape(50))
+            .pressScaleClickable(onClick = onClick, onClickLabel = stringResource(R.string.cd_open_location_channels))
+            .padding(start = 10.dp, end = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Icon(
+            painter = painterResource(if (location != null) R.drawable.ic_spec_globe else R.drawable.ic_spec_range),
+            contentDescription = null,
+            tint = colorScheme.primary,
+            modifier = Modifier.size(18.dp)
+        )
+        Text(
+            label,
+            style = MaterialTheme.typography.bodyMedium,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f)
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_spec_people),
+            contentDescription = stringResource(
+                if (location != null) R.string.cd_geohash_participants else R.string.cd_connected_peers
+            ),
+            tint = colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(15.dp)
+        )
+        AnimatedCount(
+            count = count,
+            style = MaterialTheme.typography.bodyMedium,
+            fontSize = 13.sp,
+            color = colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Medium
+        )
+        Icon(
+            imageVector = androidx.compose.material.icons.Icons.Filled.ExpandMore,
+            contentDescription = null,
+            tint = colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(18.dp)
+        )
     }
 }
 

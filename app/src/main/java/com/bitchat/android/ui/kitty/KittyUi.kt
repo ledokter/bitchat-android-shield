@@ -18,6 +18,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateMap
@@ -78,16 +81,18 @@ fun KittySays(text: String, modifier: Modifier = Modifier, kittyHeight: androidx
     }
 }
 
-/** Bouncing pointing finger (👆 or 👇). */
+/** Bouncing arrow pointing at the highlighted item. */
 @Composable
 fun PointingFinger(up: Boolean, modifier: Modifier = Modifier) {
     val bob = rememberInfiniteTransition(label = "finger").animateFloat(
         0f, 1f, infiniteRepeatable(tween(450, easing = FastOutSlowInEasing), RepeatMode.Reverse), label = "b"
     )
     val d = with(LocalDensity.current) { 7.dp.toPx() }
-    Text(
-        if (up) "👆" else "👇", fontSize = 30.sp,
-        modifier = modifier.graphicsLayer { translationY = (if (up) -1 else 1) * bob.value * d }
+    Icon(
+        if (up) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.primary,
+        modifier = modifier.size(32.dp).graphicsLayer { translationY = (if (up) -1 else 1) * bob.value * d }
     )
 }
 
@@ -123,6 +128,11 @@ object KittyAnchors {
     const val ROOMS = "rooms"
     const val DMS = "dms"
     const val PEOPLE = "people"
+    const val COMPOSER = "composer"
+    const val TAB_CHAT = "tab_chat"
+    const val TAB_MAP = "tab_map"
+    const val TAB_PRIVATE = "tab_private"
+    const val TAB_SETTINGS = "tab_settings"
 }
 
 fun Modifier.kittyAnchor(id: String): Modifier = composed {
@@ -132,17 +142,19 @@ fun Modifier.kittyAnchor(id: String): Modifier = composed {
 
 private data class TourStep(val anchor: String?, val text: Int)
 
+// The tabbed interface: header, composer, then the tabs at the bottom.
 private val TOUR = listOf(
-    TourStep(KittyAnchors.LOGO, R.string.tour_logo),
-    TourStep(KittyAnchors.CHANNEL, R.string.tour_channel),
-    TourStep(KittyAnchors.GLOBE, R.string.tour_globe),
-    TourStep(KittyAnchors.DMS, R.string.tour_dms),
-    TourStep(KittyAnchors.ROOMS, R.string.tour_rooms),
-    TourStep(KittyAnchors.PEOPLE, R.string.tour_people),
-    TourStep(null, R.string.tour_badges)
+    TourStep(KittyAnchors.LOGO, R.string.tour2_logo),
+    TourStep(KittyAnchors.CHANNEL, R.string.tour2_place),
+    TourStep(KittyAnchors.COMPOSER, R.string.tour2_composer),
+    TourStep(KittyAnchors.TAB_MAP, R.string.tour2_map),
+    TourStep(KittyAnchors.TAB_PRIVATE, R.string.tour2_private),
+    TourStep(KittyAnchors.TAB_SETTINGS, R.string.tour2_settings),
+    TourStep(null, R.string.tour2_badges)
 )
 
-const val TOUR_TIP = "tour"
+// new id: people who saw the old header tour get the new one once
+const val TOUR_TIP = "tour2"
 
 /** First-launch tour: kitty points at each header button in turn. Place it over the whole screen. */
 @Composable
@@ -152,16 +164,18 @@ fun KittyTour() {
     val steps = TOUR.filter { it.anchor == null || KittyAnchors.rects.containsKey(it.anchor) }
     var index by remember { mutableIntStateOf(0) }
     var origin by remember { mutableStateOf(Offset.Zero) }
+    var boxHeight by remember { mutableIntStateOf(0) }
     val step = steps.getOrNull(index) ?: run { KittyGame.markTipSeen(TOUR_TIP); return }
     val target = step.anchor?.let { KittyAnchors.rects[it] }
     val density = LocalDensity.current
     Box(
         Modifier
             .fillMaxSize()
-            .onGloballyPositioned { origin = it.positionInWindow() }
+            .onGloballyPositioned { origin = it.positionInWindow(); boxHeight = it.size.height }
             .background(Color.Black.copy(alpha = 0.55f))
             .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) { index++ }
     ) {
+        val lower = target != null && target.translate(-origin).center.y > boxHeight / 2f
         if (target != null) {
             val r = target.translate(-origin)
             val pad = with(density) { 6.dp.toPx() }
@@ -169,19 +183,30 @@ fun KittyTour() {
                 Modifier
                     .offset { IntOffset((r.left - pad).toInt(), (r.top - pad).toInt()) }
                     .size(with(density) { (r.width + 2 * pad).toDp() }, with(density) { (r.height + 2 * pad).toDp() })
-                    .border(3.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                    .border(3.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
             )
-            val fingerSize = with(density) { 36.dp.toPx() }
+            val arrow = with(density) { 32.dp.toPx() }
             PointingFinger(
-                up = true,
-                modifier = Modifier.offset { IntOffset((r.center.x - fingerSize / 2).toInt(), (r.bottom + pad).toInt()) }
+                up = !lower,
+                modifier = Modifier.offset {
+                    IntOffset((r.center.x - arrow / 2).toInt(), if (lower) (r.top - pad - arrow - 4).toInt() else (r.bottom + pad + 4).toInt())
+                }
             )
         }
-        val top = target?.let { with(density) { (it.translate(-origin).bottom).toDp() } + 56.dp } ?: 0.dp
+        val edge = target?.let {
+            val r = it.translate(-origin)
+            with(density) { (if (lower) boxHeight - r.top else r.bottom).toDp() } + 52.dp
+        } ?: 0.dp
         Column(
             Modifier
                 .fillMaxWidth()
-                .then(if (target == null) Modifier.align(Alignment.Center) else Modifier.padding(top = top))
+                .then(
+                    when {
+                        target == null -> Modifier.align(Alignment.Center)
+                        lower -> Modifier.align(Alignment.BottomCenter).padding(bottom = edge)
+                        else -> Modifier.padding(top = edge)
+                    }
+                )
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

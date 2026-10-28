@@ -204,14 +204,15 @@ private fun LanguageMenuItem(
  * Apple-like design with proper spacing
  */
 @Composable
-private fun SettingsToggleRow(
+internal fun SettingsToggleRow(
     icon: ImageVector,
     title: String,
     subtitle: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     enabled: Boolean = true,
-    statusIndicator: (@Composable () -> Unit)? = null
+    statusIndicator: (@Composable () -> Unit)? = null,
+    help: Int? = null
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val palette = LocalBitchatPalette.current
@@ -273,6 +274,7 @@ private fun SettingsToggleRow(
                     color = titleColor
                 )
                 statusIndicator?.invoke()
+                help?.let { HelpDot(it) }
             }
             Text(
                 text = subtitle,
@@ -404,157 +406,11 @@ fun AboutSheet(
                     if (selectedTab == AboutTab.Settings) {
                     // Appearance Section
                     item(key = "appearance") {
-                        Column {
-                            AboutSectionLabel(text = stringResource(R.string.about_section_theme))
-                            val themePref by com.bitchat.android.ui.theme.ThemePreferenceManager.themeFlow.collectAsState()
-                            val chatUiMode by com.bitchat.android.ui.theme.ChatUiModeManager.modeFlow.collectAsState()
-                            Surface(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = AboutHorizontalPadding),
-                                color = colorScheme.surface,
-                                shape = AboutCardShape
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(12.dp),
-                                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        ThemeChip(
-                                            label = stringResource(R.string.about_system),
-                                            selected = themePref.isSystem,
-                                            onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.System) },
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        ThemeChip(
-                                            label = stringResource(R.string.about_light),
-                                            selected = themePref.isLight,
-                                            onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.Light) },
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        ThemeChip(
-                                            label = stringResource(R.string.about_dark),
-                                            selected = themePref.isDark,
-                                            onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.Dark) },
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                    }
-                                    // Accent palette: every tone meets WCAG AA in light and dark themes
-                                    val accent by com.bitchat.android.ui.theme.ThemePreferenceManager.accentFlow.collectAsState()
-                                    val darkNow = colorScheme.background.luminance() < 0.5f
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        com.bitchat.android.ui.theme.AccentColor.entries.forEach { a ->
-                                            val selected = a == accent
-                                            val accentLabel = stringResource(a.label)
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(30.dp)
-                                                    .clip(CircleShape)
-                                                    .background(Color(if (darkNow) a.dark else a.light))
-                                                    .border(
-                                                        width = if (selected) 3.dp else 0.dp,
-                                                        color = if (selected) colorScheme.onSurface else Color.Transparent,
-                                                        shape = CircleShape
-                                                    )
-                                                    .clickable { com.bitchat.android.ui.theme.ThemePreferenceManager.setAccent(context, a) }
-                                                    .semantics { contentDescription = accentLabel },
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                if (selected) Icon(
-                                                    Icons.Filled.Check,
-                                                    contentDescription = null,
-                                                    tint = if (darkNow) Color.Black else Color.White,
-                                                    modifier = Modifier.size(16.dp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        ThemeChip(
-                                            label = stringResource(R.string.chat_ui_bubbles),
-                                            selected = chatUiMode.isBubbles,
-                                            onClick = { com.bitchat.android.ui.theme.ChatUiModeManager.set(context, com.bitchat.android.ui.theme.ChatUiMode.Bubbles) },
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                        ThemeChip(
-                                            label = stringResource(R.string.chat_ui_matrix),
-                                            selected = chatUiMode.isMatrix,
-                                            onClick = { com.bitchat.android.ui.theme.ChatUiModeManager.set(context, com.bitchat.android.ui.theme.ChatUiMode.Matrix) },
-                                            modifier = Modifier.weight(1f)
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        AppearanceSettings()
                     }
 
                     item(key = "language") {
-                        val selectedLanguageName = supportedLanguages
-                            .firstOrNull { it.languageTag == selectedLanguageTag }
-                            ?.endonym
-                            ?: stringResource(R.string.about_system_default)
-
-                        Column {
-                            AboutSectionLabel(text = stringResource(R.string.about_language))
-                            BoxWithConstraints(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = AboutHorizontalPadding),
-                            ) {
-                                Surface(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    color = colorScheme.surface,
-                                    shape = AboutCardShape,
-                                ) {
-                                    LanguageSettingsRow(
-                                        selectedLanguageName = selectedLanguageName,
-                                        onClick = { showLanguagePicker = true },
-                                    )
-                                }
-                                DropdownMenu(
-                                    expanded = showLanguagePicker,
-                                    onDismissRequest = { showLanguagePicker = false },
-                                    modifier = Modifier.width(maxWidth),
-                                ) {
-                                    LanguageMenuItem(
-                                        label = stringResource(R.string.about_system_default),
-                                        selected = selectedLanguageTag.isEmpty(),
-                                        onClick = {
-                                            showLanguagePicker = false
-                                            if (selectedLanguageTag.isNotEmpty()) {
-                                                selectedLanguageTag = ""
-                                                LanguagePreferenceManager.setLanguage("")
-                                            }
-                                        },
-                                    )
-                                    HorizontalDivider()
-                                    supportedLanguages.forEach { language ->
-                                        LanguageMenuItem(
-                                            label = language.endonym,
-                                            selected = selectedLanguageTag == language.languageTag,
-                                            onClick = {
-                                                showLanguagePicker = false
-                                                if (language.languageTag != selectedLanguageTag) {
-                                                    selectedLanguageTag = language.languageTag
-                                                    LanguagePreferenceManager.setLanguage(language.languageTag)
-                                                }
-                                            },
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                        LanguageSettings()
                     }
 
                     // Settings Section - Unified Card with Toggles
@@ -766,6 +622,276 @@ fun AboutSheet(
                                         color = colorScheme.outline.copy(alpha = 0.12f)
                                     )
 
+                                    ApkShareRows()
+
+                                }
+                            }
+
+                            // Tor unavailable hint
+                            if (!torAvailable) {
+                                Text(
+                                    text = stringResource(R.string.tor_not_available_in_this_build),
+                                    fontSize = 12.sp,
+                                    fontFamily = BitchatFontFamily,
+                                    color = palette.textTertiary,
+                                    modifier = Modifier.padding(
+                                        start = AboutHorizontalPadding + 16.dp,
+                                        top = 8.dp
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    // PoW Difficulty Sliders (Incoming filter + Outgoing send PoW)
+                    // chatbit protections: summary by default, every switch in advanced mode
+                    item(key = "security") {
+                        SecuritySettingsCard(advanced = advancedMode)
+                    }
+
+                    if (advancedMode) item(key = "pow_slider") {
+                        PowSliders()
+                    }
+
+                    // Tor Status (when enabled)
+                    item(key = "tor_status") {
+                        TorStatusCard(showRotation = advancedMode)
+                    }
+
+                    } // end Settings tab
+
+                    // Footer
+                    item(key = "footer") {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = AboutHorizontalPadding,
+                                    end = AboutHorizontalPadding,
+                                    top = 24.dp
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            if (selectedTab == AboutTab.Settings) {
+                                AdvancedModeToggle(advanced = advancedMode)
+                            }
+                            if (selectedTab == AboutTab.Settings && advancedMode && onShowDebug != null) {
+                                TextButton(onClick = onShowDebug) {
+                                    Text(
+                                        text = stringResource(R.string.about_debug_settings),
+                                        fontSize = 13.sp,
+                                        fontFamily = BitchatFontFamily,
+                                        color = colorScheme.primary
+                                    )
+                                }
+                            }
+                            Text(
+                                text = stringResource(R.string.about_footer),
+                                fontSize = 11.sp,
+                                fontFamily = BitchatFontFamily,
+                                color = palette.textTertiary
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
+                    }
+                }
+
+                // TopBar
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
+                        .height(64.dp)
+                        .background(colorScheme.background.copy(alpha = topBarAlpha))
+                ) {
+                    val dismiss = LocalSheetDismiss.current
+                    CloseButton(
+                        onClick = { dismiss?.invoke() ?: onDismiss() },
+                        modifier = modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(horizontal = 16.dp),
+                    )
+                }
+            }
+        }
+    }
+}
+
+// chatbit: settings blocks shared by the settings tab cards and the legacy About sheet.
+
+/** Theme, accent colour and message style. */
+@Composable
+internal fun AppearanceSettings(showLabel: Boolean = true, outerPadding: androidx.compose.ui.unit.Dp = AboutHorizontalPadding) {
+    val context = LocalContext.current
+    val colorScheme = MaterialTheme.colorScheme
+                        Column {
+                            if (showLabel) AboutSectionLabel(text = stringResource(R.string.about_section_theme))
+                            val themePref by com.bitchat.android.ui.theme.ThemePreferenceManager.themeFlow.collectAsState()
+                            val chatUiMode by com.bitchat.android.ui.theme.ChatUiModeManager.modeFlow.collectAsState()
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = outerPadding),
+                                color = colorScheme.surface,
+                                shape = AboutCardShape
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        ThemeChip(
+                                            label = stringResource(R.string.about_system),
+                                            selected = themePref.isSystem,
+                                            onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.System) },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        ThemeChip(
+                                            label = stringResource(R.string.about_light),
+                                            selected = themePref.isLight,
+                                            onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.Light) },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        ThemeChip(
+                                            label = stringResource(R.string.about_dark),
+                                            selected = themePref.isDark,
+                                            onClick = { com.bitchat.android.ui.theme.ThemePreferenceManager.set(context, com.bitchat.android.ui.theme.ThemePreference.Dark) },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                    // Accent palette: every tone meets WCAG AA in light and dark themes
+                                    val accent by com.bitchat.android.ui.theme.ThemePreferenceManager.accentFlow.collectAsState()
+                                    val darkNow = colorScheme.background.luminance() < 0.5f
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        com.bitchat.android.ui.theme.AccentColor.entries.forEach { a ->
+                                            val selected = a == accent
+                                            val accentLabel = stringResource(a.label)
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(30.dp)
+                                                    .clip(CircleShape)
+                                                    .background(Color(if (darkNow) a.dark else a.light))
+                                                    .border(
+                                                        width = if (selected) 3.dp else 0.dp,
+                                                        color = if (selected) colorScheme.onSurface else Color.Transparent,
+                                                        shape = CircleShape
+                                                    )
+                                                    .clickable { com.bitchat.android.ui.theme.ThemePreferenceManager.setAccent(context, a) }
+                                                    .semantics { contentDescription = accentLabel },
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                if (selected) Icon(
+                                                    Icons.Filled.Check,
+                                                    contentDescription = null,
+                                                    tint = if (darkNow) Color.Black else Color.White,
+                                                    modifier = Modifier.size(16.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        ThemeChip(
+                                            label = stringResource(R.string.chat_ui_bubbles),
+                                            selected = chatUiMode.isBubbles,
+                                            onClick = { com.bitchat.android.ui.theme.ChatUiModeManager.set(context, com.bitchat.android.ui.theme.ChatUiMode.Bubbles) },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        ThemeChip(
+                                            label = stringResource(R.string.chat_ui_matrix),
+                                            selected = chatUiMode.isMatrix,
+                                            onClick = { com.bitchat.android.ui.theme.ChatUiModeManager.set(context, com.bitchat.android.ui.theme.ChatUiMode.Matrix) },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+}
+
+/** App language picker. */
+@Composable
+internal fun LanguageSettings(showLabel: Boolean = true, outerPadding: androidx.compose.ui.unit.Dp = AboutHorizontalPadding) {
+    val context = LocalContext.current
+    val colorScheme = MaterialTheme.colorScheme
+    val supportedLanguages = remember(context) { LanguagePreferenceManager.supportedLanguages(context) }
+    var selectedLanguageTag by remember { mutableStateOf(LanguagePreferenceManager.currentLanguageTag()) }
+    var showLanguagePicker by remember { mutableStateOf(false) }
+                        val selectedLanguageName = supportedLanguages
+                            .firstOrNull { it.languageTag == selectedLanguageTag }
+                            ?.endonym
+                            ?: stringResource(R.string.about_system_default)
+
+                        Column {
+                            if (showLabel) AboutSectionLabel(text = stringResource(R.string.about_language))
+                            BoxWithConstraints(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = outerPadding),
+                            ) {
+                                Surface(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = colorScheme.surface,
+                                    shape = AboutCardShape,
+                                ) {
+                                    LanguageSettingsRow(
+                                        selectedLanguageName = selectedLanguageName,
+                                        onClick = { showLanguagePicker = true },
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = showLanguagePicker,
+                                    onDismissRequest = { showLanguagePicker = false },
+                                    modifier = Modifier.width(maxWidth),
+                                ) {
+                                    LanguageMenuItem(
+                                        label = stringResource(R.string.about_system_default),
+                                        selected = selectedLanguageTag.isEmpty(),
+                                        onClick = {
+                                            showLanguagePicker = false
+                                            if (selectedLanguageTag.isNotEmpty()) {
+                                                selectedLanguageTag = ""
+                                                LanguagePreferenceManager.setLanguage("")
+                                            }
+                                        },
+                                    )
+                                    HorizontalDivider()
+                                    supportedLanguages.forEach { language ->
+                                        LanguageMenuItem(
+                                            label = language.endonym,
+                                            selected = selectedLanguageTag == language.languageTag,
+                                            onClick = {
+                                                showLanguagePicker = false
+                                                if (language.languageTag != selectedLanguageTag) {
+                                                    selectedLanguageTag = language.languageTag
+                                                    LanguagePreferenceManager.setLanguage(language.languageTag)
+                                                }
+                                            },
+                                        )
+                                    }
+                                }
+                            }
+                        }
+}
+
+/** Prepare the APK, then share it through a hotspot or any share target. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun ApkShareRows() {
+    val context = LocalContext.current
+    val colorScheme = MaterialTheme.colorScheme
+    Column {
                                     // === Prepare App for Sharing Section ===
                                     val apkViewModel: ApkDownloadViewModel = viewModel()
                                     val apkUiState by apkViewModel.state.collectAsStateWithLifecycle()
@@ -1229,33 +1355,15 @@ fun AboutSheet(
                                             )
                                         }
                                     }
+    }
+}
 
-                                }
-                            }
-
-                            // Tor unavailable hint
-                            if (!torAvailable) {
-                                Text(
-                                    text = stringResource(R.string.tor_not_available_in_this_build),
-                                    fontSize = 12.sp,
-                                    fontFamily = BitchatFontFamily,
-                                    color = palette.textTertiary,
-                                    modifier = Modifier.padding(
-                                        start = AboutHorizontalPadding + 16.dp,
-                                        top = 8.dp
-                                    )
-                                )
-                            }
-                        }
-                    }
-
-                    // PoW Difficulty Sliders (Incoming filter + Outgoing send PoW)
-                    // chatbit protections: summary by default, every switch in advanced mode
-                    item(key = "security") {
-                        SecuritySettingsCard(advanced = advancedMode)
-                    }
-
-                    if (advancedMode) item(key = "pow_slider") {
+/** Proof-of-work difficulty sliders (advanced). */
+@Composable
+internal fun PowSliders(outerPadding: androidx.compose.ui.unit.Dp = AboutHorizontalPadding) {
+    val colorScheme = MaterialTheme.colorScheme
+    val palette = LocalBitchatPalette.current
+    Column {
                         val powEnabled by PoWPreferenceManager.powEnabled.collectAsState()
                         val powDifficulty by PoWPreferenceManager.powDifficulty.collectAsState()
                         val sendPowEnabled by PoWPreferenceManager.sendPowEnabled.collectAsState()
@@ -1266,7 +1374,7 @@ fun AboutSheet(
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = AboutHorizontalPadding),
+                                        .padding(horizontal = outerPadding),
                                     color = colorScheme.surface,
                                     shape = AboutCardShape
                                 ) {
@@ -1337,7 +1445,7 @@ fun AboutSheet(
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = AboutHorizontalPadding),
+                                        .padding(horizontal = outerPadding),
                                     color = colorScheme.surface,
                                     shape = AboutCardShape
                                 ) {
@@ -1402,11 +1510,17 @@ fun AboutSheet(
                                 }
                             }
                         }
-                    }
+    }
+}
 
-                    // Tor Status (when enabled)
-                    item(key = "tor_status") {
-                        val torMode = remember { mutableStateOf(TorPreferenceManager.get(context)) }
+/** Tor state, new route button and automatic rotation. */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+internal fun TorStatusCard(showRotation: Boolean, outerPadding: androidx.compose.ui.unit.Dp = AboutHorizontalPadding) {
+    val context = LocalContext.current
+    val colorScheme = MaterialTheme.colorScheme
+    val palette = LocalBitchatPalette.current
+                        val torMode = TorPreferenceManager.modeFlow.collectAsState()  // follows the Tor switch live
                         val torProvider = remember { ArtiTorManager.getInstance() }
                         val torStatus by torProvider.statusFlow.collectAsState()
 
@@ -1415,7 +1529,7 @@ fun AboutSheet(
                                 Surface(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(horizontal = AboutHorizontalPadding),
+                                        .padding(horizontal = outerPadding),
                                     color = colorScheme.surface,
                                     shape = AboutCardShape
                                 ) {
@@ -1475,13 +1589,16 @@ fun AboutSheet(
                                                 )
                                             }
                                         }
-                                        if (advancedMode) {
-                                        Text(
-                                            text = stringResource(R.string.tor_auto_rotation),
-                                            fontFamily = BitchatFontFamily,
-                                            fontSize = 12.sp,
-                                            color = colorScheme.onSurface
-                                        )
+                                        if (showRotation) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Text(
+                                                text = stringResource(R.string.tor_auto_rotation),
+                                                fontFamily = BitchatFontFamily,
+                                                fontSize = 12.sp,
+                                                color = colorScheme.onSurface
+                                            )
+                                            HelpDot(R.string.help_tor_rotation)
+                                        }
                                         // wraps instead of cutting the last choice off-screen
                                         androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                                             TorPreferenceManager.ROTATION_CHOICES.forEach { m ->
@@ -1507,66 +1624,6 @@ fun AboutSheet(
                                 }
                             }
                         }
-                    }
-
-                    } // end Settings tab
-
-                    // Footer
-                    item(key = "footer") {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    start = AboutHorizontalPadding,
-                                    end = AboutHorizontalPadding,
-                                    top = 24.dp
-                                ),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            if (selectedTab == AboutTab.Settings) {
-                                AdvancedModeToggle(advanced = advancedMode)
-                            }
-                            if (selectedTab == AboutTab.Settings && advancedMode && onShowDebug != null) {
-                                TextButton(onClick = onShowDebug) {
-                                    Text(
-                                        text = stringResource(R.string.about_debug_settings),
-                                        fontSize = 13.sp,
-                                        fontFamily = BitchatFontFamily,
-                                        color = colorScheme.primary
-                                    )
-                                }
-                            }
-                            Text(
-                                text = stringResource(R.string.about_footer),
-                                fontSize = 11.sp,
-                                fontFamily = BitchatFontFamily,
-                                color = palette.textTertiary
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                        }
-                    }
-                }
-
-                // TopBar
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .background(colorScheme.background.copy(alpha = topBarAlpha))
-                ) {
-                    val dismiss = LocalSheetDismiss.current
-                    CloseButton(
-                        onClick = { dismiss?.invoke() ?: onDismiss() },
-                        modifier = modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(horizontal = 16.dp),
-                    )
-                }
-            }
-        }
-    }
 }
 
 /**

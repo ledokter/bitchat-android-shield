@@ -70,7 +70,7 @@ import java.util.Date
 fun PrivateRoomsSheet(nickname: String, onDismiss: () -> Unit) {
     val rooms by PrivateRooms.rooms.collectAsState()
     val pending by PrivateRooms.pendingInvite.collectAsState()
-    var openTag by remember { mutableStateOf<String?>(null) }
+    var openTag by remember { mutableStateOf(PrivateRooms.takeInitialTag()) }
     val open = rooms.firstOrNull { it.tag == openTag }
 
     BitchatBottomSheet(onDismissRequest = onDismiss) {

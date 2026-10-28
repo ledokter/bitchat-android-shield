@@ -76,9 +76,15 @@ object PrivateRooms {
     private val _sheetOpen = MutableStateFlow(false)
     val sheetOpen: StateFlow<Boolean> = _sheetOpen.asStateFlow()
 
-    fun openSheet() {
+    // Room the sheet opens on (Private tab), read once by the sheet
+    @Volatile private var initialTag: String? = null
+
+    fun openSheet(tag: String? = null) {
+        initialTag = tag
         _sheetOpen.value = true
     }
+
+    fun takeInitialTag(): String? = initialTag.also { initialTag = null }
 
     fun closeSheet() {
         _sheetOpen.value = false
