@@ -141,7 +141,7 @@ private fun Directory(onJoin: (String) -> Unit, onClose: () -> Unit) {
     fun up() {
         open = null
         when {
-            path == ALL_CITIES || path.length <= 2 -> path = ""
+            path == ALL_CITIES || (path.isNotEmpty() && path.length <= 2) -> path = ""
             path.isNotEmpty() -> path = path.dropLast(1)
             country != null -> country = null
             continent != null -> continent = null

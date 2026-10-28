@@ -187,8 +187,21 @@ class WorldMapActivity : ComponentActivity() {
                             }
                             Text(stringResource(R.string.map_title), fontFamily = BitchatFontFamily, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = androidx.compose.ui.graphics.Color.White, modifier = Modifier.weight(1f))
                             // place names vanish when zoomed in: find a zone by name instead
-                            IconButton(onClick = { directoryLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java)) }) {
-                                Icon(Icons.Filled.Search, contentDescription = stringResource(R.string.dir_open), tint = androidx.compose.ui.graphics.Color.White)
+                            // a labelled pill: the bare magnifier was easy to miss on the dark sky
+                            Surface(
+                                onClick = { directoryLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java)) },
+                                shape = RoundedCornerShape(50),
+                                color = colorScheme.primary,
+                                contentColor = colorScheme.onPrimary
+                            ) {
+                                Row(
+                                    Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
+                                    Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(18.dp))
+                                    Text(stringResource(R.string.dir_open), fontFamily = BitchatFontFamily, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                                }
                             }
                         }
                         Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(6.dp)) {

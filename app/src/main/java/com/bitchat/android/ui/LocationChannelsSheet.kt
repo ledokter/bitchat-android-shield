@@ -234,6 +234,26 @@ fun LocationChannelsSheet(
                     item(key = "kitty_tip") {
                         com.bitchat.android.ui.kitty.KittyTip("channels", stringResource(R.string.tip_channels), Modifier.padding(horizontal = 16.dp))
                     }
+                    // chatbit: world map and zone directory first, as two big buttons
+                    item(key = "map_and_directory") {
+                        Row(
+                            Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            BigPlaceButton(
+                                icon = { Icon(painterResource(R.drawable.ic_spec_globe), contentDescription = null, modifier = Modifier.size(26.dp)) },
+                                label = stringResource(R.string.map_open),
+                                onClick = { mapPickerLauncher.launch(Intent(context, WorldMapActivity::class.java)) },
+                                modifier = Modifier.weight(1f)
+                            )
+                            BigPlaceButton(
+                                icon = { Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(26.dp)) },
+                                label = stringResource(R.string.dir_open),
+                                onClick = { mapPickerLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java)) },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
                     // Mesh section: icon + title header, offline subtitle, then selection card
                     item(key = "mesh_card") {
                         Column {
@@ -549,45 +569,6 @@ fun LocationChannelsSheet(
                                     )
                                 )
                             }
-                        }
-                    }
-
-                    // chatbit world map: live activity, geocaches, day/night (glub.chat style)
-                    item(key = "world_map") {
-                        androidx.compose.material3.OutlinedButton(
-                            onClick = {
-                                mapPickerLauncher.launch(Intent(context, WorldMapActivity::class.java))
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        ) {
-                            Icon(painterResource(R.drawable.ic_spec_globe), contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.map_open),
-                                fontFamily = BitchatFontFamily
-                            )
-                        }
-                    }
-
-                    // chatbit: find a zone by place name (offline list, by continent and country)
-                    item(key = "zone_directory") {
-                        androidx.compose.material3.OutlinedButton(
-                            onClick = {
-                                mapPickerLauncher.launch(Intent(context, ZoneDirectoryActivity::class.java))
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                                .padding(top = 8.dp)
-                        ) {
-                            Icon(Icons.Filled.Search, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.dir_open),
-                                fontFamily = BitchatFontFamily
-                            )
                         }
                     }
 
@@ -1270,3 +1251,30 @@ private fun formatDistance(value: Double): String {
 private fun meshRangeString(): String = "~10–50m"
 
 private fun formattedNamePrefix(level: GeohashChannelLevel): String = "~"
+
+/** Big filled button (icon over label) for the world map and the zone directory. */
+@Composable
+private fun BigPlaceButton(icon: @Composable () -> Unit, label: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val colorScheme = MaterialTheme.colorScheme
+    Surface(
+        onClick = onClick,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        color = colorScheme.primary,
+        contentColor = colorScheme.onPrimary,
+        modifier = modifier
+    ) {
+        Column(
+            Modifier.padding(vertical = 14.dp, horizontal = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            icon()
+            Text(
+                label,
+                fontFamily = BitchatFontFamily, fontSize = 13.sp, fontWeight = FontWeight.SemiBold,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                maxLines = 2
+            )
+        }
+    }
+}
