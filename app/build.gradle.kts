@@ -30,13 +30,22 @@ android {
         applicationId = "app.chatbit"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 43
-        versionName = "2.2.1"
+        versionCode = 44
+        versionName = "2.3.0"
         buildConfigField(
             "String",
             "GITHUB_RELEASE_CERT_SHA256",
             "\"$normalizedGithubReleaseCertSha256\""
         )
+        // AdMob (free version videos): Google's public test IDs until the real ones are set in
+        // gradle.properties (chatbit.admob.app / chatbit.admob.rewarded, from the AdMob account)
+        buildConfigField(
+            "String",
+            "ADMOB_REWARDED_ID",
+            "\"${providers.gradleProperty("chatbit.admob.rewarded").getOrElse("ca-app-pub-3940256099942544/5224354917")}\""
+        )
+        manifestPlaceholders["admobAppId"] =
+            providers.gradleProperty("chatbit.admob.app").getOrElse("ca-app-pub-3940256099942544~3347511713")
 
         testInstrumentationRunner = "com.bitchat.android.ui.PerformanceTestRunner"
         vectorDrawables {
@@ -183,6 +192,11 @@ dependencies {
     // Note: AAR is kept in libs/ for reference, but libraries loaded from jniLibs/
 
     // Google Play Services Location
+
+    // Free version: rewarded videos (AdMob + consent form) and Pro through Google Play Billing
+    implementation(libs.play.services.ads)
+    implementation(libs.ump)
+    implementation(libs.billing.ktx)
 
     // Security preferences
     implementation(libs.androidx.security.crypto)

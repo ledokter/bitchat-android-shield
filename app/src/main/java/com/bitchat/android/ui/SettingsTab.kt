@@ -34,6 +34,8 @@ import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.WorkspacePremium
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Key
@@ -105,8 +107,39 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
     val context = LocalContext.current
     val colorScheme = MaterialTheme.colorScheme
     val advanced by SecurityPreferences.advancedMode.collectAsState()
+    val isPro by com.bitchat.android.monetization.ProStatus.isPro.collectAsState()
     var open by rememberSaveable { mutableStateOf<String?>(null) }
-    val toggle: (String) -> Unit = { id -> open = if (open == id) null else id }
+    // free version: the anti-spam card opens after a video, every time (closing it locks it again)
+    var spamUnlocked by remember { mutableStateOf(false) }
+    var showFloodTuto by remember { mutableStateOf(false) }
+    var gate by remember { mutableStateOf<AdGate?>(null) }
+    var showPro by remember { mutableStateOf(false) }
+    val toggle: (String) -> Unit = { id ->
+        when {
+            open == id -> { open = null; if (id == "spam") spamUnlocked = false }
+            id == "spam" && !isPro && !spamUnlocked -> gate = AdGate.ANTI_SPAM
+            else -> {
+                if (open == "spam") spamUnlocked = false
+                if (id == "spam" && isPro && !KittyGame.tipSeen(FLOOD_TUTO_TIP)) showFloodTuto = true
+                open = id
+            }
+        }
+    }
+    gate?.let { g ->
+        AdGateSheet(
+            gate = g,
+            onUnlocked = {
+                gate = null
+                when (g) {
+                    AdGate.ANTI_SPAM -> { spamUnlocked = true; showFloodTuto = true; open = "spam" }
+                    AdGate.ADVANCED -> SecurityPreferences.setAdvancedMode(true)
+                }
+            },
+            onDismiss = { gate = null },
+            onShowPro = { gate = null; showPro = true }
+        )
+    }
+    if (showPro) ProSheet(onDismiss = { showPro = false })
     var showKitty by remember { mutableStateOf(false) }
     var showFlood by remember { mutableStateOf(false) }
     var showDebug by remember { mutableStateOf(false) }
@@ -148,6 +181,33 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
                     stringResource(R.string.kitty_collection, badges.size, Badge.entries.size),
                     fontFamily = BitchatFontFamily, fontSize = 13.sp, color = colorScheme.primary
                 )
+            }
+        }
+
+        item(key = "pro") {
+            if (isPro) {
+                Text(
+                    stringResource(R.string.pro_active), fontFamily = BitchatFontFamily, fontSize = 13.sp,
+                    color = okColor(), modifier = Modifier.padding(start = 4.dp)
+                )
+            } else {
+                Surface(
+                    onClick = { showPro = true },
+                    shape = RoundedCornerShape(18.dp),
+                    color = colorScheme.primary,
+                    contentColor = colorScheme.onPrimary,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(Modifier.padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.WorkspacePremium, contentDescription = null, modifier = Modifier.size(26.dp))
+                        Spacer(Modifier.width(12.dp))
+                        Column(Modifier.weight(1f)) {
+                            Text(stringResource(R.string.pro_button), fontFamily = BitchatFontFamily, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.settings_pro_sum), fontFamily = BitchatFontFamily, fontSize = 12.sp)
+                        }
+                        Icon(Icons.Filled.ChevronRight, contentDescription = null)
+                    }
+                }
             }
         }
 
@@ -238,6 +298,7 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
                 contentPadding = PaddingValues(bottom = 12.dp)
             ) {
                 Column {
+                    if (showFloodTuto) FloodTutorial(onDone = { showFloodTuto = false; KittyGame.markTipSeen(FLOOD_TUTO_TIP) })
                     SettingsToggleRow(Icons.Filled.Shield, stringResource(R.string.flood_row_title, flagged), stringResource(R.string.flood_row_desc),
                         floodEnabled, { BitchatShield.setFloodEnabled(it) }, help = R.string.help_flood)
                     SettingsToggleRow(Icons.Filled.Lock, stringResource(R.string.shield_bots_title, blocked), stringResource(R.string.shield_bots_desc),
@@ -374,7 +435,29 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
         }
 
         item(key = "advanced") {
-            Box(Modifier.padding(top = 8.dp)) { AdvancedModeToggle(advanced = advanced) }
+            // free version: switching it on costs a video, every time (it switches off on leaving Settings)
+            Row(Modifier.fillMaxWidth().padding(top = 8.dp, start = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(stringResource(R.string.advanced_mode_title), fontFamily = BitchatFontFamily, fontSize = 14.sp, color = colorScheme.onSurface)
+                        HelpDot(R.string.help_advanced)
+                    }
+                    Text(
+                        stringResource(if (isPro) R.string.advanced_mode_desc else R.string.adgate_advanced_hint),
+                        fontFamily = BitchatFontFamily, fontSize = 12.sp, color = colorScheme.onSurfaceVariant
+                    )
+                }
+                androidx.compose.material3.Switch(
+                    checked = advanced,
+                    onCheckedChange = { on ->
+                        when {
+                            !on -> SecurityPreferences.setAdvancedMode(false)
+                            isPro -> SecurityPreferences.setAdvancedMode(true)
+                            else -> gate = AdGate.ADVANCED
+                        }
+                    }
+                )
+            }
         }
         item(key = "footer") {
             Text(
@@ -387,6 +470,8 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
         }
     }
 }
+
+private const val FLOOD_TUTO_TIP = "flood_tuto"
 
 /** Big title at the top of a tab. */
 @Composable

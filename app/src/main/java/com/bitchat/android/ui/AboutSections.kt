@@ -428,7 +428,7 @@ internal fun AboutFeatureCard(modifier: Modifier = Modifier) {
         Triple(
             R.drawable.ic_spec_eye_off,
             R.string.about_no_tracking_title,
-            R.string.about_no_tracking_desc
+            R.string.about_no_tracking_desc_ads
         ),
     )
 

@@ -184,5 +184,18 @@
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"
             tools:node="merge" />
+        <!-- AdMob: nothing starts at launch; consent and videos load only when a video is asked for -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+        <meta-data
+            android:name="com.google.android.gms.ads.DELAY_APP_MEASUREMENT_INIT"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
+            android:value="true" />
     </application>
 </manifest>

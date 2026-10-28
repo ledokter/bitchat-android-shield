@@ -74,7 +74,7 @@ object BitchatShield {
 
     val detector = FloodDetector()
 
-    private val _floodEnabled = MutableStateFlow(true)
+    private val _floodEnabled = MutableStateFlow(false)  // off by default: switched on in Settings > Anti-spam
     val floodEnabled: StateFlow<Boolean> = _floodEnabled.asStateFlow()
 
     private val _floodRules = MutableStateFlow(FloodDetector.Rules())
@@ -115,7 +115,7 @@ object BitchatShield {
         _blockLinks.value = prefs.getBoolean(KEY_BLOCK_LINKS, true)
         _strictNicknames.value = prefs.getBoolean(KEY_STRICT_NICKNAMES, true)
         _blockedCount.value = prefs.getInt(KEY_BLOCKED_COUNT, 0)
-        _floodEnabled.value = prefs.getBoolean(KEY_FLOOD_ENABLED, true)
+        _floodEnabled.value = prefs.getBoolean(KEY_FLOOD_ENABLED, false)
         prefs.getString(KEY_FLOOD_RULES, null)?.let { _floodRules.value = FloodRulesCodec.decode(it) }
         detector.rules = _floodRules.value
         synchronized(detector) {

@@ -15,7 +15,7 @@ bitchat is designed with privacy as its foundation. We believe private communica
 - **Hybrid Functionality** - bitchat offers two modes of communication:
   - **Bluetooth Mesh Chat**: This mode is completely offline, using peer-to-peer Bluetooth connections. It does not use any servers or internet connection.
   - **Geohash Chat**: This mode uses an internet connection to communicate with others in a specific geographic area. It relies on Nostr relays for message transport.
-- **No tracking** - We have no analytics, telemetry, or user tracking
+- **No tracking by chatbit** - chatbit itself has no analytics, telemetry, or user tracking. The free version shows video ads from Google AdMob only when you ask to open certain settings (see "Free version: ads and payments")
 - **Open source** - You can verify these claims by reading our code
 
 ## What Information bitchat Stores
@@ -74,10 +74,16 @@ bitchat **never**:
 - Collects location history
 - Transmits any data to us (the developers)
 - Stores data on servers
-- Shares data with third parties
+- Shares data with third parties (except the ad network, only when you choose to watch a video in the free version)
 - Uses analytics or telemetry
 - Creates user profiles
 - Requires registration
+
+## Free version: ads and payments
+
+- **Video ads (Google AdMob).** In the free version, opening the anti-spam settings or the advanced settings first shows a short video ad. Nothing ad-related runs before you tap "watch the video". In Europe a consent form (Google User Messaging Platform) asks whether ads may be personalized. Google AdMob may then collect your device's advertising ID, IP address and ad interactions under [Google's privacy policy](https://policies.google.com/privacy). The video loads over a direct connection, not through Tor. Your messages are never sent to the ad network.
+- **chatbit Pro (Google Play Billing).** Pro is bought, renewed and cancelled through Google Play. Google handles the payment; chatbit only asks Google Play whether this device's Play account owns Pro. chatbit keeps no account and receives no payment details.
+- **Pro removes the ads**: no video, and no ad network contact at all.
 
 ## Encryption
 

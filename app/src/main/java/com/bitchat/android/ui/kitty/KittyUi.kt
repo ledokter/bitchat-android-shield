@@ -145,16 +145,18 @@ private data class TourStep(val anchor: String?, val text: Int)
 // The tabbed interface: header, composer, then the tabs at the bottom.
 private val TOUR = listOf(
     TourStep(KittyAnchors.LOGO, R.string.tour2_logo),
+    TourStep(null, R.string.tour3_security),
     TourStep(KittyAnchors.CHANNEL, R.string.tour2_place),
     TourStep(KittyAnchors.COMPOSER, R.string.tour2_composer),
     TourStep(KittyAnchors.TAB_MAP, R.string.tour2_map),
     TourStep(KittyAnchors.TAB_PRIVATE, R.string.tour2_private),
     TourStep(KittyAnchors.TAB_SETTINGS, R.string.tour2_settings),
+    TourStep(KittyAnchors.TAB_SETTINGS, R.string.tour3_spam),
     TourStep(null, R.string.tour2_badges)
 )
 
 // new id: people who saw the old header tour get the new one once
-const val TOUR_TIP = "tour2"
+const val TOUR_TIP = "tour3"
 
 /** First-launch tour: kitty points at each header button in turn. Place it over the whole screen. */
 @Composable

@@ -1,4 +1,7 @@
 [versions]
+play-services-ads = "24.4.0"
+ump = "3.2.0"
+billing = "8.0.0"
 # Android and Kotlin
 agp = "9.3.1"
 kotlin = "2.4.10"
@@ -76,6 +79,9 @@ mockito-core = "5.23.0"
 roboelectric = "4.15" # 4.16+ drops the AndroidKeyStore shim; breaks EncryptionServiceTest
 
 [libraries]
+play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "play-services-ads" }
+ump = { module = "com.google.android.ump:user-messaging-platform", version.ref = "ump" }
+billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "billing" }
 # AndroidX Core
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle-runtime" }

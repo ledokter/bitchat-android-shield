@@ -87,6 +87,13 @@ fun MainTabs(viewModel: ChatViewModel) {
     val unread by viewModel.unreadPrivateMessages.collectAsStateWithLifecycle()
 
     BackHandler(enabled = tab != MainTab.CHAT) { tab = MainTab.CHAT }
+    LaunchedEffect(Unit) { com.bitchat.android.monetization.ProStatus.init(context) }
+    // free version: advanced settings are unlocked by a video for one visit of Settings only
+    LaunchedEffect(tab) {
+        if (tab != MainTab.SETTINGS && !com.bitchat.android.monetization.ProStatus.isPro.value) {
+            com.bitchat.android.security.SecurityPreferences.setAdvancedMode(false)
+        }
+    }
     LaunchedEffect(tab) { if (tab != MainTab.CHAT) focus.clearFocus() }
 
     // Map: the globe returns the geohash picked there, which becomes the current channel
