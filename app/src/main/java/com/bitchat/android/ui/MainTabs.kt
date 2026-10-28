@@ -87,7 +87,10 @@ fun MainTabs(viewModel: ChatViewModel) {
     val unread by viewModel.unreadPrivateMessages.collectAsStateWithLifecycle()
 
     BackHandler(enabled = tab != MainTab.CHAT) { tab = MainTab.CHAT }
-    LaunchedEffect(Unit) { com.bitchat.android.monetization.ProStatus.init(context) }
+    LaunchedEffect(Unit) {
+        com.bitchat.android.monetization.ProStatus.init(context)
+        SenderStats.init(context)
+    }
     // free version: advanced settings are unlocked by a video for one visit of Settings only
     LaunchedEffect(tab) {
         if (tab != MainTab.SETTINGS && !com.bitchat.android.monetization.ProStatus.isPro.value) {

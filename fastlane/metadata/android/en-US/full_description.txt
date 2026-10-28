@@ -1,1 +1,33 @@
-A secure, decentralized, peer-to-peer messaging app that works over Bluetooth mesh networks. No internet required, no servers, no phone numbers - just pure encrypted communication.
+chatbit is the group chat that works without internet: phones pass messages to each other over Bluetooth, and each one relays the others'. The more people, the further it reaches. Perfect for festivals, hiking, protests, network outages or travelling abroad.
+
+ANTI-FLOOD AND AUTOMATIC BOT BLOCKER
+Public rooms are often drowned in spam. chatbit cleans them up right on your phone:
+- anti-flood spots whoever floods the room and hides them automatically;
+- bots repeating the same messages are blocked on their own;
+- messages stuffed with links (often scams) and booby-trapped texts that crash the screen are filtered;
+- next to each nickname you see how many of their messages you got and for how many days you have been seeing them: newcomers who flood stand out at once;
+- the mascot shows you what to tick and why.
+
+NO INTERNET: THE MESH
+Messages hop from phone to phone over Bluetooth, with no cell tower, no server and no carrier.
+
+WITH INTERNET: ZONES, THROUGH TOR
+Join the room of your neighbourhood, your city or any area of the world on the map. Everything that goes over the internet goes through Tor, which hides your address.
+
+SECURITY IS ALREADY ON
+- chatbit's own PIN, typed on a keypad drawn by the app
+- Duress code: if someone forces you to open the app, this second code silently wipes everything
+- Panic wipe: 3 taps on the mascot and everything is gone
+- Private messages and private rooms end-to-end encrypted
+- Screenshots blocked, clipboard cleared, incognito keyboard
+
+NO ACCOUNT
+No phone number, no e-mail, no address book: pick a nickname, that's all.
+
+SHARE WITHOUT INTERNET
+Your phone becomes a small Wi-Fi hotspot: friends install chatbit by scanning a QR code, even with no network.
+
+FREE, WITH PRO AS AN OPTION
+No account, no tracking by chatbit. The free version shows a video ad on request, before opening the anti-spam or advanced settings; Pro, none. chatbit Pro removes the ads and funds the servers (subscription through Google Play).
+
+Free software (GPL v3), compatible with bitchat on the mesh and in zones.

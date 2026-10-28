@@ -250,6 +250,8 @@ fun MessagesList(
     /** Messages from blocked / reported people shown on request: drawn faded with a tag, like on the bot. */
     blockedIds: Set<String> = emptySet()
 ) {
+    // chatbit: per-sender message count and first-seen day, shown after the nickname
+    LaunchedEffect(messages) { SenderStats.record(messages) }
     val resolvedMentionPeerIdentities = mentionPeerIdentities
         ?: rememberMentionPeerIdentities(messages, conversationKey = conversationKey)
 
@@ -797,14 +799,15 @@ internal fun TextMessageLayout(
     val displayMessage = remember(message, bodyContent) {
         if (bodyContent == message.content) message else message.copy(content = bodyContent)
     }
-    val senderText = remember(message, currentUserNickname, myPeerId, palette) {
+    val senderText = senderExtras(message, message.isFromSelf(currentUserNickname, myPeerId)).let { extras -> remember(message, currentUserNickname, myPeerId, palette, extras) {
         formatTextMessageSender(
             message = message,
             currentUserNickname = currentUserNickname,
             myPeerID = myPeerId,
             palette = palette,
+            extras = extras,
         )
-    }
+    } }
     val isSelf = message.isFromSelf(currentUserNickname, myPeerId)
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current

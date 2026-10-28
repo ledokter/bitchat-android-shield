@@ -430,6 +430,16 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
                         onClick = onReplayTour,
                         modifier = Modifier.padding(start = 16.dp)
                     )
+                    // the site (provisional address until the final domain)
+                    ChatbitButton(
+                        text = stringResource(R.string.about_site),
+                        onClick = {
+                            runCatching {
+                                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(SITE_URL)))
+                            }
+                        },
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
                 }
             }
         }
@@ -472,6 +482,9 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
 }
 
 private const val FLOOD_TUTO_TIP = "flood_tuto"
+
+/** chatbit's site; change it here when the final domain is chosen. */
+private const val SITE_URL = "https://chatbit.zap-info.com/"
 
 /** Big title at the top of a tab. */
 @Composable

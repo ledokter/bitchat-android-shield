@@ -74,7 +74,8 @@ fun formatTextMessageSender(
     message: BitchatMessage,
     currentUserNickname: String,
     myPeerID: String,
-    palette: BitchatPalette
+    palette: BitchatPalette,
+    extras: List<Pair<String, Color>> = emptyList()
 ): AnnotatedString {
     val builder = AnnotatedString.Builder()
     val isSelf = message.isFromSelf(currentUserNickname, myPeerID)
@@ -117,6 +118,14 @@ fun formatTextMessageSender(
             )
         )
         builder.append(suffix)
+        builder.pop()
+    }
+
+    // chatbit: messages seen from this person and days since first seen, each in its own colour
+    extras.forEach { (text, color) ->
+        builder.append("  ")
+        builder.pushStyle(SpanStyle(color = color, fontSize = ChatVisualTokens.SenderFontSize * 0.85f, fontWeight = FontWeight.Medium))
+        builder.append(text)
         builder.pop()
     }
 

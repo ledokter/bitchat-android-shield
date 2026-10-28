@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bitchat.android.core.ui.component.text.AnnotatedClickableText
 import com.bitchat.android.model.BitchatMessage
+import com.bitchat.android.ui.senderExtras
 import com.bitchat.android.ui.DeliveryStatusIcon
 import com.bitchat.android.ui.formatTextMessageMetadata
 import com.bitchat.android.ui.formatTextMessageSender
@@ -104,14 +105,15 @@ fun MediaBubbleShell(
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (showSender && !isSelf) {
-                    val senderText = remember(message, currentUserNickname, myPeerID, palette) {
+                    val senderText = senderExtras(message, message.isFromSelf(currentUserNickname, myPeerID)).let { extras -> remember(message, currentUserNickname, myPeerID, palette, extras) {
                         formatTextMessageSender(
                             message = message,
                             currentUserNickname = currentUserNickname,
                             myPeerID = myPeerID,
                             palette = palette,
+                            extras = extras,
                         )
-                    }
+                    } }
                     AnnotatedClickableText(
                         text = senderText,
                         annotationTags = listOf("nickname_click"),

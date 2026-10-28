@@ -1470,6 +1470,7 @@ class ChatViewModel(
 
         // chatbit private rooms: keys, identities and messages
         try { com.bitchat.android.rooms.PrivateRooms.wipe() } catch (_: Exception) { }
+        SenderStats.wipe()
 
         // Clear all UI managers
         com.bitchat.android.services.AppStateStore.clear()

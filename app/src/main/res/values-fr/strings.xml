@@ -1157,4 +1157,12 @@
     <string name="tour3_security">Ta sécurité est déjà activée : Tor, code PIN, chiffrement et effacement d\'urgence. Rien à régler pour être protégé.</string>
     <string name="tour3_spam">Les filtres anti-spam sont coupés au départ. Pour les activer, va dans Réglages, Anti-spam : une courte vidéo, et je te montre quoi cocher.</string>
     <string name="about_no_tracking_desc_ads">Ni serveur, ni compte, rien de collecté par chatbit. Seule la version gratuite affiche, quand tu la demandes, une vidéo d\'une régie publicitaire (Google AdMob).</string>
+    <string name="sender_new">nouveau</string>
+    <string name="sender_days">%1$d j</string>
+    <string name="about_site">Site de chatbit</string>
+    <string name="private_delete_title">Supprimer la conversation ?</string>
+    <string name="private_delete_body">Les messages avec %1$s sont effacés de ce téléphone.</string>
+    <string name="private_delete_confirm">Supprimer</string>
+    <string name="tour3_stats">À côté de chaque pseudo : dans la couleur de l\'appli, le nombre de messages que tu as vus de cette personne ; en violet, depuis combien de jours tu la croises (« nouveau » = première fois aujourd\'hui). Méfie-toi des nouveaux qui inondent le salon.</string>
+    <plurals name="sender_msgs"><item quantity="one">%1$d msg</item><item quantity="many">%1$d msg</item><item quantity="other">%1$d msg</item></plurals>
 </resources>

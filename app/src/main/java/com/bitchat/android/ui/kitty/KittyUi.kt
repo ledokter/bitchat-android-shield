@@ -148,6 +148,7 @@ private val TOUR = listOf(
     TourStep(null, R.string.tour3_security),
     TourStep(KittyAnchors.CHANNEL, R.string.tour2_place),
     TourStep(KittyAnchors.COMPOSER, R.string.tour2_composer),
+    TourStep(null, R.string.tour3_stats),
     TourStep(KittyAnchors.TAB_MAP, R.string.tour2_map),
     TourStep(KittyAnchors.TAB_PRIVATE, R.string.tour2_private),
     TourStep(KittyAnchors.TAB_SETTINGS, R.string.tour2_settings),

@@ -1193,4 +1193,12 @@
     <string name="tour3_security">Your security is already on: Tor, PIN, encryption and panic wipe. Nothing to set to be protected.</string>
     <string name="tour3_spam">Spam filters are off at first. To switch them on, go to Settings, Anti-spam: a short video, and I show you what to tick.</string>
     <string name="about_no_tracking_desc_ads">No server, no account, nothing collected by chatbit. Only the free version shows, when you ask for it, a video from an ad network (Google AdMob).</string>
+    <string name="sender_new">new</string>
+    <string name="sender_days">%1$d d</string>
+    <string name="about_site">chatbit website</string>
+    <string name="private_delete_title">Delete this conversation?</string>
+    <string name="private_delete_body">The messages with %1$s are erased from this phone.</string>
+    <string name="private_delete_confirm">Delete</string>
+    <string name="tour3_stats">Next to each nickname: in the app colour, how many of their messages you have seen; in purple, for how many days you have been seeing them (\"new\" = first time today). Be careful with newcomers who flood the room.</string>
+    <plurals name="sender_msgs"><item quantity="one">%1$d msg</item><item quantity="other">%1$d msgs</item></plurals>
 </resources>

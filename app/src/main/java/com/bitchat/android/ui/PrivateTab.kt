@@ -3,6 +3,7 @@ package com.bitchat.android.ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -52,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bitchat.android.R
 import com.bitchat.android.rooms.PrivateRooms
 import com.bitchat.android.ui.theme.BitchatFontFamily
+import kotlinx.coroutines.launch
 import java.text.DateFormat
 import java.util.Date
 
@@ -67,6 +70,26 @@ internal fun PrivateTab(viewModel: ChatViewModel, modifier: Modifier = Modifier)
     val roomMessages by PrivateRooms.messages.collectAsState()
     var showRooms by rememberSaveable { mutableStateOf(false) }
     var menu by remember { mutableStateOf(false) }
+    var confirmDelete by remember { mutableStateOf<ConversationSummary?>(null) }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    confirmDelete?.let { c ->
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { confirmDelete = null },
+            title = { Text(stringResource(R.string.private_delete_title), fontFamily = BitchatFontFamily) },
+            text = { Text(stringResource(R.string.private_delete_body, c.displayName), fontFamily = BitchatFontFamily) },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = {
+                    confirmDelete = null
+                    scope.launch { viewModel.deletePrivateConversation(c.conversationID) }
+                }) { Text(stringResource(R.string.private_delete_confirm), color = colorScheme.error, fontFamily = BitchatFontFamily) }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = { confirmDelete = null }) {
+                    Text(stringResource(R.string.cancel), fontFamily = BitchatFontFamily)
+                }
+            }
+        )
+    }
     val top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 
     Column(modifier.fillMaxSize().background(colorScheme.background).padding(top = top)) {
@@ -126,14 +149,33 @@ internal fun PrivateTab(viewModel: ChatViewModel, modifier: Modifier = Modifier)
             if (!showRooms) {
                 if (conversations.isEmpty()) item { EmptyHint(stringResource(R.string.private_empty_dm)) }
                 items(conversations, key = { it.conversationID }) { c ->
+                    // swipe left (or long press) to delete, always after a confirmation
+                    val swipe = androidx.compose.material3.rememberSwipeToDismissBoxState(
+                        confirmValueChange = { v ->
+                            if (v == androidx.compose.material3.SwipeToDismissBoxValue.EndToStart) confirmDelete = c
+                            false
+                        }
+                    )
+                    androidx.compose.material3.SwipeToDismissBox(
+                        state = swipe,
+                        enableDismissFromStartToEnd = false,
+                        backgroundContent = {
+                            Box(
+                                Modifier.fillMaxSize().clip(RoundedCornerShape(16.dp)).background(colorScheme.error).padding(end = 20.dp),
+                                contentAlignment = Alignment.CenterEnd
+                            ) { Icon(Icons.Filled.Delete, contentDescription = stringResource(R.string.private_delete_confirm), tint = colorScheme.onError) }
+                        }
+                    ) {
                     ListRow(
                         onClick = { viewModel.showPrivateChatSheet(c.conversationID) },
+                        onLongClick = { confirmDelete = c },
                         leading = { Avatar(c.displayName) },
                         title = c.displayName,
                         subtitle = c.latestMessagePreview,
                         trailing = if (c.latestMessageAt > 0) shortTime(c.latestMessageAt) else "",
                         unread = c.unreadCount
                     )
+                    }
                 }
             } else {
                 if (rooms.isEmpty()) item { EmptyHint(stringResource(R.string.private_empty_rooms)) }
@@ -168,6 +210,7 @@ internal fun PrivateTab(viewModel: ChatViewModel, modifier: Modifier = Modifier)
 @Composable
 private fun ListRow(
     onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
     leading: @Composable () -> Unit,
     title: String,
     subtitle: String,
@@ -176,11 +219,13 @@ private fun ListRow(
 ) {
     val colorScheme = MaterialTheme.colorScheme
     Surface(
-        onClick = onClick,
         shape = RoundedCornerShape(16.dp),
         color = colorScheme.surface,
         border = BorderStroke(1.dp, if (unread > 0) colorScheme.primary.copy(alpha = 0.5f) else colorScheme.outlineVariant),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
     ) {
         Row(Modifier.padding(horizontal = 12.dp, vertical = 11.dp), verticalAlignment = Alignment.CenterVertically) {
             leading()

@@ -1,0 +1,33 @@
+chatbit, c'est le chat de groupe qui marche sans internet : les téléphones se passent les messages par Bluetooth, et chacun relaie ceux des autres. Plus on est nombreux, plus ça porte loin. Idéal en festival, en randonnée, en manif, pendant une panne de réseau ou à l'étranger.
+
+ANTI-FLOOD ET BLOQUEUR DE BOTS AUTOMATIQUE
+Les salons publics sont souvent noyés sous le spam. chatbit les nettoie directement sur ton téléphone :
+- l'anti-flood repère celui qui inonde le salon et le masque automatiquement ;
+- les bots qui répètent les mêmes messages sont bloqués tout seuls ;
+- les messages bourrés de liens (souvent des arnaques) et les textes piégés qui font planter l'écran sont filtrés ;
+- à côté de chaque pseudo, tu vois combien de messages tu as reçus de cette personne et depuis combien de jours tu la croises : les nouveaux venus qui inondent se repèrent tout de suite ;
+- la mascotte te montre quoi cocher et pourquoi.
+
+SANS INTERNET : LE MESH
+Les messages sautent de téléphone en téléphone par Bluetooth, sans antenne, sans serveur et sans opérateur.
+
+AVEC INTERNET : LES ZONES, À TRAVERS TOR
+Rejoins le salon de ton quartier, de ta ville ou de n'importe quelle région du monde sur la carte. Tout ce qui passe par internet traverse Tor, qui cache ton adresse.
+
+LA SÉCURITÉ EST DÉJÀ ACTIVÉE
+- Code PIN propre à chatbit, tapé sur un pavé dessiné par l'appli
+- Code de contrainte : si on te force à ouvrir l'appli, ce second code efface tout en silence
+- Effacement d'urgence : 3 appuis sur la mascotte et tout disparaît
+- Messages privés et salons privés chiffrés de bout en bout
+- Captures d'écran bloquées, presse-papiers vidé, clavier incognito
+
+SANS COMPTE
+Pas de numéro, pas d'e-mail, pas de carnet d'adresses : tu choisis un pseudo, c'est tout.
+
+PARTAGE SANS INTERNET
+Ton téléphone devient un petit point d'accès Wi-Fi : tes amis installent chatbit en scannant un QR code, même sans réseau.
+
+GRATUIT, ET PRO EN OPTION
+Sans compte, sans pistage par chatbit. La version gratuite affiche une vidéo publicitaire à la demande, avant d'ouvrir les réglages anti-spam ou avancés ; Pro, aucune. chatbit Pro supprime les publicités et finance les serveurs (abonnement via Google Play).
+
+Logiciel libre (GPL v3), compatible avec bitchat sur le mesh et les zones.
