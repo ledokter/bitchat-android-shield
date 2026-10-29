@@ -757,6 +757,41 @@ private fun MainHeader(
             onClick = onLocationChannelsClick,
             modifier = Modifier.weight(1f).kittyAnchor(KittyAnchors.CHANNEL)
         )
+        // a private message waiting: orange envelope with the count, one tap opens the latest one
+        if (hasUnreadPrivateMessages.isNotEmpty()) {
+            val pulse = rememberInfiniteTransition(label = "dmPulse").animateFloat(
+                1f, 0.45f, infiniteRepeatable(tween(700), RepeatMode.Reverse), label = "dmPulseAlpha"
+            )
+            HeaderIconButton(
+                onClick = { viewModel.openLatestUnreadPrivateChat() },
+                contentDescription = stringResource(R.string.cd_unread_private_messages)
+            ) {
+                Box {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_spec_envelope),
+                        contentDescription = null,
+                        modifier = Modifier.size(HeaderIconSize + 2.dp),
+                        tint = palette.accentOrange
+                    )
+                    Box(
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = 7.dp, y = (-7).dp)
+                            .graphicsLayer { alpha = pulse.value }
+                            .clip(CircleShape)
+                            .background(palette.accentOrange)
+                            .padding(horizontal = 4.dp)
+                    ) {
+                        Text(
+                            "${hasUnreadPrivateMessages.size}",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorScheme.background
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
