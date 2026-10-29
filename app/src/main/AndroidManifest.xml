@@ -174,7 +174,7 @@
         <activity
             android:name=".hotspot.HotspotActivity"
             android:exported="false"
-            android:label="Partager via chatbit"
+            android:label="@string/share_target_label"
             android:theme="@style/Theme.BitchatAndroid"
             android:launchMode="singleTop" />
 

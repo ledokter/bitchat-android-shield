@@ -619,7 +619,6 @@
     <string name="about_app_language">Aplikazioaren hizkuntza</string>
     <string name="about_system_default">Sistemaren lehenetsia</string>
     <string name="about_select_language">Hautatu hizkuntza</string>
-    <string name="app_name">chatbit</string>
     <string name="conversation_preview_timestamp">· %1$s</string>
     <string name="file_viewer_name">📄 %1$s</string>
     <string name="debug_rssi_fmt">RSSI: %1$s</string>

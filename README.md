@@ -8,6 +8,9 @@ This is the Android implementation of bitchat, fully protocol-compatible with th
 
 [bitchat.free](http://bitchat.free)
 
+> **chatbit** is a fork of bitchat-android, under the same GPL v3. The chatbit name and mascot are
+> not part of this repository: a build from this source is unbranded. See [TRADEMARKS.md](TRADEMARKS.md).
+
 [GitHub Releases](https://github.com/permissionlesstech/bitchat-android/releases)
 
 [<img alt="Get it on Google Play" height="60" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"/>](https://play.google.com/store/apps/details?id=com.bitchat.droid)

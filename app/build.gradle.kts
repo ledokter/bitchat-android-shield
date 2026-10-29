@@ -84,6 +84,17 @@ android {
         }
     }
 
+    // chatbit: official builds overlay the private brand assets (name, kitten, icons) from the
+    // chatbit-brand repo; without it this GPL source builds an unbranded app
+    val brandRes = rootProject.file(
+        providers.gradleProperty("chatbit.brandDir").getOrElse("../chatbit-brand")
+    ).resolve("android/res")
+    if (brandRes.isDirectory) {
+        buildTypes.configureEach { sourceSets.maybeCreate(name).res.srcDir(brandRes) }
+    } else {
+        logger.lifecycle("chatbit: brand assets not found at $brandRes, building unbranded")
+    }
+
     // APK splits for GitHub releases - creates arm64, x86_64, and universal APKs
     // AAB for Play Store handles architecture distribution automatically
     // Auto-detects: splits enabled for assemble tasks, disabled for bundle tasks

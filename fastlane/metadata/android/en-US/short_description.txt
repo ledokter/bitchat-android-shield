@@ -1,1 +1,0 @@
-Chat without internet over Bluetooth, with anti-flood and auto bot blocker
