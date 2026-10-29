@@ -113,14 +113,16 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
     var spamUnlocked by remember { mutableStateOf(false) }
     var showFloodTuto by remember { mutableStateOf(false) }
     var gate by remember { mutableStateOf<AdGate?>(null) }
+    // no video for Pro, nor in the website build (built without ads)
+    val adFree = isPro || !com.bitchat.android.BuildConfig.ADS_ENABLED
     var showPro by remember { mutableStateOf(false) }
     val toggle: (String) -> Unit = { id ->
         when {
             open == id -> { open = null; if (id == "spam") spamUnlocked = false }
-            id == "spam" && !isPro && !spamUnlocked -> gate = AdGate.ANTI_SPAM
+            id == "spam" && !adFree && !spamUnlocked -> gate = AdGate.ANTI_SPAM
             else -> {
                 if (open == "spam") spamUnlocked = false
-                if (id == "spam" && isPro && !KittyGame.tipSeen(FLOOD_TUTO_TIP)) showFloodTuto = true
+                if (id == "spam" && adFree && !KittyGame.tipSeen(FLOOD_TUTO_TIP)) showFloodTuto = true
                 open = id
             }
         }
@@ -462,7 +464,7 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
                     onCheckedChange = { on ->
                         when {
                             !on -> SecurityPreferences.setAdvancedMode(false)
-                            isPro -> SecurityPreferences.setAdvancedMode(true)
+                            adFree -> SecurityPreferences.setAdvancedMode(true)
                             else -> gate = AdGate.ADVANCED
                         }
                     }

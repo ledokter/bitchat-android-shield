@@ -30,8 +30,8 @@ android {
         applicationId = "app.chatbit"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 47
-        versionName = "2.3.3"
+        versionCode = 48
+        versionName = "2.3.4"
         buildConfigField(
             "String",
             "GITHUB_RELEASE_CERT_SHA256",
@@ -44,6 +44,9 @@ android {
             "ADMOB_REWARDED_ID",
             "\"${providers.gradleProperty("chatbit.admob.rewarded").getOrElse("ca-app-pub-3940256099942544/5224354917")}\""
         )
+        // -Pchatbit.ads=false: APK for the website, no video in front of anti-spam and advanced
+        // mode (the Play build keeps them; Pro is sold through Play only)
+        buildConfigField("boolean", "ADS_ENABLED", providers.gradleProperty("chatbit.ads").getOrElse("true"))
         manifestPlaceholders["admobAppId"] =
             providers.gradleProperty("chatbit.admob.app").getOrElse("ca-app-pub-3940256099942544~3347511713")
 
