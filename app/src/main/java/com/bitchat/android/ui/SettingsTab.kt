@@ -294,7 +294,7 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
             SettingsCard(
                 id = "spam", icon = Icons.Filled.Block, open = open, onToggle = toggle,
                 title = stringResource(R.string.settings_spam_title),
-                summary = if (floodEnabled) stringResource(R.string.settings_spam_sum, flagged) else stringResource(R.string.settings_spam_sum_off),
+                summary = stringResource(if (floodEnabled) R.string.settings_spam_sum else R.string.settings_spam_sum_base, flagged),
                 contentPadding = PaddingValues(bottom = 12.dp)
             ) {
                 Column {

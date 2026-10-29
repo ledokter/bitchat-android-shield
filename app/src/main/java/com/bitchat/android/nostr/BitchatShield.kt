@@ -74,7 +74,9 @@ object BitchatShield {
 
     val detector = FloodDetector()
 
-    private val _floodEnabled = MutableStateFlow(false)  // off by default: switched on in Settings > Anti-spam
+    // off by default: switched on in Settings > Anti-spam; while off, the base rules still run
+    // (throwaway-key raids, zalgo bombs), see FloodDetector.BASE_RULES
+    private val _floodEnabled = MutableStateFlow(false)
     val floodEnabled: StateFlow<Boolean> = _floodEnabled.asStateFlow()
 
     private val _floodRules = MutableStateFlow(FloodDetector.Rules())
@@ -117,7 +119,7 @@ object BitchatShield {
         _blockedCount.value = prefs.getInt(KEY_BLOCKED_COUNT, 0)
         _floodEnabled.value = prefs.getBoolean(KEY_FLOOD_ENABLED, false)
         prefs.getString(KEY_FLOOD_RULES, null)?.let { _floodRules.value = FloodRulesCodec.decode(it) }
-        detector.rules = _floodRules.value
+        applyFloodRules()
         synchronized(detector) {
             detector.flagged.addAll(prefs.getStringSet(KEY_FLOOD_FLAGGED, emptySet()) ?: emptySet())
             detector.ignored.addAll(prefs.getStringSet(KEY_FLOOD_IGNORED, emptySet()) ?: emptySet())
@@ -153,16 +155,21 @@ object BitchatShield {
 
     fun setFloodEnabled(enabled: Boolean) {
         _floodEnabled.value = enabled
+        applyFloodRules()
         if (::prefs.isInitialized) prefs.edit().putBoolean(KEY_FLOOD_ENABLED, enabled).apply()
+    }
+
+    private fun applyFloodRules() {
+        detector.rules = if (_floodEnabled.value) _floodRules.value else FloodDetector.BASE_RULES
     }
 
     fun setFloodRules(rules: FloodDetector.Rules) {
         _floodRules.value = rules
-        detector.rules = rules
+        applyFloodRules()
         if (::prefs.isInitialized) prefs.edit().putString(KEY_FLOOD_RULES, FloodRulesCodec.encode(rules)).apply()
     }
 
-    /** Keys flagged as flooders (hidden while the flood filter is on). */
+    /** Keys flagged as flooders (always hidden: the base rules run even with the anti-spam off). */
     fun flaggedKeys(): Set<String> = synchronized(detector) { detector.flagged.toSet() }
 
     /** Marks keys as flooders (import); returns how many were new. */
@@ -210,7 +217,6 @@ object BitchatShield {
         createdAtSeconds: Long?,
         nowMs: Long
     ): Boolean {
-        if (!_floodEnabled.value) return false
         // relay backfills deliver old events at once: use the event time, never in the future
         val now = minOf(createdAtSeconds?.toDouble() ?: Double.MAX_VALUE, nowMs / 1000.0)
         val alert = detector.process(pubkey, rawContent, nickname, geohash, teleport, now)

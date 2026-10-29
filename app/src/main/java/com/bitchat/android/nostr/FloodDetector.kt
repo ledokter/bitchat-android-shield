@@ -409,10 +409,17 @@ class FloodDetector(@Volatile var rules: Rules = Rules()) {
         const val RULE_GIANT = "giant"
         const val RULE_ZALGO = "zalgo"
         const val RULE_KEYWORD = "keyword"
+        /** Rules against throwaway-key raids (one key per message, same text, nickname or link), and
+         *  zalgo: always on, even with the anti-spam switched off. */
+        val BASE_RULE_IDS = setOf(RULE_SAME_TEXT, RULE_NICK_KEYS, RULE_PATTERN, RULE_LINK, RULE_ZALGO)
+
         val RULE_IDS = listOf(
             RULE_RATE, RULE_REPEAT, RULE_SHORT, RULE_COPY, RULE_SAME_TEXT, RULE_NICKNAMES,
             RULE_NICK_KEYS, RULE_PATTERN, RULE_LINK, RULE_GIANT, RULE_ZALGO, RULE_KEYWORD
         )
+
+        /** What runs while the anti-spam is off: default thresholds, base rules only, no keywords. */
+        val BASE_RULES = Rules(disabled = RULE_IDS.toSet() - BASE_RULE_IDS)
 
         // sites shared by everybody: they don't link keys together
         val COMMON_LINKS = setOf(

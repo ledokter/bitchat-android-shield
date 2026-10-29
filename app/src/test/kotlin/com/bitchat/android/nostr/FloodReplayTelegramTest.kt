@@ -6,8 +6,12 @@ import org.junit.Test
 /** Replay of the 2026-10-29 attack seen by the bot: one throwaway key per message, same nickname, 4 texts. */
 class FloodReplayTelegramTest {
     @Test
-    fun `throwaway keys with one message each get flagged quickly`() {
-        val d = FloodDetector()
+    fun `throwaway keys with one message each get flagged quickly`() = replay(FloodDetector())
+
+    @Test
+    fun `base rules stop the raid with the anti-spam off`() = replay(FloodDetector(FloodDetector.BASE_RULES))
+
+    private fun replay(d: FloodDetector) {
         val texts = listOf("uhq_gouv > telegram !-1179", "uhq_gouv > telegram !-3885", "uhq_gouv > telegram !-3225", "uhq_gouv > telegram !-7005")
         val t0 = 1_000_000.0
         // the app has been running for a while (keys created after start count as "young")
