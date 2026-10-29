@@ -446,7 +446,9 @@ class PrivateChatManager(
             val accepted = messageManager.addPrivateMessageDurably(
                 peerID = conversationID,
                 message = message,
-                forceRead = suppressUnread || !trackUnreadMessages
+                // chatbit: the headless Nostr processor does not track unread, but the store must
+                // keep the message unread so the screen shows it
+                forceRead = suppressUnread
             )
             if (!accepted) return false
         }

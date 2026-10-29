@@ -8,8 +8,10 @@ import com.bitchat.android.services.AppStateStore
 import com.bitchat.android.services.ContactIdentityResolver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -95,6 +97,53 @@ class PrivateChatManagerTest {
 
         assertEquals(listOf(message), AppStateStore.privateMessages.value["nostr_background"])
         assertTrue(state.getUnreadPrivateMessagesValue().isEmpty())
+    }
+
+    @Test
+    fun `headless Nostr processing leaves durable messages unread for the screen`() = runTest {
+        val databaseName = "headless-unread-${java.util.UUID.randomUUID()}.db"
+        val repository = com.bitchat.android.services.ConversationRepository(
+            context = RuntimeEnvironment.getApplication(),
+            dispatcher = kotlinx.coroutines.Dispatchers.Unconfined,
+            databaseName = databaseName,
+            storageCipher = com.bitchat.android.services.InMemoryConversationStorageCipher()
+        )
+        AppStateStore.setConversationRepositoryForTest(repository)
+        try {
+            assertHeadlessMessageStaysUnread()
+        } finally {
+            AppStateStore.setConversationRepositoryForTest(null)
+            repository.closeForTest()
+            RuntimeEnvironment.getApplication().deleteDatabase(databaseName)
+        }
+    }
+
+    private suspend fun assertHeadlessMessageStaysUnread() {
+        val headlessManager = PrivateChatManager(
+            state = state,
+            messageManager = MessageManager(state),
+            dataManager = DataManager(RuntimeEnvironment.getApplication()),
+            noiseSessionDelegate = mock(),
+            trackUnreadMessages = false
+        )
+        val message = BitchatMessage(
+            id = "background-geohash-dm",
+            sender = "alice",
+            content = "zone dm",
+            timestamp = Date(1),
+            isPrivate = true,
+            senderPeerID = "nostr_zonedm"
+        )
+
+        assertTrue(
+            headlessManager.handleIncomingPrivateMessageDurably(
+                message = message,
+                suppressUnread = false,
+                origin = PrivateMessageOrigin.NOSTR
+            )
+        )
+
+        assertFalse(AppStateStore.isPrivateMessageRead(message.id))
     }
 
     @Test
