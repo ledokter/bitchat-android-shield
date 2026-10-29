@@ -4,7 +4,8 @@
 Writes, from the single GRID below:
   app drawables  chatbit_cat (fixed colours), chatbit_bow (headset, tinted with the accent colour
                  by ChatbitLogo), chatbit_bow_knot (headset shading), ic_launcher_foreground,
-                 ic_launcher_monochrome, and the launcher PNGs of every density;
+                 ic_launcher_monochrome, ic_notification (status bar), and the launcher PNGs of
+                 every density;
   store icon     fastlane/metadata/android/*/images/icon.png (512 px);
   site images    when a site folder is given: img/kitty.webp, favicon.ico, favicon-32.png,
                  icon-192.png, apple-touch-icon.png.
@@ -120,6 +121,13 @@ def main():
     (drawable / "ic_launcher_monochrome.xml").write_text(vector(
         "chatbit: monochrome silhouette for themed icons", (108, 108), (108, 108),
         [("#000000", path(cells("KWGPNMBb"), s, dx, dy))]))
+
+    # status bar: white silhouette, the eyes and mouth left as holes so the face still reads
+    face = {(x, y) for x, y in cells("K") if 5 <= x <= 18 and 10 <= y <= 16}
+    shape = [p for p in cells("KWGPNMBb") if p not in face]
+    (drawable / "ic_notification.xml").write_text(vector(
+        "chatbit status bar icon: the kitten silhouette", (24, 24), (24, 24),
+        [("#FFFFFF", path(shape, 1, 0, 1.5))]))
 
     # launcher PNGs for older launchers: legacy icon, adaptive foreground and background
     for folder, legacy, adaptive in [("mdpi", 48, 108), ("hdpi", 72, 162), ("xhdpi", 96, 216),
