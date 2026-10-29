@@ -823,6 +823,9 @@
     <!-- chatbit -->
     <string name="rooms_title">Salons privés</string>
     <string name="rooms_back">Retour</string>
+    <string name="rooms_full">Salon complet : un salon gratuit accueille 10 membres. Un membre chatbit Pro lève la limite.</string>
+    <string name="rooms_no_pass">Les salons privés demandent l’appli chatbit de Google Play.</string>
+    <string name="rooms_connecting">Connexion au serveur des salons via Tor…</string>
     <string name="rooms_empty">Aucun salon privé pour l’instant. Crée-en un et invite des gens par lien ou QR code. Les messages sont chiffrés de bout en bout et gardés seulement sur les téléphones.</string>
     <string name="rooms_create">Créer un salon</string>
     <string name="rooms_name_hint">Nom du salon (visible des membres seulement)</string>
@@ -1017,6 +1020,9 @@
     <string name="hs_announce_message">%1$s · point d’installation à proximité, sans internet\nWi-Fi : %2$s\nMot de passe : %3$s\nPuis ouvrir %4$s\nAmenez vos amis qui n’ont pas encore chatbit !</string>
     <string name="dir_open">Annuaire des zones</string>
     <string name="dir_title">Annuaire</string>
+    <string name="dir_downloading">Téléchargement de l’annuaire via Tor…</string>
+    <string name="dir_unavailable">Annuaire indisponible : il demande l’appli chatbit de Google Play et une connexion Tor.</string>
+    <string name="dir_retry">Réessayer</string>
     <string name="dir_search">Chercher une ville ou un quartier</string>
     <string name="dir_districts">Quartiers et arrondissements</string>
     <string name="dir_join">Rejoindre</string>

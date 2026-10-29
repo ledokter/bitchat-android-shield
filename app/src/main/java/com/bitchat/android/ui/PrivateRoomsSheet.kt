@@ -53,6 +53,7 @@ import com.bitchat.android.core.ui.component.sheet.BitchatSheetTitle
 import com.bitchat.android.core.ui.component.sheet.BitchatSheetTopBar
 import com.bitchat.android.rooms.PrivateRoom
 import com.bitchat.android.rooms.PrivateRooms
+import com.bitchat.android.rooms.RoomsRelay
 import com.bitchat.android.security.SecureClipboard
 import com.bitchat.android.ui.theme.BitchatFontFamily
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -228,6 +229,14 @@ private fun RoomChat(room: PrivateRoom, nickname: String, onBack: () -> Unit) {
             TextButton(onClick = { confirmLeave = true }) {
                 Text(stringResource(R.string.rooms_leave), fontFamily = BitchatFontFamily, color = MaterialTheme.colorScheme.error)
             }
+        }
+        val relayStatus by PrivateRooms.relayStatus.collectAsState()
+        val refusal by PrivateRooms.relayRefusal.collectAsState()
+        when {
+            refusal?.startsWith("blocked: free rooms") == true -> RoomHint(stringResource(R.string.rooms_full))
+            relayStatus == RoomsRelay.Status.NO_PASS -> RoomHint(stringResource(R.string.rooms_no_pass))
+            relayStatus == RoomsRelay.Status.CONNECTING -> RoomHint(stringResource(R.string.rooms_connecting))
+            else -> Unit
         }
         LazyColumn(
             state = listState,

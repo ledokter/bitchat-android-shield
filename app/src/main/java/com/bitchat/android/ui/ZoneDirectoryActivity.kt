@@ -61,8 +61,6 @@ import com.bitchat.android.geohash.ZoneDirectory
 import com.bitchat.android.security.IncognitoKeyboard
 import com.bitchat.android.ui.theme.BitchatFontFamily
 import com.bitchat.android.ui.theme.BitchatTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.text.Collator
 import java.util.Locale
 
@@ -126,8 +124,12 @@ private fun tileLevel(length: Int): String = when (length) {
 @Composable
 private fun Directory(onJoin: (String) -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
-    val data by produceState<ZoneDirectory.Data?>(null) {
-        value = withContext(Dispatchers.IO) { ZoneDirectory.load(context) }
+    var attempt by remember { mutableStateOf(0) }
+    var failed by remember { mutableStateOf(false) }
+    val data by produceState<ZoneDirectory.Data?>(null, attempt) {
+        failed = false
+        value = ZoneDirectory.obtain(context)
+        failed = value == null
     }
     var continent by rememberSaveable { mutableStateOf<String?>(null) }
     var country by rememberSaveable { mutableStateOf<String?>(null) }
@@ -179,7 +181,18 @@ private fun Directory(onJoin: (String) -> Unit, onClose: () -> Unit) {
         )
         Spacer(Modifier.size(8.dp))
 
-        val d = data ?: return@Column
+        val d = data ?: run {
+            // first opening: the directory comes from the chatbit server through Tor (about 1 MB)
+            Text(
+                stringResource(if (failed) R.string.dir_unavailable else R.string.dir_downloading),
+                Modifier.padding(horizontal = 16.dp), fontFamily = BitchatFontFamily, fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (failed) TextButton(onClick = { attempt++ }, Modifier.padding(horizontal = 8.dp)) {
+                Text(stringResource(R.string.dir_retry), fontFamily = BitchatFontFamily)
+            }
+            return@Column
+        }
         val collator = remember { Collator.getInstance() }
         val cc = country
         LazyColumn(Modifier.fillMaxSize(), state = list) {

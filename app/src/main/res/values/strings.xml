@@ -861,6 +861,9 @@
     <!-- chatbit -->
     <string name="rooms_title">Private rooms</string>
     <string name="rooms_back">Back</string>
+    <string name="rooms_full">This room is full: free rooms hold 10 members. A chatbit Pro member lifts the limit.</string>
+    <string name="rooms_no_pass">Private rooms need the chatbit app from Google Play.</string>
+    <string name="rooms_connecting">Connecting to the rooms server through Tor…</string>
     <string name="rooms_empty">No private room yet. Create one and invite people with a link or a QR code. Messages are end-to-end encrypted and only kept on phones.</string>
     <string name="rooms_create">Create a room</string>
     <string name="rooms_name_hint">Room name (only visible to members)</string>
@@ -1055,6 +1058,9 @@
     <string name="hs_announce_message">%1$s · install point nearby, no internet needed\nWi-Fi: %2$s\nPassword: %3$s\nThen open %4$s\nBring friends who don\'t have chatbit yet!</string>
     <string name="dir_open">Zone directory</string>
     <string name="dir_title">Directory</string>
+    <string name="dir_downloading">Downloading the directory through Tor…</string>
+    <string name="dir_unavailable">Directory unavailable: it needs the chatbit app from Google Play and a Tor connection.</string>
+    <string name="dir_retry">Try again</string>
     <string name="dir_search">Search a city or district</string>
     <string name="dir_districts">Districts</string>
     <string name="dir_join">Join</string>

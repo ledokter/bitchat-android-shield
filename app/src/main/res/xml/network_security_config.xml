@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- chatbit: plain http/ws only to the chatbit onion service, which Tor already encrypts and
+     authenticates end to end (the address is the server's key); cleartext stays off elsewhere -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">w3nmrc4p6gzqhrrkiisv5aajo3syohmxtmeshgrbvp6uxykbcbuggbad.onion</domain>
+    </domain-config>
+</network-security-config>

@@ -5,11 +5,9 @@ import android.content.SharedPreferences
 import android.util.Base64
 import android.util.Log
 import com.bitchat.android.nostr.NostrEvent
-import com.bitchat.android.nostr.NostrFilter
 import com.bitchat.android.nostr.NostrIdentity
 import com.bitchat.android.nostr.NostrKind
 import com.bitchat.android.nostr.NostrProofOfWork
-import com.bitchat.android.nostr.NostrRelayManager
 import com.bitchat.android.nostr.PoWPreferenceManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,15 +20,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 /**
- * Private rooms: persisted list (app-private storage, wiped by panic), relay subscription on the
- * always-connected default relays (through Tor like everything else), sending and receiving.
+ * Private rooms: persisted list (app-private storage, wiped by panic), sending and receiving
+ * through the chatbit rooms relay (onion service, see [RoomsRelay]).
  * Messages are kept in memory only.
  */
 object PrivateRooms {
     private const val TAG = "PrivateRooms"
     private const val PREFS = "chatbit_private_rooms"
     private const val KEY_ROOMS = "rooms"
-    private const val SUBSCRIPTION_ID = "chatbit-private-rooms"
     private const val MAX_MESSAGES = 500
     private const val MAX_TEXT = 2000
 
@@ -47,6 +44,7 @@ object PrivateRooms {
     private lateinit var prefs: SharedPreferences
     private lateinit var appContext: Context
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private lateinit var relay: RoomsRelay
     private val seen = LinkedHashSet<String>()
 
     private val _rooms = MutableStateFlow<List<PrivateRoom>>(emptyList())
@@ -54,6 +52,10 @@ object PrivateRooms {
 
     private val _messages = MutableStateFlow<Map<String, List<Message>>>(emptyMap())
     val messages: StateFlow<Map<String, List<Message>>> = _messages.asStateFlow()
+
+    /** Rooms relay connection, and its last refusal of one of our messages (room full…). */
+    val relayStatus: StateFlow<RoomsRelay.Status> get() = relay.status
+    val relayRefusal: StateFlow<String?> get() = relay.refusal
 
     /** Invite opened from a chatbit://room link, waiting for the user to confirm. */
     private val _pendingInvite = MutableStateFlow<PrivateRoom.Invite?>(null)
@@ -63,6 +65,7 @@ object PrivateRooms {
         if (::prefs.isInitialized) return
         appContext = context.applicationContext
         prefs = com.bitchat.android.security.SecurePrefs.open(appContext, PREFS)
+        relay = RoomsRelay(appContext, ::onEvent)
         _rooms.value = load()
         resubscribe()
     }
@@ -119,7 +122,8 @@ object PrivateRooms {
         _messages.value = emptyMap()
         _pendingInvite.value = null
         synchronized(seen) { seen.clear() }
-        runCatching { NostrRelayManager.getInstance(appContext).unsubscribe(SUBSCRIPTION_ID) }
+        if (::relay.isInitialized) relay.close()
+        com.bitchat.android.server.ChatbitServer.wipe()
     }
 
     fun send(room: PrivateRoom, nickname: String, text: String) {
@@ -142,8 +146,7 @@ object PrivateRooms {
                 val signed = identity.signEvent(event)
                 remember(signed.id)
                 add(Message(signed.id, room.tag, nickname, identity.publicKeyHex, body, System.currentTimeMillis(), mine = true))
-                val relays = NostrRelayManager.defaultRelays()
-                NostrRelayManager.getInstance(appContext).sendEvent(signed, relays)
+                relay.send(signed)
             } catch (e: Exception) {
                 Log.e(TAG, "Send failed: ${e.message}")
             }
@@ -151,20 +154,7 @@ object PrivateRooms {
     }
 
     private fun resubscribe() {
-        val manager = NostrRelayManager.getInstance(appContext)
-        runCatching { manager.unsubscribe(SUBSCRIPTION_ID) }
-        val tags = _rooms.value.map { it.tag }
-        if (tags.isEmpty()) return
-        manager.subscribe(
-            filter = NostrFilter(
-                kinds = listOf(NostrKind.EPHEMERAL_EVENT),
-                since = (System.currentTimeMillis() / 1000).toInt() - 3600,
-                tagFilters = mapOf("h" to tags)
-            ),
-            id = SUBSCRIPTION_ID,
-            handler = ::onEvent,
-            targetRelayUrls = NostrRelayManager.defaultRelays()
-        )
+        relay.follow(_rooms.value.map { it.tag })
     }
 
     private fun onEvent(event: NostrEvent) {
@@ -203,7 +193,7 @@ object PrivateRooms {
             })
         }
         if (::prefs.isInitialized) prefs.edit().putString(KEY_ROOMS, arr.toString()).apply()
-        if (::appContext.isInitialized) resubscribe()
+        if (::relay.isInitialized) resubscribe()
     }
 
     private fun load(): List<PrivateRoom> = try {

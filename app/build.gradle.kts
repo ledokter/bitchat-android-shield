@@ -208,6 +208,7 @@ dependencies {
     implementation(libs.play.services.ads)
     implementation(libs.ump)
     implementation(libs.billing.ktx)
+    implementation(libs.play.integrity)
 
     // Security preferences
     implementation(libs.androidx.security.crypto)

@@ -1,13 +1,22 @@
 package com.bitchat.android.geohash
 
 import android.content.Context
+import android.util.Log
+import com.bitchat.android.net.OkHttpProvider
+import com.bitchat.android.server.ChatbitServer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Request
+import java.io.File
 import java.text.Normalizer
+import java.util.concurrent.TimeUnit
+import java.util.zip.GZIPInputStream
 
 /**
- * Offline directory of named places (continent > country > city > district) with their geohash,
- * so a zone can be found by name: zoomed in on the map, place names are not visible.
- * Data: assets/zones.tsv, built by tools/build_zone_directory.py from GeoNames (CC BY 4.0).
- * Nothing is looked up online.
+ * Directory of named places (continent > country > city > district) with their geohash, so a
+ * zone can be found by name: zoomed in on the map, place names are not visible.
+ * Data: zones.tsv from GeoNames (CC BY 4.0), served by the chatbit server to genuine apps (see
+ * [ChatbitServer]) and downloaded once through Tor; searches then stay on the phone.
  */
 object ZoneDirectory {
 
@@ -73,7 +82,31 @@ object ZoneDirectory {
 
     @Volatile private var cached: Data? = null
 
-    fun load(context: Context): Data {
+    private const val FILE = "zones.tsv"
+
+    /** The directory, downloaded first if needed; null when the server cannot give it. */
+    suspend fun obtain(context: Context): Data? = withContext(Dispatchers.IO) {
+        cached ?: runCatching {
+            val file = File(context.filesDir, FILE)
+            if (!file.exists()) download(context, file)
+            load(file)
+        }.onFailure { Log.w("ZoneDirectory", "unavailable: ${it.message}") }.getOrNull()
+    }
+
+    private suspend fun download(context: Context, file: File) {
+        val pass = ChatbitServer.pass(context) ?: error("no pass")
+        val request = Request.Builder().url("${ChatbitServer.BASE_URL}/v1/zones")
+            .header("Authorization", "Pass ${pass.token}").build()
+        val part = File(file.path + ".part")
+        OkHttpProvider.httpClient().newBuilder().readTimeout(120, TimeUnit.SECONDS).callTimeout(300, TimeUnit.SECONDS)
+            .build().newCall(request).execute().use { response ->
+                check(response.isSuccessful) { "zones ${response.code}" }
+                GZIPInputStream(response.body!!.byteStream()).use { input -> part.outputStream().use(input::copyTo) }
+            }
+        check(part.renameTo(file)) { "cannot store the directory" }
+    }
+
+    private fun load(file: File): Data {
         cached?.let { return it }
         synchronized(this) {
             cached?.let { return it }
@@ -81,7 +114,7 @@ object ZoneDirectory {
             val all = ArrayList<Place>(42000)
             val tiles = HashMap<String, HashMap<String, Tile>>()
             var tileCountry: HashMap<String, Tile>? = null
-            context.assets.open("zones.tsv").bufferedReader().useLines { lines ->
+            file.bufferedReader().useLines { lines ->
                 for (line in lines) {
                     val f = line.split('\t')
                     when (f[0]) {

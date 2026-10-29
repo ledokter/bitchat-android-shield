@@ -41,6 +41,10 @@ object ProStatus {
     private val _products = MutableStateFlow<Map<String, ProductDetails>>(emptyMap())
     val products: StateFlow<Map<String, ProductDetails>> = _products.asStateFlow()
 
+    /** The purchase that makes this account Pro (product id, purchase token), for the server pass. */
+    @Volatile var activePurchase: Pair<String, String>? = null
+        private set
+
     private var client: BillingClient? = null
 
     fun init(context: Context) {
@@ -75,8 +79,7 @@ object ProStatus {
             if (r1.responseCode == BillingClient.BillingResponseCode.OK) owned += subs
             c.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build()) { r2, inapp ->
                 if (r2.responseCode == BillingClient.BillingResponseCode.OK) owned += inapp
-                _isPro.value = false
-                handle(owned)
+                handle(owned, reset = true)
             }
         }
     }
@@ -99,17 +102,24 @@ object ProStatus {
         }
     }
 
-    private fun handle(purchases: List<Purchase>) {
+    /** [reset]: [purchases] is everything the account owns, not just a new purchase. */
+    private fun handle(purchases: List<Purchase>, reset: Boolean = false) {
         val now = System.currentTimeMillis()
-        var pro = _isPro.value
+        var pro = _isPro.value && !reset
+        if (reset) activePurchase = null
         for (p in purchases) {
             if (p.purchaseState != Purchase.PurchaseState.PURCHASED) continue
             val pass = EVENT_PASS in p.products
-            if (!pass || now - p.purchaseTime < EVENT_PASS_MS) pro = true
+            if (!pass || now - p.purchaseTime < EVENT_PASS_MS) {
+                pro = true
+                activePurchase = p.products.first() to p.purchaseToken
+            }
             if (!p.isAcknowledged) {
                 client?.acknowledgePurchase(AcknowledgePurchaseParams.newBuilder().setPurchaseToken(p.purchaseToken).build()) { }
             }
         }
+        // a newly bought (or lapsed) Pro must reach the server: take a new pass
+        if (pro != _isPro.value) com.bitchat.android.server.ChatbitServer.invalidate()
         _isPro.value = pro
     }
 
