@@ -1107,7 +1107,7 @@
     <string name="settings_tor_sum_off">Off</string>
     <string name="settings_spam_title">Anti-spam</string>
     <string name="settings_spam_sum">On · %1$d hidden</string>
-    <string name="settings_spam_sum_off">Off</string>
+    <string name="settings_spam_sum_base">Basic protection · %1$d hidden</string>
     <string name="settings_share_title">Share chatbit</string>
     <string name="settings_share_sum">No internet needed, phone to phone</string>
     <string name="settings_look_title">Appearance</string>

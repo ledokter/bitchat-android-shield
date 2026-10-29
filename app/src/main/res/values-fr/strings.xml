@@ -1069,7 +1069,7 @@
     <string name="settings_tor_sum_off">Désactivé</string>
     <string name="settings_spam_title">Anti-spam</string>
     <string name="settings_spam_sum">Actif · %1$d masqués</string>
-    <string name="settings_spam_sum_off">Désactivé</string>
+    <string name="settings_spam_sum_base">Protection de base · %1$d masqués</string>
     <string name="settings_share_title">Partager chatbit</string>
     <string name="settings_share_sum">Sans internet, de téléphone à téléphone</string>
     <string name="settings_look_title">Apparence</string>
