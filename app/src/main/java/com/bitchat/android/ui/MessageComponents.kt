@@ -1248,7 +1248,8 @@ private fun redeemCashu(context: Context, token: String, preferWallet: Boolean) 
             // No wallet registered for cashu:, so use the explicit web fallback.
         }
     }
-    runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(web))) }
+    // chatbit: the web fallback goes through Tor Browser only (see TorLinks)
+    com.bitchat.android.net.TorLinks.open(context, web)
 }
 
 /**

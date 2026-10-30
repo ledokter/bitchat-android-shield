@@ -218,7 +218,7 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
             SettingsCard(
                 id = "security", icon = Icons.Filled.VerifiedUser, open = open, onToggle = toggle,
                 title = stringResource(R.string.security_section),
-                summary = stringResource(R.string.security_summary, active, 11), ok = active == 11
+                summary = stringResource(R.string.security_summary, active, SECURITY_TOTAL), ok = active == SECURITY_TOTAL
             ) { SecurityToggles() }
         }
 
@@ -436,9 +436,7 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
                     ChatbitButton(
                         text = stringResource(R.string.about_site),
                         onClick = {
-                            runCatching {
-                                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(SITE_URL)))
-                            }
+                            com.bitchat.android.net.TorLinks.open(context, SITE_URL)
                         },
                         modifier = Modifier.padding(start = 16.dp)
                     )

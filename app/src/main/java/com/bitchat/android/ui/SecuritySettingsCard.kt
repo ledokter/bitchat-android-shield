@@ -46,9 +46,10 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
     val wipe by SecurityPreferences.autoWipeDays.collectAsState()
     val rotation by TorPreferenceManager.rotationFlow.collectAsState()
 
+    val linksTor by SecurityPreferences.linksViaTor.collectAsState()
     // link previews, photo metadata and lock-screen notifications are always protected
     val active = listOf(rotation > 0, killSwitch, !presence, true, true, ephemeral > 0, true,
-        screenshots, lock, clipboard, wipe > 0).count { it }
+        screenshots, lock, clipboard, wipe > 0, linksTor).count { it }
 
     Column {
         AboutSectionLabel(text = stringResource(R.string.security_section))
@@ -59,11 +60,14 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
         ) {
             Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    stringResource(R.string.security_summary, active, 11),
+                    stringResource(R.string.security_summary, active, SECURITY_TOTAL),
                     fontFamily = BitchatFontFamily, fontSize = 14.sp, fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.primary
                 )
                 PinSettings()
+                // links: shown even without advanced mode, it decides what every link tap does
+                com.bitchat.android.ui.kitty.KittyTip("links_tor", stringResource(R.string.tip_links_tor))
+                SecSwitch(R.string.sec_links_title, R.string.sec_links_desc, linksTor, help = R.string.help_links_tor) { SecurityPreferences.setLinksViaTor(it) }
                 if (!advanced) {
                     SecHint(stringResource(R.string.security_summary_hint))
                     return@Column
@@ -114,7 +118,10 @@ internal fun SecuritySettingsCard(advanced: Boolean) {
     }
 }
 
-/** How many of the 11 protections are on (link previews, photo metadata and lock-screen notifications always are). */
+/** Number of protections counted by [securityActiveCount]. */
+internal const val SECURITY_TOTAL = 12
+
+/** How many of the SECURITY_TOTAL protections are on (link previews, photo metadata and lock-screen notifications always are). */
 @Composable
 internal fun securityActiveCount(): Int {
     val lock by SecurityPreferences.appLock.collectAsState()
@@ -125,8 +132,9 @@ internal fun securityActiveCount(): Int {
     val ephemeral by SecurityPreferences.ephemeralHours.collectAsState()
     val wipe by SecurityPreferences.autoWipeDays.collectAsState()
     val rotation by TorPreferenceManager.rotationFlow.collectAsState()
+    val linksTor by SecurityPreferences.linksViaTor.collectAsState()
     return listOf(rotation > 0, killSwitch, !presence, true, true, ephemeral > 0, true,
-        screenshots, lock, clipboard, wipe > 0).count { it }
+        screenshots, lock, clipboard, wipe > 0, linksTor).count { it }
 }
 
 /** Every protection switch and delay, each with its help bubble (settings tab, Security card). */
@@ -140,7 +148,10 @@ internal fun SecurityToggles() {
     val clipboard by SecurityPreferences.clipboardClear.collectAsState()
     val ephemeral by SecurityPreferences.ephemeralHours.collectAsState()
     val wipe by SecurityPreferences.autoWipeDays.collectAsState()
+    val linksTor by SecurityPreferences.linksViaTor.collectAsState()
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        com.bitchat.android.ui.kitty.KittyTip("links_tor", stringResource(R.string.tip_links_tor))
+        SecSwitch(R.string.sec_links_title, R.string.sec_links_desc, linksTor, help = R.string.help_links_tor) { SecurityPreferences.setLinksViaTor(it) }
         SecSwitch(R.string.sec_lock_title, R.string.sec_lock_pin_desc, lock, help = R.string.help_lock) { SecurityPreferences.setAppLock(it) }
         SecSwitch(R.string.sec_screenshots_title, R.string.sec_screenshots_desc, screenshots, help = R.string.help_screenshots) { SecurityPreferences.setBlockScreenshots(it) }
         SecSwitch(R.string.sec_killswitch_title, R.string.sec_killswitch_desc, killSwitch, help = R.string.help_killswitch) { SecurityPreferences.setKillSwitch(it) }

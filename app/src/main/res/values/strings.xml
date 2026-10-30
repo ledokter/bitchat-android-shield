@@ -1202,4 +1202,18 @@
     <string name="private_delete_confirm">Delete</string>
     <string name="tour3_stats">Next to each nickname: in the app colour, how many of their messages you have seen; in purple, for how many days you have been seeing them (\"new\" = first time today). Be careful with newcomers who flood the room.</string>
     <plurals name="sender_msgs"><item quantity="one">%1$d msg</item><item quantity="other">%1$d msgs</item></plurals>
+    <string name="torlink_title">Open with Tor Browser</string>
+    <string name="torlink_body">To protect everyone on the network, chatbit opens links only in Tor Browser, which is not installed. Get it from an official source, then tap the link again.</string>
+    <string name="torlink_fdroid" translatable="false">F-Droid (Guardian Project)</string>
+    <string name="torlink_torproject" translatable="false">torproject.org</string>
+    <string name="torlink_cancel">Cancel</string>
+    <string name="torlink_off_title">Links through Tor Browser are off</string>
+    <string name="torlink_off_body">chatbit does not open this link: links through Tor Browser are switched off in Settings › Security.</string>
+    <string name="torlink_copy_risk">You can copy the link and paste it into a browser\'s address bar at your own risk: that site will see your real IP address.</string>
+    <string name="torlink_copy">Copy the link (at my own risk)</string>
+    <string name="sec_links_title">Open links with Tor Browser</string>
+    <string name="sec_links_desc">Links open only in Tor Browser. Off: chatbit opens no link at all</string>
+    <string name="help_links_tor">A tapped link opens only in Tor Browser, so the site never sees your real IP address. Some sites refuse Tor and will not open (in Tor Browser, try \"New circuit for this site\"). Without Tor Browser, or with this switch off, chatbit does not even try: you can copy the link and paste it into a browser\'s address bar, at your own risk.</string>
+    <string name="tip_links_tor">Links open only in Tor Browser, to protect everyone. Some sites refuse Tor. Without Tor Browser, you can copy the link at your own risk.</string>
+    <string name="tour3_links">A link in a message opens only in Tor Browser: the site never sees your real address. Some sites refuse Tor; without Tor Browser, you can copy the link at your own risk.</string>
 </resources>

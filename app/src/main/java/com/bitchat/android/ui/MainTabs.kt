@@ -140,6 +140,47 @@ fun MainTabs(viewModel: ChatViewModel) {
         // first-launch tour, over everything including the tab bar
         if (tab == MainTab.CHAT) Box(Modifier.fillMaxSize()) { KittyTour() }
     }
+    TorBrowserRequiredDialog()
+}
+
+/**
+ * A link was not opened: the "links through Tor Browser" setting is off, or Tor Browser is
+ * missing. The person may copy the link (at their own risk) or get Tor Browser from its sources.
+ */
+@Composable
+private fun TorBrowserRequiredDialog() {
+    val refused by com.bitchat.android.net.TorLinks.refused.collectAsStateWithLifecycle()
+    val r = refused ?: return
+    val context = LocalContext.current
+    val links = com.bitchat.android.net.TorLinks
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = { links.dismiss() },
+        title = { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(if (r.torOff) R.string.torlink_off_title else R.string.torlink_title)) },
+        text = {
+            androidx.compose.foundation.layout.Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(10.dp)) {
+                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(if (r.torOff) R.string.torlink_off_body else R.string.torlink_body))
+                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_copy_risk), color = androidx.compose.material3.MaterialTheme.colorScheme.error)
+            }
+        },
+        confirmButton = {
+            androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.End) {
+                if (!r.torOff) {
+                    androidx.compose.material3.TextButton(onClick = { links.openSource(context, links.GUARDIAN_FDROID) }) {
+                        androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_fdroid))
+                    }
+                    androidx.compose.material3.TextButton(onClick = { links.openSource(context, links.TORPROJECT_ANDROID) }) {
+                        androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_torproject))
+                    }
+                }
+                androidx.compose.material3.TextButton(onClick = { links.copy(context, r.url) }) {
+                    androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_copy))
+                }
+                androidx.compose.material3.TextButton(onClick = { links.dismiss() }) {
+                    androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_cancel))
+                }
+            }
+        }
+    )
 }
 
 @Composable

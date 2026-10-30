@@ -1,8 +1,6 @@
 package com.bitchat.android.ui
 
 import android.content.Context
-import android.content.Intent
-import androidx.core.net.toUri
 import com.bitchat.android.geohash.GeohashChannel
 import com.bitchat.android.geohash.GeohashChannelLevel
 import com.bitchat.android.geohash.LocationChannelManager
@@ -26,12 +24,9 @@ internal fun normalizeMessageUrl(rawUrl: String): String =
         "https://$rawUrl"
     }
 
+// chatbit: links open in Tor Browser only (see TorLinks)
 internal fun openMessageUrl(context: Context, rawUrl: String): Boolean =
-    runCatching {
-        val intent = Intent(Intent.ACTION_VIEW, normalizeMessageUrl(rawUrl).toUri())
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }.isSuccess
+    com.bitchat.android.net.TorLinks.open(context, normalizeMessageUrl(rawUrl))
 
 internal fun channelForGeohash(geohash: String): GeohashChannel {
     val level = when (geohash.length) {

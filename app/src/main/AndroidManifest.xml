@@ -75,6 +75,12 @@
         android:name="${applicationId}.permission.FORCE_FINISH"
         android:protectionLevel="signature" />
 
+    <!-- chatbit: links open only in Tor Browser, so the app must be able to see it (Android 11+) -->
+    <queries>
+        <package android:name="org.torproject.torbrowser" />
+        <package android:name="org.torproject.torbrowser_alpha" />
+    </queries>
+
     <application
         android:name=".BitchatApplication"
         android:allowBackup="false"

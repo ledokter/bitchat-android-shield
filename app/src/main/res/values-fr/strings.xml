@@ -1164,4 +1164,16 @@
     <string name="private_delete_confirm">Supprimer</string>
     <string name="tour3_stats">À côté de chaque pseudo : dans la couleur de l\'appli, le nombre de messages que tu as vus de cette personne ; en violet, depuis combien de jours tu la croises (« nouveau » = première fois aujourd\'hui). Méfie-toi des nouveaux qui inondent le salon.</string>
     <plurals name="sender_msgs"><item quantity="one">%1$d msg</item><item quantity="many">%1$d msg</item><item quantity="other">%1$d msg</item></plurals>
+    <string name="torlink_title">Ouvrir avec Tor Browser</string>
+    <string name="torlink_body">Pour protéger tout le monde sur le réseau, chatbit n\'ouvre les liens qu\'avec Tor Browser, qui n\'est pas installé. Installe-le depuis une source officielle, puis touche à nouveau le lien.</string>
+    <string name="torlink_cancel">Annuler</string>
+    <string name="torlink_off_title">Liens via Tor Browser désactivés</string>
+    <string name="torlink_off_body">chatbit n\'ouvre pas ce lien : l\'ouverture des liens avec Tor Browser est coupée dans Réglages › Sécurité.</string>
+    <string name="torlink_copy_risk">Tu peux copier le lien et le coller dans la barre d\'adresse d\'un navigateur, à tes risques et périls : le site verra ta vraie adresse IP.</string>
+    <string name="torlink_copy">Copier le lien (à mes risques)</string>
+    <string name="sec_links_title">Ouvrir les liens avec Tor Browser</string>
+    <string name="sec_links_desc">Les liens s\'ouvrent seulement dans Tor Browser. Coupé : chatbit n\'ouvre aucun lien</string>
+    <string name="help_links_tor">Un lien touché s\'ouvre seulement dans Tor Browser : le site ne voit jamais ta vraie adresse IP. Certains sites refusent Tor et ne s\'ouvriront pas (dans Tor Browser, essaie « Nouveau circuit pour ce site »). Sans Tor Browser, ou avec ce réglage coupé, chatbit n\'essaie même pas : tu peux copier le lien et le coller dans la barre d\'adresse d\'un navigateur, à tes risques et périls.</string>
+    <string name="tip_links_tor">Les liens s\'ouvrent seulement dans Tor Browser, pour protéger tout le monde. Certains sites refusent Tor. Sans Tor Browser, tu peux copier le lien à tes risques.</string>
+    <string name="tour3_links">Un lien dans un message s\'ouvre seulement dans Tor Browser : le site ne voit jamais ta vraie adresse. Certains sites refusent Tor ; sans Tor Browser, tu peux copier le lien à tes risques.</string>
 </resources>

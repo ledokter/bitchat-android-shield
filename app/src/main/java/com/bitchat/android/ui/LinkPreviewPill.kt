@@ -2,8 +2,6 @@ package com.bitchat.android.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Link
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -63,14 +61,8 @@ fun LinkPreviewPill(
             .clip(RoundedCornerShape(10.dp))
             .background(backgroundColor)
             .border(1.dp, borderColor, RoundedCornerShape(10.dp))
-            .clickable {
-                try {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    context.startActivity(intent)
-                } catch (e: Exception) {
-                    // Silently fail if URL can't be opened
-                }
-            },
+            // chatbit: links open in Tor Browser only (see TorLinks)
+            .clickable { com.bitchat.android.net.TorLinks.open(context, url) },
         color = Color.Transparent
     ) {
         Row(

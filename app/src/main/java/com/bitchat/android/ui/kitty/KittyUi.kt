@@ -146,6 +146,7 @@ private data class TourStep(val anchor: String?, val text: Int)
 private val TOUR = listOf(
     TourStep(KittyAnchors.LOGO, R.string.tour2_logo),
     TourStep(null, R.string.tour3_security),
+    TourStep(null, R.string.tour3_links),
     TourStep(KittyAnchors.CHANNEL, R.string.tour2_place),
     TourStep(KittyAnchors.COMPOSER, R.string.tour2_composer),
     TourStep(null, R.string.tour3_stats),
