@@ -246,7 +246,7 @@ private fun RoomChat(room: PrivateRoom, nickname: String, onBack: () -> Unit) {
                                 "${m.nickname}#${m.senderPubkey.takeLast(4)} · ${DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(m.atMs))}",
                                 fontFamily = BitchatFontFamily, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            Text(m.text, fontFamily = BitchatFontFamily, fontSize = 14.sp)
+                            RoomMessageText(m.text)
                         }
                     }
                 }
@@ -330,3 +330,30 @@ private fun RoomHint(text: String, maxLines: Int = Int.MAX_VALUE) {
     Text(text, fontFamily = BitchatFontFamily, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant,
         maxLines = maxLines, overflow = TextOverflow.Ellipsis)
 }
+
+/** A room message with its links clickable: they go through Tor Browser only (see TorLinks). */
+@Composable
+private fun RoomMessageText(text: String) {
+    val context = LocalContext.current
+    val accent = MaterialTheme.colorScheme.primary
+    val annotated = remember(text, accent) {
+        androidx.compose.ui.text.buildAnnotatedString {
+            append(text)
+            for (u in MessageSpecialParser.findUrls(text)) {
+                addStyle(
+                    androidx.compose.ui.text.SpanStyle(color = accent, textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline),
+                    u.start, u.endExclusive
+                )
+                addStringAnnotation("url_click", u.url, u.start, u.endExclusive)
+            }
+        }
+    }
+    com.bitchat.android.core.ui.component.text.AnnotatedClickableText(
+        text = annotated,
+        annotationTags = listOf("url_click"),
+        onAnnotationClick = { _, url -> openMessageUrl(context, url) ; true },
+        fontFamily = BitchatFontFamily,
+        style = androidx.compose.ui.text.TextStyle(fontSize = 14.sp)
+    )
+}
+

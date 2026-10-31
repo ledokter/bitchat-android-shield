@@ -453,7 +453,7 @@ internal fun SettingsTab(viewModel: ChatViewModel, onReplayTour: () -> Unit, mod
                         HelpDot(R.string.help_advanced)
                     }
                     Text(
-                        stringResource(if (isPro) R.string.advanced_mode_desc else R.string.adgate_advanced_hint),
+                        stringResource(if (adFree) R.string.advanced_mode_desc else R.string.adgate_advanced_hint),
                         fontFamily = BitchatFontFamily, fontSize = 12.sp, color = colorScheme.onSurfaceVariant
                     )
                 }
