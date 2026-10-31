@@ -30,8 +30,8 @@ android {
         applicationId = "app.chatbit"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 49
-        versionName = "2.3.5"
+        versionCode = 50
+        versionName = "2.3.6"
         buildConfigField(
             "String",
             "GITHUB_RELEASE_CERT_SHA256",
