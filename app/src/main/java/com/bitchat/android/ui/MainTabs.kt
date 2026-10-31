@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bitchat.android.R
+import com.bitchat.android.net.TorLinks.Reason
 import com.bitchat.android.core.ui.component.sheet.BitchatBottomSheet
 import com.bitchat.android.game.KittyGame
 import com.bitchat.android.net.ArtiTorManager
@@ -144,27 +145,57 @@ fun MainTabs(viewModel: ChatViewModel) {
 }
 
 /**
- * A link was not opened: the "links through Tor Browser" setting is off, or Tor Browser is
- * missing. The person may copy the link (at their own risk) or get Tor Browser from its sources.
+ * A tapped link waits on the person (see TorLinks): first copy-and-paste explanation, Tor Browser
+ * missing, or links switched off. Copying is always their own choice, with the risk spelled out.
  */
 @Composable
 private fun TorBrowserRequiredDialog() {
-    val refused by com.bitchat.android.net.TorLinks.refused.collectAsStateWithLifecycle()
-    val r = refused ?: return
     val context = LocalContext.current
+    // after Tor Browser opens: remind to paste (the link sits on the secure clipboard)
+    LaunchedEffect(Unit) {
+        com.bitchat.android.net.TorLinks.copied.collect {
+            android.widget.Toast.makeText(context, R.string.torlink_pasted_toast, android.widget.Toast.LENGTH_LONG).show()
+        }
+    }
+    val pending by com.bitchat.android.net.TorLinks.pending.collectAsStateWithLifecycle()
+    val p = pending ?: return
     val links = com.bitchat.android.net.TorLinks
+    val clipboardClear by com.bitchat.android.security.SecurityPreferences.clipboardClear.collectAsStateWithLifecycle()
+    val title = when (p.reason) {
+        Reason.OFF -> R.string.torlink_off_title
+        Reason.MISSING -> R.string.torlink_title
+        Reason.PASTE -> R.string.torlink_paste_title
+    }
+    val body = when (p.reason) {
+        Reason.OFF -> R.string.torlink_off_body
+        Reason.MISSING -> R.string.torlink_body
+        Reason.PASTE -> R.string.torlink_paste_body
+    }
     androidx.compose.material3.AlertDialog(
         onDismissRequest = { links.dismiss() },
-        title = { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(if (r.torOff) R.string.torlink_off_title else R.string.torlink_title)) },
+        title = { androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(title)) },
         text = {
             androidx.compose.foundation.layout.Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(10.dp)) {
-                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(if (r.torOff) R.string.torlink_off_body else R.string.torlink_body))
-                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_copy_risk), color = androidx.compose.material3.MaterialTheme.colorScheme.error)
+                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(body))
+                // why the clipboard is safe (or the warning when its clearing is switched off)
+                androidx.compose.material3.Text(
+                    androidx.compose.ui.res.stringResource(if (clipboardClear) R.string.torlink_clipboard_secure else R.string.torlink_clipboard_keep),
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (p.reason != Reason.PASTE) androidx.compose.material3.Text(
+                    androidx.compose.ui.res.stringResource(R.string.torlink_copy_risk),
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.error
+                )
             }
         },
         confirmButton = {
             androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.End) {
-                if (!r.torOff) {
+                if (p.reason == Reason.PASTE) {
+                    androidx.compose.material3.TextButton(onClick = { links.copyAndOpenTorBrowser(context, p.url) }) {
+                        androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_paste_button))
+                    }
+                }
+                if (p.reason == Reason.MISSING) {
                     androidx.compose.material3.TextButton(onClick = { links.openSource(context, links.GUARDIAN_FDROID) }) {
                         androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_fdroid))
                     }
@@ -172,8 +203,10 @@ private fun TorBrowserRequiredDialog() {
                         androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_torproject))
                     }
                 }
-                androidx.compose.material3.TextButton(onClick = { links.copy(context, r.url) }) {
-                    androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_copy))
+                if (p.reason != Reason.PASTE) {
+                    androidx.compose.material3.TextButton(onClick = { links.copy(context, p.url) }) {
+                        androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_copy))
+                    }
                 }
                 androidx.compose.material3.TextButton(onClick = { links.dismiss() }) {
                     androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.torlink_cancel))

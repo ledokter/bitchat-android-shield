@@ -1212,8 +1212,14 @@
     <string name="torlink_copy_risk">You can copy the link and paste it into a browser\'s address bar at your own risk: that site will see your real IP address.</string>
     <string name="torlink_copy">Copy the link (at my own risk)</string>
     <string name="sec_links_title">Open links with Tor Browser</string>
-    <string name="sec_links_desc">Links open only in Tor Browser. Off: chatbit opens no link at all</string>
-    <string name="help_links_tor">A tapped link opens only in Tor Browser, so the site never sees your real IP address. Some sites refuse Tor and will not open (in Tor Browser, try \"New circuit for this site\"). Without Tor Browser, or with this switch off, chatbit does not even try: you can copy the link and paste it into a browser\'s address bar, at your own risk.</string>
-    <string name="tip_links_tor">Links open only in Tor Browser, to protect everyone. Some sites refuse Tor. Without Tor Browser, you can copy the link at your own risk.</string>
-    <string name="tour3_links">A link in a message opens only in Tor Browser: the site never sees your real address. Some sites refuse Tor; without Tor Browser, you can copy the link at your own risk.</string>
+    <string name="sec_links_desc">Links are copied and Tor Browser opens, ready to paste. Off: chatbit opens no link at all</string>
+    <string name="help_links_tor">Tor Browser accepts no link from other apps, so a tapped link is copied to chatbit\'s secure clipboard and Tor Browser opens: long-press its address bar and Paste. The clipboard is marked sensitive and erased after 60 seconds (or when you come back to chatbit), so no other app can read it. Some sites refuse Tor and will not open (in Tor Browser, try \"New circuit for this site\"). Without Tor Browser, or with this switch off, chatbit opens nothing: you can copy the link and paste it into another browser, at your own risk.</string>
+    <string name="tip_links_tor">Links go to Tor Browser only: chatbit copies them to its secure clipboard (erased after 60 s) and opens Tor Browser, you just paste.</string>
+    <string name="tour3_links">Tap a link: chatbit copies it to its secure clipboard (erased after 60 s, invisible to other apps) and opens Tor Browser; you paste it there. The site never sees your real address.</string>
+    <string name="torlink_paste_title">Open in Tor Browser</string>
+    <string name="torlink_paste_body">Tor Browser accepts no link sent by another app (a Tor Project protection). So chatbit copies the link and opens Tor Browser: long-press its address bar, then Paste.</string>
+    <string name="torlink_paste_button">Copy and open Tor Browser</string>
+    <string name="torlink_clipboard_secure">The link goes through chatbit\'s secure clipboard: it is marked sensitive (Android and the keyboard do not show it), and it is erased after 60 seconds, or as soon as you come back to chatbit, so that no other app can read it afterwards.</string>
+    <string name="torlink_clipboard_keep">Automatic clipboard clearing is off (Settings › Security): the link stays in the clipboard, where other apps can read it. Clear it once pasted.</string>
+    <string name="torlink_pasted_toast">Link copied (secure clipboard): paste it into Tor Browser\'s address bar.</string>
 </resources>

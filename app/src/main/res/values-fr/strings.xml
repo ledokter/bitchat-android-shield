@@ -1172,8 +1172,14 @@
     <string name="torlink_copy_risk">Tu peux copier le lien et le coller dans la barre d\'adresse d\'un navigateur, à tes risques et périls : le site verra ta vraie adresse IP.</string>
     <string name="torlink_copy">Copier le lien (à mes risques)</string>
     <string name="sec_links_title">Ouvrir les liens avec Tor Browser</string>
-    <string name="sec_links_desc">Les liens s\'ouvrent seulement dans Tor Browser. Coupé : chatbit n\'ouvre aucun lien</string>
-    <string name="help_links_tor">Un lien touché s\'ouvre seulement dans Tor Browser : le site ne voit jamais ta vraie adresse IP. Certains sites refusent Tor et ne s\'ouvriront pas (dans Tor Browser, essaie « Nouveau circuit pour ce site »). Sans Tor Browser, ou avec ce réglage coupé, chatbit n\'essaie même pas : tu peux copier le lien et le coller dans la barre d\'adresse d\'un navigateur, à tes risques et périls.</string>
-    <string name="tip_links_tor">Les liens s\'ouvrent seulement dans Tor Browser, pour protéger tout le monde. Certains sites refusent Tor. Sans Tor Browser, tu peux copier le lien à tes risques.</string>
-    <string name="tour3_links">Un lien dans un message s\'ouvre seulement dans Tor Browser : le site ne voit jamais ta vraie adresse. Certains sites refusent Tor ; sans Tor Browser, tu peux copier le lien à tes risques.</string>
+    <string name="sec_links_desc">Le lien est copié et Tor Browser s\'ouvre, prêt à coller. Coupé : chatbit n\'ouvre aucun lien</string>
+    <string name="help_links_tor">Tor Browser n\'accepte aucun lien venant d\'une autre appli : un lien touché est donc copié dans le presse-papiers sécurisé de chatbit et Tor Browser s\'ouvre ; appuie longuement sur sa barre d\'adresse puis Coller. Ce presse-papiers est marqué comme sensible et effacé au bout de 60 secondes (ou à ton retour dans chatbit) : aucune autre appli ne peut le lire. Certains sites refusent Tor et ne s\'ouvriront pas (dans Tor Browser, essaie « Nouveau circuit pour ce site »). Sans Tor Browser, ou avec ce réglage coupé, chatbit n\'ouvre rien : tu peux copier le lien et le coller dans un autre navigateur, à tes risques et périls.</string>
+    <string name="tip_links_tor">Les liens vont uniquement dans Tor Browser : chatbit les copie dans son presse-papiers sécurisé (effacé au bout de 60 s) et ouvre Tor Browser, tu n\'as qu\'à coller.</string>
+    <string name="tour3_links">Touche un lien : chatbit le copie dans son presse-papiers sécurisé (effacé au bout de 60 s, invisible des autres applis) et ouvre Tor Browser ; tu le colles là-bas. Le site ne voit jamais ta vraie adresse.</string>
+    <string name="torlink_paste_title">Ouvrir dans Tor Browser</string>
+    <string name="torlink_paste_body">Tor Browser n\'accepte aucun lien envoyé par une autre appli (une protection du Tor Project). chatbit copie donc le lien et ouvre Tor Browser : appuie longuement sur sa barre d\'adresse, puis Coller.</string>
+    <string name="torlink_paste_button">Copier et ouvrir Tor Browser</string>
+    <string name="torlink_clipboard_secure">Le lien passe par le presse-papiers sécurisé de chatbit : il est marqué comme sensible (Android et le clavier ne l\'affichent pas) et il est effacé au bout de 60 secondes, ou dès ton retour dans chatbit, pour qu\'aucune autre appli ne puisse le lire ensuite.</string>
+    <string name="torlink_clipboard_keep">L\'effacement automatique du presse-papiers est coupé (Réglages › Sécurité) : le lien y reste, et d\'autres applis peuvent le lire. Vide-le une fois collé.</string>
+    <string name="torlink_pasted_toast">Lien copié (presse-papiers sécurisé) : colle-le dans la barre d\'adresse de Tor Browser.</string>
 </resources>

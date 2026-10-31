@@ -8,15 +8,20 @@ import android.net.Uri
 import android.os.Build
 import com.bitchat.android.security.SecureClipboard
 import com.bitchat.android.security.SecurityPreferences
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
  * chatbit: a web link leaves the app only through Tor Browser, never through the phone's default
- * browser (which would reveal the real IP of whoever taps it). With the setting off, or without
- * Tor Browser, chatbit does not even try: the person may copy the link and paste it into a
- * browser of their choice, at their own risk, and is shown where to get Tor Browser.
+ * browser (which would reveal the real IP of whoever taps it).
+ *
+ * Tor Browser (16+) accepts no link from other apps: no http(s) VIEW filter, its own scheme is not
+ * exported. So chatbit copies the link to its secure clipboard and opens Tor Browser, where the
+ * person pastes it. With the setting off, or without Tor Browser, nothing opens: the person may
+ * copy the link at their own risk, or get Tor Browser from its official sources.
  */
 object TorLinks {
     /** Tor Project builds, stable first (declared in the manifest's <queries>). */
@@ -24,14 +29,27 @@ object TorLinks {
     const val GUARDIAN_FDROID = "https://guardianproject.info/fdroid/"
     const val TORPROJECT_ANDROID = "https://www.torproject.org/download/#android"
 
-    /** A link chatbit refused to open: [torOff] = the setting is off, else Tor Browser is missing. */
-    data class Refused(val url: String, val torOff: Boolean)
+    enum class Reason {
+        /** "Open links with Tor Browser" is switched off: chatbit opens nothing. */
+        OFF,
+        /** Tor Browser is not installed. */
+        MISSING,
+        /** First link with Tor Browser installed: explain copy, paste and the secure clipboard. */
+        PASTE
+    }
 
-    private val _refused = MutableStateFlow<Refused?>(null)
-    val refused: StateFlow<Refused?> = _refused.asStateFlow()
+    /** A link waiting on the person: the dialog shown depends on [reason]. */
+    data class Pending(val url: String, val reason: Reason)
+
+    private val _pending = MutableStateFlow<Pending?>(null)
+    val pending: StateFlow<Pending?> = _pending.asStateFlow()
+
+    /** Tor Browser was opened with the link on the clipboard: the app reminds to paste it. */
+    private val _copied = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val copied: SharedFlow<Unit> = _copied
 
     fun dismiss() {
-        _refused.value = null
+        _pending.value = null
     }
 
     fun installedPackage(context: Context): String? = PACKAGES.firstOrNull { pkg ->
@@ -44,23 +62,37 @@ object TorLinks {
         }
     }
 
-    /** Opens [url] in Tor Browser; true when it did. Otherwise nothing opens (see [refused]). */
+    /**
+     * A link was tapped. True when Tor Browser was opened with the link in the clipboard; false
+     * when the person must decide first (see [pending]).
+     */
     fun open(context: Context, url: String): Boolean {
-        if (!SecurityPreferences.linksViaTor.value) {
-            _refused.value = Refused(url, torOff = true)
+        val reason = when {
+            !SecurityPreferences.linksViaTor.value -> Reason.OFF
+            installedPackage(context) == null -> Reason.MISSING
+            !SecurityPreferences.linksTorExplained.value -> Reason.PASTE
+            else -> return copyAndOpenTorBrowser(context, url)
+        }
+        _pending.value = Pending(url, reason)
+        return false
+    }
+
+    /** Copies [url] to the secure clipboard and opens Tor Browser, where the person pastes it. */
+    fun copyAndOpenTorBrowser(context: Context, url: String): Boolean {
+        _pending.value = null
+        SecurityPreferences.setLinksTorExplained(true)
+        val launch = installedPackage(context)?.let { context.packageManager.getLaunchIntentForPackage(it) }
+        if (launch == null) {
+            _pending.value = Pending(url, Reason.MISSING)
             return false
         }
-        val pkg = installedPackage(context) ?: run {
-            _refused.value = Refused(url, torOff = false)
-            return false
-        }
+        SecureClipboard.copy(context, "link", url)
         return try {
-            context.startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse(url)).setPackage(pkg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            )
+            context.startActivity(launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            _copied.tryEmit(Unit)
             true
         } catch (_: ActivityNotFoundException) {
-            _refused.value = Refused(url, torOff = false)
+            _pending.value = Pending(url, Reason.MISSING)
             false
         }
     }
@@ -69,7 +101,7 @@ object TorLinks {
     fun copy(context: Context, url: String) {
         // same rules as every chatbit copy (cleared after 60 s when that setting is on)
         SecureClipboard.copy(context, "link", url)
-        _refused.value = null
+        _pending.value = null
     }
 
     /**
@@ -80,6 +112,6 @@ object TorLinks {
         runCatching {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         }
-        _refused.value = null
+        _pending.value = null
     }
 }

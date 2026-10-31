@@ -21,6 +21,7 @@ object SecurityPreferences {
     private const val KEY_APP_LOCK = "app_lock"
     private const val KEY_CLIPBOARD_CLEAR = "clipboard_clear"
     private const val KEY_LINKS_TOR = "links_tor"
+    private const val KEY_LINKS_TOR_EXPLAINED = "links_tor_explained"
     private const val KEY_AUTO_WIPE_DAYS = "auto_wipe_days"
     private const val KEY_LAST_OPEN = "last_open_ms"
     private const val KEY_SHOW_BLOCKED = "show_blocked"
@@ -67,6 +68,10 @@ private const val KEY_DURESS_LEN = "duress_len"
     private val _linksViaTor = MutableStateFlow(true)
     val linksViaTor: StateFlow<Boolean> = _linksViaTor.asStateFlow()
 
+    /** The copy-then-paste-in-Tor-Browser explanation was shown once; later links skip it. */
+    private val _linksTorExplained = MutableStateFlow(false)
+    val linksTorExplained: StateFlow<Boolean> = _linksTorExplained.asStateFlow()
+
     private val _autoWipeDays = MutableStateFlow(DEFAULT_AUTO_WIPE_DAYS)
     val autoWipeDays: StateFlow<Int> = _autoWipeDays.asStateFlow()
 
@@ -85,6 +90,7 @@ private const val KEY_DURESS_LEN = "duress_len"
         _appLock.value = prefs.getBoolean(KEY_APP_LOCK, true)
         _clipboardClear.value = prefs.getBoolean(KEY_CLIPBOARD_CLEAR, true)
         _linksViaTor.value = prefs.getBoolean(KEY_LINKS_TOR, true)
+        _linksTorExplained.value = prefs.getBoolean(KEY_LINKS_TOR_EXPLAINED, false)
         _autoWipeDays.value = prefs.getInt(KEY_AUTO_WIPE_DAYS, DEFAULT_AUTO_WIPE_DAYS)
         _showBlocked.value = prefs.getBoolean(KEY_SHOW_BLOCKED, false)
         loadPins()
@@ -95,6 +101,7 @@ private const val KEY_DURESS_LEN = "duress_len"
     }
 
     fun setLinksViaTor(v: Boolean) { _linksViaTor.value = v; put { putBoolean(KEY_LINKS_TOR, v) } }
+    fun setLinksTorExplained(v: Boolean) { _linksTorExplained.value = v; put { putBoolean(KEY_LINKS_TOR_EXPLAINED, v) } }
     fun setAdvancedMode(v: Boolean) { _advanced.value = v; put { putBoolean(KEY_ADVANCED, v) } }
     fun setKillSwitch(v: Boolean) { _killSwitch.value = v; put { putBoolean(KEY_KILL_SWITCH, v) } }
     fun setSendPresence(v: Boolean) { _presence.value = v; put { putBoolean(KEY_PRESENCE, v) } }
